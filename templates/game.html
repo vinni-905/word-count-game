@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WordLinks - Premium Puzzle</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Embedded CSS (Enhanced Version) -->
+    <style>
+        /* --- Base & Typography --- */
+        :root {
+            /* Define Color Palette */
+            --bg-gradient-start: #f8f9fa; /*#e0eafc;*/
+            --bg-gradient-end: #ffffff; /*#cfdef3;*/
+            --container-bg: #ffffff;
+            --text-primary: #343a40;
+            --text-secondary: #6c757d;
+            --accent-primary: #007bff; /*#4e54c8;*/
+            --accent-secondary: #8f94fb;
+            --selected-bg: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); /* Purple/Blue */
+            --selected-text: #ffffff;
+            --solved-bg: #e9ecef;
+            --solved-text: #adb5bd;
+            --disabled-opacity: 0.6;
+            --correct-bg: #d1e7dd; /* Light Green */
+            --correct-text: #0f5132;
+            --correct-border: #badbcc;
+            --incorrect-bg: #f8d7da; /* Light Red */
+            --incorrect-text: #842029;
+            --incorrect-border: #f5c2c7;
+            --hint-bg: #cff4fc; /* Light Cyan */
+            --hint-text: #055160;
+            --hint-border: #b6effb;
+            --button-primary-bg: linear-gradient(135deg, #007bff 0%, #0056b3 100%); /* Blue */
+            --button-primary-hover: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+            --button-warning-bg: linear-gradient(135deg, #ffc107 0%, #e0a800 100%); /* Yellow/Orange */
+            --button-warning-hover: linear-gradient(135deg, #e0a800 0%, #c69500 100%);
+            --button-info-bg: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%); /* Cyan */
+            --button-info-hover: linear-gradient(135deg, #117a8b 0%, #0f6674 100%);
+            --button-success-bg: linear-gradient(135deg, #28a745 0%, #1e7e34 100%); /* Green */
+            --button-success-hover: linear-gradient(135deg, #1e7e34 0%, #155724 100%);
+            --button-disabled-bg: #ced4da;
+            --button-disabled-text: #6c757d;
+
+            /* Solved Group Colors (More vibrant) */
+            --solved-color-0-bg: linear-gradient(135deg, #fefae0 0%, #faedcd 100%); /* Creamy Yellow */
+            --solved-color-0-text: #bc6c25;
+            --solved-color-0-border: #faedcd;
+            --solved-color-1-bg: linear-gradient(135deg, #caf0f8 0%, #ade8f4 100%); /* Light Blue */
+            --solved-color-1-text: #0077b6;
+            --solved-color-1-border: #ade8f4;
+            --solved-color-2-bg: linear-gradient(135deg, #d8f3dc 0%, #b7e4c7 100%); /* Mint Green */
+            --solved-color-2-text: #2d6a4f;
+            --solved-color-2-border: #b7e4c7;
+            --solved-color-3-bg: linear-gradient(135deg, #fec8d8 0%, #ffacb7 100%); /* Pink */
+            --solved-color-3-text: #c9184a;
+            --solved-color-3-border: #ffacb7;
+
+
+            /* Shadows */
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 8px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 20px rgba(0,0,0,0.1);
+
+             /* Transitions */
+             --transition-speed: 0.25s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(to bottom, var(--bg-gradient-start), var(--bg-gradient-end));
+            color: var(--text-primary);
+            padding: 20px;
+            min-height: 100vh;
+            display: flex; /* For centering container */
+            align-items: center; /* For centering container */
+            justify-content: center; /* For centering container */
+        }
+
+        .container {
+            width: 100%; /* Use full width on small screens */
+            max-width: 700px; /* Slightly wider for better spacing */
+            margin: 20px auto; /* Add vertical margin */
+            background: var(--container-bg);
+            padding: 30px; /* More padding */
+            border-radius: 16px; /* More rounded */
+            box-shadow: var(--shadow-lg);
+        }
+
+         h1 { text-align: center; color: var(--text-primary); margin-bottom: 15px; font-weight: 700; }
+         h2 { text-align: center; color: var(--text-secondary); margin-bottom: 25px; font-weight: 600; }
+
+        /* --- Status Bar --- */
+        .status-bar {
+            display: flex;
+            justify-content: space-around; /* Even distribution */
+            align-items: center;
+            padding: 15px 0;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #dee2e6;
+            flex-wrap: wrap;
+            gap: 15px;
+            background-color: #f8f9fa; /* Slight bg */
+            border-radius: 8px; /* Rounded corners for the bar */
+            box-shadow: var(--shadow-sm);
+        }
+        .status-bar div {
+            font-weight: 600;
+            font-size: 0.9em;
+            text-align: center;
+            flex-basis: auto;
+            flex-grow: 1;
+             color: var(--text-secondary); /* Subtler text */
+        }
+         .status-bar span {
+             font-weight: 700;
+             color: var(--accent-primary); /* Highlight values */
+             font-size: 1.1em; /* Make values slightly larger */
+             margin-left: 5px; /* Space out label and value */
+         }
+         #timer {
+             min-width: 80px; /* Ensure space for MM:SS */
+         }
+
+        /* --- Word Grid & Items --- */
+        #word-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px; /* Slightly larger gap */
+            margin-bottom: 30px; /* More space below grid */
+        }
+
+        /* --- Modal Styles --- */
+.modal-overlay {
+    position: fixed;
+    inset: 0; /* top, right, bottom, left = 0 */
+    background-color: rgba(0, 0, 0, 0.6); /* Darker overlay */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; /* Ensure it's on top */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+}
+
+.modal-overlay.modal-open {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease;
+}
+
+.modal-content {
+    background: var(--container-bg); /* Use container glass effect */
+    padding: 30px 40px;
+    border-radius: 15px;
+    border: 1px solid var(--container-border);
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(var(--blur-intensity));
+    -webkit-backdrop-filter: blur(var(--blur-intensity));
+    max-width: 450px; /* Limit width */
+    width: 90%;
+    text-align: center;
+    color: var(--text-primary);
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.modal-open .modal-content {
+    transform: scale(1);
+}
+
+.modal-title {
+    font-size: 1.5em;
+    font-weight: 700;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: var(--accent-primary); /* Highlight title */
+}
+
+.modal-content p {
+    margin-bottom: 25px;
+    font-size: 1em;
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: space-around; /* Or center/space-between */
+    gap: 15px;
+    flex-wrap: wrap; /* Allow wrapping on small screens */
+}
+
+.modal-button {
+    padding: 10px 25px;
+    cursor: pointer;
+    border-radius: 25px;
+    border: 1px solid;
+    font-weight: 600;
+    font-size: 0.9em;
+    color: var(--text-primary);
+    background: transparent;
+    transition: background var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease, border-color var(--transition-speed) ease;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+.modal-button:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.modal-button-confirm {
+    background: var(--button-success-bg); /* Greenish tint */
+    border-color: var(--button-success-border);
+}
+.modal-button-confirm:hover:not(:disabled) {
+    background: var(--button-success-hover-bg);
+    border-color: rgba(40, 167, 69, 1);
+}
+
+.modal-button-cancel {
+    background: var(--button-warning-bg); /* Yellowish tint */
+    border-color: var(--button-warning-border);
+}
+.modal-button-cancel:hover:not(:disabled) {
+    background: var(--button-warning-hover-bg);
+    border-color: rgba(255, 193, 7, 1);
+}
+
+/* Add icons if needed, like previous buttons */
+.modal-button i {
+    font-size: 1.1em;
+}
+
+@media (max-width: 480px) {
+    .modal-content { padding: 20px 25px; }
+    .modal-title { font-size: 1.3em; }
+    .modal-actions { flex-direction: column; align-items: center; }
+    .modal-button { width: 80%; justify-content: center; }
+}
+        .word-item {
+            background-color: #f8f9fa; /* Lighter base */
+            padding: 15px 8px; /* Adjust padding */
+            text-align: center;
+            border-radius: 8px; /* Consistent rounding */
+            cursor: pointer;
+            font-weight: 600; /* Slightly bolder */
+            text-transform: uppercase;
+            transition: background-color var(--transition-speed) ease,
+                        color var(--transition-speed) ease,
+                        transform var(--transition-speed) ease,
+                        box-shadow var(--transition-speed) ease;
+            user-select: none;
+            min-height: 3.5em; /* Ensure height */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.2;
+            word-break: break-word;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid #dee2e6; /* Subtle border */
+        }
+
+        .word-item:hover:not(.selected):not(.solved):not(.disabled) {
+             background-color: #e9ecef; /* Hover effect */
+             transform: translateY(-3px); /* Lift effect */
+             box-shadow: var(--shadow-md);
+        }
+
+        .word-item.selected {
+            background: var(--selected-bg);
+            color: var(--selected-text);
+            transform: scale(1.05) translateY(-2px); /* Pop effect */
+            box-shadow: var(--shadow-md);
+            border: none; /* Remove border when selected */
+        }
+
+        .word-item.solved {
+            background-color: var(--solved-bg);
+            color: var(--solved-text);
+            cursor: default;
+            opacity: var(--disabled-opacity);
+            box-shadow: none;
+            border: 1px solid #ced4da; /* Show border again but muted */
+             transform: none; /* Reset transforms */
+        }
+
+        .word-item.disabled { /* State for end-game */
+            cursor: default;
+            opacity: var(--disabled-opacity);
+             box-shadow: none;
+             transform: none; /* Reset transforms */
+        }
+
+        /* --- Controls & Buttons --- */
+        .controls {
+            text-align: center;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between; /* Better alignment */
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px; /* Consistent gap */
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: var(--shadow-sm);
+        }
+        .controls p {
+            margin: 0; /* Remove default margin */
+            white-space: nowrap;
+            font-size: 0.9em;
+            color: var(--text-secondary);
+             flex-grow: 1; /* Allow text paragraphs to take space */
+             text-align: center;
+        }
+         .controls p span { /* Style the numbers */
+             font-weight: 700;
+             color: var(--accent-primary);
+             font-size: 1.1em;
+         }
+
+        .controls button {
+            padding: 10px 20px; /* More padding */
+            cursor: pointer;
+            border-radius: 25px; /* Pill shape */
+            border: none;
+            font-weight: 600;
+            font-size: 0.9em;
+            color: white;
+            transition: background var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+            box-shadow: var(--shadow-sm);
+            flex-shrink: 0; /* Prevent buttons shrinking too much */
+        }
+        .controls button:hover:not(:disabled) {
+             transform: translateY(-2px);
+             box-shadow: var(--shadow-md);
+        }
+         .controls button:active:not(:disabled) {
+             transform: translateY(0);
+             box-shadow: var(--shadow-sm);
+         }
+
+        #clear-selection-btn { background: var(--button-warning-bg); }
+        #clear-selection-btn:hover:not(:disabled) { background: var(--button-warning-hover); }
+
+        #hint-btn { background: var(--button-info-bg); }
+        #hint-btn:hover:not(:disabled) { background: var(--button-info-hover); }
+
+        /* Submit button removed visually, but keep styles if you re-add it */
+        #submit-answer-btn { background: var(--button-primary-bg); }
+        #submit-answer-btn:hover:not(:disabled) { background: var(--button-primary-hover); }
+
+        .controls button:disabled {
+            background: var(--button-disabled-bg);
+            color: var(--button-disabled-text);
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+
+        /* --- Feedback Area --- */
+        #feedback-area {
+            margin-top: 15px; /* Reset margin */
+            margin-bottom: 25px; /* Add space below */
+            padding: 15px 20px;
+            border-radius: 8px;
+            min-height: 3em;
+            text-align: center;
+            font-weight: 600;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+            border: 1px solid transparent; /* Placeholder for borders */
+        }
+        .feedback-correct { background-color: var(--correct-bg); color: var(--correct-text); border-color: var(--correct-border); }
+        .feedback-incorrect { background-color: var(--incorrect-bg); color: var(--incorrect-text); border-color: var(--incorrect-border); }
+        .feedback-hint { background-color: var(--hint-bg); color: var(--hint-text); border-color: var(--hint-border); }
+
+        /* --- Solved Groups Area --- */
+        #solved-groups-area {
+            margin-bottom: 30px; /* More space */
+            display: grid;
+            grid-template-columns: 1fr; /* Stack vertically */
+            gap: 15px; /* Consistent gap */
+        }
+        .solved-group {
+            border-radius: 12px; /* Smoother corners */
+            padding: 15px 20px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            border-width: 2px; /* Make border slightly thicker */
+            border-style: solid;
+             transition: transform 0.3s ease-out; /* Add entrance animation */
+             transform: scale(0.95); /* Start slightly smaller */
+             opacity: 0; /* Start hidden */
+             animation: fadeInScale 0.5s ease-out forwards; /* Animation */
+        }
+        @keyframes fadeInScale {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .solved-group strong {
+            display: block;
+            margin-bottom: 8px; /* More space */
+            text-transform: uppercase;
+            font-size: 1em; /* Slightly larger */
+            font-weight: 700;
+        }
+        .solved-group p {
+            margin: 0;
+            font-size: 0.95em;
+            font-weight: 400; /* Regular weight for words */
+            line-height: 1.5;
+        }
+
+        /* Apply distinct solved group colors */
+        .solved-group-color-0 { background: var(--solved-color-0-bg); color: var(--solved-color-0-text); border-color: var(--solved-color-0-border); animation-delay: 0s; }
+        .solved-group-color-1 { background: var(--solved-color-1-bg); color: var(--solved-color-1-text); border-color: var(--solved-color-1-border); animation-delay: 0.1s; }
+        .solved-group-color-2 { background: var(--solved-color-2-bg); color: var(--solved-color-2-text); border-color: var(--solved-color-2-border); animation-delay: 0.2s; }
+        .solved-group-color-3 { background: var(--solved-color-3-bg); color: var(--solved-color-3-text); border-color: var(--solved-color-3-border); animation-delay: 0.3s; }
+
+        /* --- New Game Button & Utility --- */
+        #new-game-btn {
+            display: block;
+            width: fit-content; /* Fit content */
+            margin: 30px auto 0; /* Centered, with top margin */
+            padding: 12px 30px; /* Generous padding */
+            font-size: 1.1em; /* Larger text */
+            cursor: pointer;
+            background: var(--button-success-bg);
+            color: white;
+            border: none;
+            border-radius: 30px; /* Pill shape */
+            font-weight: 600;
+            box-shadow: var(--shadow-md);
+            transition: background var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+        }
+        #new-game-btn:hover {
+            background: var(--button-success-hover);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .error {
+            color: var(--incorrect-text);
+            background-color: var(--incorrect-bg);
+            border: 1px solid var(--incorrect-border);
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+
+        #loading-message, #puzzle-info { /* Consistent styling for info texts */
+             text-align: center;
+             color: var(--text-secondary);
+             font-style: italic;
+             margin-bottom: 20px;
+        }
+
+        /* --- Shake Animation --- */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0) scale(1.05) translateY(-2px); } /* Keep selected style */
+            25% { transform: translateX(-6px) scale(1.05) translateY(-2px); }
+            50% { transform: translateX(6px) scale(1.05) translateY(-2px); }
+            75% { transform: translateX(-6px) scale(1.05) translateY(-2px); }
+        }
+
+        /* --- Responsive Adjustments --- */
+        @media (max-width: 768px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.8em; }
+             .status-bar { padding: 10px; }
+            .status-bar div { font-size: 0.85em; }
+            .status-bar span { font-size: 1em; }
+             #word-grid { gap: 10px; }
+             .word-item { font-size: 0.9em; min-height: 3.2em; padding: 12px 5px; }
+             .controls { flex-direction: column; gap: 10px; padding: 10px; }
+             .controls p { order: -1; /* Put text at top */ margin-bottom: 10px; text-align: center; }
+             .controls button { width: 60%; /* Make buttons wider */ padding: 10px 15px; font-size: 0.9em;}
+            #new-game-btn { padding: 10px 25px; font-size: 1em; }
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 10px; }
+            .container { padding: 15px; border-radius: 12px; }
+            h1 { font-size: 1.5em; margin-bottom: 10px;}
+            h2 { font-size: 1em; margin-bottom: 15px; }
+            .status-bar { flex-direction: column; align-items: stretch; gap: 8px; padding: 8px; }
+            .status-bar div { text-align: left; padding: 0 10px; } /* Align left in column */
+             #word-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 20px;} /* 2 columns */
+             .word-item { font-size: 0.85em; min-height: 3.5em; font-weight: 600; } /* Ensure readability */
+             .controls { gap: 10px; }
+            .controls button { width: 80%; }
+             #feedback-area { padding: 10px 15px; font-size: 0.9em;}
+            .solved-group { padding: 10px 15px; }
+            .solved-group strong { font-size: 0.9em; }
+            .solved-group p { font-size: 0.9em; }
+            #new-game-btn { width: 70%; }
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Container and all child elements remain the same -->
+    <div class="container game-container">
+        <h1>WordLinks</h1> <!-- Simpler Title -->
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div>Time: <span id="timer">00:00</span></div>
+            <div>Score: <span id="score">1000</span></div>
+            <div>Hints: <span id="hints-used">0</span> / <span id="hints-allowed">3</span></div> <!-- Simplified Label -->
+             <div>Mistakes: <span id="lives-remaining">4</span></div> <!-- Moved Mistakes here -->
+        </div>
+
+        <p id="loading-message">Loading puzzle...</p>
+        <p id="error-message" class="error"></p>
+        <div id="puzzle-info" style="text-align: center; font-style: italic; margin-bottom: 15px;"></div>
+
+        <!-- Solved groups appear above grid -->
+        <div id="solved-groups-area"></div>
+
+        <!-- The dynamic grid -->
+        <div id="word-grid"></div>
+
+        <!-- Controls Area - Simplified layout, mistakes moved to status bar -->
+        <div class="controls">
+             <p>Selected: <span id="selected-count">0</span> / 4</p>
+             <button id="clear-selection-btn" disabled>Clear</button>
+             <button id="hint-btn">Hint</button>
+             <!-- Submit button is not needed due to auto-submit logic -->
+             <!-- <button id="submit-answer-btn" disabled>Submit</button> -->
+        </div>
+        <!-- Show Answer Confirmation Modal -->
+<div id="show-answer-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+        <h3 class="modal-title"><i class="fas fa-eye"></i> Hints Exhausted</h3>
+        <p>You've used all available hints. Would you like to reveal the solution?</p>
+        <div class="modal-actions">
+            <button id="confirm-show-answer-btn" class="modal-button modal-button-confirm">
+                <i class="fas fa-check"></i> Show Answer
+            </button>
+            <button id="cancel-show-answer-btn" class="modal-button modal-button-cancel">
+                <i class="fas fa-times"></i> Keep Playing
+            </button>
+        </div>
+    </div>
+</div>
+
+         <div id="feedback-area"></div>
+         <button id="new-game-btn" style="display: none;">Play Again?</button>
+    </div>
+
+    <!-- Embedded JavaScript (No changes needed here) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Element References ---
+            const wordGrid = document.getElementById('word-grid');
+            const loadingMessage = document.getElementById('loading-message');
+            const errorMessage = document.getElementById('error-message');
+            const selectedCountSpan = document.getElementById('selected-count');
+            const clearSelectionBtn = document.getElementById('clear-selection-btn');
+            // const submitAnswerBtn = document.getElementById('submit-answer-btn'); // No longer used visually
+            const feedbackArea = document.getElementById('feedback-area');
+            const solvedGroupsArea = document.getElementById('solved-groups-area');
+            const newGameBtn = document.getElementById('new-game-btn');
+            const livesRemainingSpan = document.getElementById('lives-remaining');
+            const puzzleInfoDiv = document.getElementById('puzzle-info');
+            const timerSpan = document.getElementById('timer');
+            const scoreSpan = document.getElementById('score');
+            const hintBtn = document.getElementById('hint-btn');
+            const hintsUsedSpan = document.getElementById('hints-used');
+            const hintsAllowedSpan = document.getElementById('hints-allowed');
+                const showAnswerModal = document.getElementById('show-answer-modal'); // Add modal reference
+    const confirmShowAnswerBtn = document.getElementById('confirm-show-answer-btn'); // Add button reference
+    const cancelShowAnswerBtn = document.getElementById('cancel-show-answer-btn'); // Add button reference
+
+
+            // --- Game Configuration ---
+            const STARTING_LIVES = 4;
+            const STARTING_SCORE = 1000;
+            const INCORRECT_GUESS_PENALTY = 75;
+            const HINT_PENALTY = 150;
+            const MAX_HINTS = 3;
+            const TIME_PENALTY_PER_SECOND = 1; // Keep if desired
+
+
+            // --- Game State Variables ---
+            let currentPuzzle = null;
+            let selectedWords = [];
+            let lives = STARTING_LIVES;
+            let score = STARTING_SCORE;
+            let hintsUsed = 0;
+            let revealedGroupsCount = 0;
+            let solvedGroupKeys = [];
+            let isSubmitting = false;
+            let gameActive = false;
+            let timerInterval = null;
+            let startTime = null;
+
+
+            // --- Initialization Function ---
+            function initGame() {
+                closeShowAnswerModal();
+
+                stopTimer();
+                gameActive = false;
+
+                const puzzleDataString = sessionStorage.getItem('currentPuzzle');
+                if (!puzzleDataString) {
+                    errorMessage.textContent = 'No puzzle data found. Please start a new game from the home page.';
+                    loadingMessage.style.display = 'none';
+                    disableAllInteraction();
+                    return;
+                }
+
+                try {
+                    currentPuzzle = JSON.parse(puzzleDataString);
+                    lives = STARTING_LIVES;
+                    score = STARTING_SCORE;
+                    hintsUsed = 0;
+                    selectedWords = [];
+                    solvedGroupKeys = [];
+                    revealedGroupsCount = 0;
+                    isSubmitting = false;
+
+                    feedbackArea.textContent = '';
+                    feedbackArea.className = 'feedback-area';
+                    solvedGroupsArea.innerHTML = '';
+                    errorMessage.textContent = '';
+                    loadingMessage.style.display = 'none';
+                    wordGrid.innerHTML = '';
+                    puzzleInfoDiv.innerHTML = '';
+
+                    if (currentPuzzle.difficulty || currentPuzzle.puzzle_id) {
+                         const infoP = document.createElement('p');
+                         let infoText = [];
+                         if(currentPuzzle.puzzle_id) infoText.push(`Puzzle #${currentPuzzle.puzzle_id}`);
+                         if(currentPuzzle.difficulty) infoText.push(`Difficulty: ${currentPuzzle.difficulty}`);
+                         // if (currentPuzzle.predicted_solve_time && currentPuzzle.predicted_solve_time > 0) {
+                         //      infoText += ` (Predicted: ${currentPuzzle.predicted_solve_time}s)`;
+                         // }
+                         infoP.textContent = infoText.join(' | ');
+                         puzzleInfoDiv.appendChild(infoP);
+                    }
+
+                    displayWords(currentPuzzle.words);
+                    updateScoreDisplay();
+                    updateLivesDisplay();
+                    updateHintsDisplay();
+                    updateSelectionUI();
+
+                    newGameBtn.style.display = 'none';
+                    enableAllInteraction();
+
+                    startTime = Date.now();
+                    startTimer();
+                    gameActive = true;
+
+                } catch (error) {
+                    console.error("Error initializing game:", error);
+                    errorMessage.textContent = 'Failed to load puzzle data. Please try starting a new game.';
+                    loadingMessage.style.display = 'none';
+                     disableAllInteraction();
+                }
+            }
+
+            // --- UI Update Functions ---
+
+            function displayWords(words) {
+                wordGrid.innerHTML = '';
+                // --- Slightly randomize word order for visual variety on reload ---
+                const shuffledWords = [...words].sort(() => Math.random() - 0.5);
+                // ---
+
+                shuffledWords.forEach(word => {
+                    const wordDiv = document.createElement('div');
+                    wordDiv.classList.add('word-item');
+                    wordDiv.textContent = word;
+                    wordDiv.dataset.word = word;
+                    wordDiv.addEventListener('click', handleWordClick);
+                    wordGrid.appendChild(wordDiv);
+                });
+            }
+
+            function updateSelectionUI() {
+                selectedCountSpan.textContent = selectedWords.length;
+                clearSelectionBtn.disabled = selectedWords.length === 0 || isSubmitting || !gameActive;
+                // submitAnswerBtn.disabled = true; // No longer used visually
+                hintBtn.disabled = isSubmitting || !gameActive || hintsUsed >= MAX_HINTS || revealedGroupsCount === 4 || lives <= 0;
+            }
+
+            function updateLivesDisplay() {
+                 livesRemainingSpan.textContent = lives;
+                 const livesDiv = livesRemainingSpan.closest('div');
+                 if(livesDiv) {
+                    livesDiv.style.color = lives <= 1 ? '#dc3545' : 'var(--text-secondary)'; // Use red for low lives
+                    livesRemainingSpan.style.color = lives <= 1 ? '#dc3545' : 'var(--accent-primary)'; // Highlight number
+                 }
+            }
+
+            function updateScoreDisplay() {
+                 scoreSpan.textContent = Math.max(0, score);
+            }
+
+            function updateHintsDisplay() {
+                 hintsUsedSpan.textContent = hintsUsed;
+                 hintsAllowedSpan.textContent = MAX_HINTS;
+                 hintBtn.disabled = isSubmitting || !gameActive || hintsUsed >= MAX_HINTS || revealedGroupsCount === 4 || lives <= 0;
+            }
+
+            // --- Timer Functions ---
+            function startTimer() {
+                stopTimer();
+                timerInterval = setInterval(() => {
+                    if (!gameActive || !startTime) return;
+
+                    const now = Date.now();
+                    const elapsedSeconds = Math.floor((now - startTime) / 1000);
+
+                    // Optional continuous time penalty - uncomment if needed
+                    // if (elapsedSeconds > 0 && elapsedSeconds % 1 === 0) { // Every second
+                    //     score -= TIME_PENALTY_PER_SECOND;
+                    //     updateScoreDisplay();
+                    // }
+
+                    const minutes = Math.floor(elapsedSeconds / 60);
+                    const seconds = elapsedSeconds % 60;
+                    timerSpan.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+                }, 1000);
+            }
+
+            function stopTimer() {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+
+            // --- Event Handlers ---
+            function handleWordClick(event) {
+                 const wordDiv = event.currentTarget;
+                 if (!gameActive || isSubmitting || wordDiv.classList.contains('solved') || wordDiv.classList.contains('disabled')) return;
+
+                 const word = wordDiv.dataset.word;
+                 const isSelected = wordDiv.classList.contains('selected');
+
+                 // Clear feedback on interaction
+                 feedbackArea.textContent = '';
+                 feedbackArea.className = 'feedback-area';
+
+                 if (isSelected) {
+                      selectedWords = selectedWords.filter(w => w !== word);
+                      wordDiv.classList.remove('selected');
+                 } else {
+                      if (selectedWords.length < 4) {
+                           selectedWords.push(word);
+                           wordDiv.classList.add('selected');
+                      }
+                 }
+                 updateSelectionUI();
+                 if (selectedWords.length === 4) {
+                     // Auto-submit after a very brief delay to allow visual selection feedback
+                     setTimeout(submitGroupAttempt, 100);
+                 }
+            }
+
+            function openShowAnswerModal() {
+        if (showAnswerModal) {
+            showAnswerModal.style.display = 'flex'; // Use flex for centering
+            // Delay adding class slightly to allow display change to register for transition
+            setTimeout(() => {
+                showAnswerModal.classList.add('modal-open');
+            }, 10);
+        }
+    }
+
+    function closeShowAnswerModal() {
+        if (showAnswerModal) {
+            showAnswerModal.classList.remove('modal-open');
+            // Wait for transition before hiding completely
+            // The visibility transition handles this delay
+             setTimeout(() => {
+                if (!showAnswerModal.classList.contains('modal-open')) { // Check if still closed
+                     showAnswerModal.style.display = 'none';
+                }
+             }, 300); // Match CSS transition duration
+        }
+    }
+
+    function clearSelection() {
+                 // Clear feedback on interaction
+                 feedbackArea.textContent = '';
+                 feedbackArea.className = 'feedback-area';
+
+                 selectedWords = [];
+                 document.querySelectorAll('.word-item.selected').forEach(el => {
+                    el.classList.remove('selected');
+                 });
+                 updateSelectionUI();
+            }
+
+             async function handleHintClick() {
+         if (!gameActive || isSubmitting || hintsUsed >= MAX_HINTS || lives <= 0) return;
+
+         // Optimistic UI update (disable button immediately)
+         isSubmitting = true;
+         updateSelectionUI();
+
+         // Penalize score and update count *before* API call
+         score -= HINT_PENALTY;
+         hintsUsed++;
+         updateScoreDisplay();
+         updateHintsDisplay(); // This might disable the button if MAX_HINTS reached
+
+
+         try {
+             await new Promise(resolve => setTimeout(resolve, 400)); // Simulate network
+             const response = await fetch('/api/get_hint', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ puzzle_id: currentPuzzle.puzzle_id, solved_group_keys: solvedGroupKeys }),
+             });
+
+             if (!response.ok) {
+                  const errorData = await response.json().catch(() => ({ detail: `HTTP error ${response.status}` }));
+                  throw new Error(errorData.detail || `Hint Error: ${response.status}`);
+             }
+             const result = await response.json();
+
+             if (result.hint) {
+                   // --- HINT EXHAUSTED LOGIC ---
+                   if (hintsUsed >= MAX_HINTS) {
+                       // Show the *last* hint briefly in the feedback area
+                       showFeedback(`Last Hint: ${result.hint}`, 'feedback-hint', 5000); // Show for 5 secs
+                       // Then open the modal
+                       // Release submitting state *before* opening modal
+                       isSubmitting = false;
+                       updateSelectionUI(); // Re-enable interaction for modal buttons
+                       openShowAnswerModal();
+                   } else {
+                       // Normal hint: Show hint feedback for a duration
+                       showFeedback(result.hint, 'feedback-hint', 4000);
+                       isSubmitting = false; // Release submitting state
+                       updateSelectionUI(); // Update button states
+                   }
+                   // -----------------------------
+             } else {
+                   // No hint available from API (e.g., server logic says none left)
+                   showFeedback(result.message || "No hint available.", '', 3000);
+                   // Revert penalty and count if API indicated no hint was provided
+                   hintsUsed--;
+                   score += HINT_PENALTY;
+                   updateScoreDisplay();
+                   updateHintsDisplay();
+                   isSubmitting = false; // Release submitting state
+                   updateSelectionUI();
+             }
+
+         } catch (error) {
+              console.error('Error getting hint:', error);
+              showFeedback(`Hint Failed: ${error.message}`, 'feedback-incorrect', 4000);
+              // Revert penalty/count on API failure ONLY IF WE INCREMENTED IT FIRST
+              if(hintsUsed > 0) { // Check if we actually used a hint count
+                 hintsUsed--;
+                 score += HINT_PENALTY;
+              }
+              updateScoreDisplay();
+              updateHintsDisplay();
+              isSubmitting = false; // Release submitting state
+              updateSelectionUI();
+         }
+         // No finally block needed here as isSubmitting is handled in branches
+    }
+    let feedbackTimeout = null; // Keep track of the timeout
+
+            function clearFeedback() {
+                if (feedbackTimeout) {
+                    clearTimeout(feedbackTimeout);
+                    feedbackTimeout = null;
+                }
+                // Ensure feedbackArea exists before manipulating
+                if (feedbackArea) {
+                    feedbackArea.textContent = '';
+                    feedbackArea.className = 'feedback-area'; // Reset class
+                }
+            }
+
+            function showFeedback(message, className = '', duration = 3000) {
+                 // Ensure feedbackArea exists before manipulating
+                 if (!feedbackArea) {
+                     console.error("Feedback area element not found!");
+                     return;
+                 }
+
+                clearFeedback(); // Clear any previous feedback and timeout first
+
+                feedbackArea.textContent = message;
+                feedbackArea.className = 'feedback-area'; // Reset base class
+                if (className) {
+                    feedbackArea.classList.add(className); // Add specific class if provided
+                }
+
+                // Only set a timeout if duration is positive
+                if (duration > 0) {
+                    feedbackTimeout = setTimeout(() => {
+                        // Check if the feedback area still exists and if the message
+                        // hasn't been changed by subsequent calls before clearing.
+                        if (feedbackArea && feedbackArea.textContent === message) {
+                            clearFeedback();
+                        }
+                    }, duration);
+                }
+            }
+
+            // --- Game Logic Functions ---
+            async function submitGroupAttempt() {
+                if (!gameActive || isSubmitting || selectedWords.length !== 4 || lives <= 0) return;
+                isSubmitting = true;
+                updateSelectionUI();
+                feedbackArea.textContent = 'Checking...';
+                feedbackArea.className = 'feedback-area';
+
+                const attemptPayload = {
+                     puzzle_id: currentPuzzle.puzzle_id,
+                     groups: { 'attempt': selectedWords } // Backend expects this structure
+                };
+
+                 // Simulate network delay
+                 await new Promise(resolve => setTimeout(resolve, 400));
+
+                try {
+                    const response = await fetch('/api/check_answer', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(attemptPayload)
+                    });
+
+                    if (!response.ok) {
+                        let errorText = `Check Error: ${response.status}`;
+                         try { const errorData = await response.json(); errorText = errorData.detail || errorText; } catch (e) { /* Ignore */ }
+                        throw new Error(errorText);
+                    }
+
+                    const result = await response.json();
+                    handleAttemptResult(result);
+
+                } catch (error) {
+                     console.error('Error submitting answer:', error);
+                     errorMessage.textContent = `Failed to check answer: ${error.message}. Please try again.`;
+                     feedbackArea.textContent = '';
+                     feedbackArea.className = 'feedback-area';
+                     // Don't penalize lives/score for a network/server error
+                     clearSelection(); // Clear selection on error
+                } finally {
+                     isSubmitting = false;
+                     // updateSelectionUI() is called within handleAttemptResult or clearSelection
+                }
+            }
+
+             function handleAttemptResult(result) {
+                  let foundCorrectGroup = false;
+                  let correctGroupDescription = "";
+                  let newlySolvedKey = null;
+
+                  const currentResultSolvedKeys = Object.keys(result.solved_groups || {});
+                  const justSolvedKeys = currentResultSolvedKeys.filter(key => !solvedGroupKeys.includes(key));
+
+                  if (justSolvedKeys.length > 0) {
+                      foundCorrectGroup = true;
+                      newlySolvedKey = justSolvedKeys[0];
+                      correctGroupDescription = result.solved_groups[newlySolvedKey];
+                      if (!solvedGroupKeys.includes(newlySolvedKey)) {
+                          solvedGroupKeys.push(newlySolvedKey);
+                      }
+                  }
+
+
+                  if (foundCorrectGroup) {
+                       feedbackArea.textContent = result.message || "Correct!"; // Show backend message or default
+                       feedbackArea.className = 'feedback-area feedback-correct';
+                       const wordsInSolvedGroup = selectedWords.slice(); // Copy before clearing
+
+                       // Find the correct index for the solved group color/order
+                       // The backend *should* ideally return the difficulty index (0-3)
+                       // If not, we use revealedGroupsCount, assuming they are solved in order of difficulty.
+                       const groupColorIndex = result.difficulty_index !== undefined ? result.difficulty_index : revealedGroupsCount;
+
+                       displaySolvedGroup(correctGroupDescription, wordsInSolvedGroup, groupColorIndex); // Pass color index
+                       revealedGroupsCount++;
+
+                       selectedWords = []; // Clear selection
+                       updateSelectionUI();
+
+                       if (revealedGroupsCount === 4) {
+                            setTimeout(() => { // Delay final message slightly
+                                feedbackArea.textContent = "Congratulations! Puzzle Solved!";
+                                feedbackArea.className = 'feedback-area feedback-correct';
+                                endGame(true); // Win
+                            }, 600); // Delay after last group animation
+                       } else {
+                           // Clear correct feedback after a delay
+                            setTimeout(() => {
+                                if (feedbackArea.classList.contains('feedback-correct')) {
+                                     feedbackArea.textContent = '';
+                                     feedbackArea.className = 'feedback-area';
+                                }
+                            }, 1500);
+                       }
+
+                  } else {
+                       // Incorrect Guess
+                       feedbackArea.textContent = result.message || "Incorrect. Try again.";
+                       feedbackArea.className = 'feedback-area feedback-incorrect';
+                       lives--;
+                       score -= INCORRECT_GUESS_PENALTY;
+                       updateScoreDisplay();
+                       updateLivesDisplay();
+                       shakeWords(); // Shake the currently selected (incorrect) words
+
+                       if (lives <= 0) {
+                            setTimeout(() => { // Delay game over slightly
+                                feedbackArea.textContent = "Game Over! You're out of mistakes.";
+                                feedbackArea.className = 'feedback-area feedback-incorrect';
+                                endGame(false); // Lose
+                            }, 600); // After shake
+                       } else {
+                            // Clear selection after shake animation (approx 500ms) + slight pause
+                            setTimeout(clearSelection, 800);
+                            // Clear incorrect feedback after a delay
+                             setTimeout(() => {
+                                 if (feedbackArea.classList.contains('feedback-incorrect')) {
+                                      feedbackArea.textContent = '';
+                                      feedbackArea.className = 'feedback-area';
+                                 }
+                             }, 1800);
+                       }
+                  }
+             }
+
+            function displaySolvedGroup(description, wordsInGroup, colorIndex) {
+                 const groupDiv = document.createElement('div');
+                 groupDiv.classList.add('solved-group');
+                 // Use the determined color index (0-3)
+                 const actualColorIndex = Math.min(Math.max(colorIndex, 0), 3); // Clamp between 0 and 3
+                 groupDiv.classList.add(`solved-group-color-${actualColorIndex}`);
+
+                 const descStrong = document.createElement('strong'); descStrong.textContent = description; groupDiv.appendChild(descStrong);
+                 const wordsP = document.createElement('p'); wordsP.textContent = wordsInGroup.sort().join(', '); groupDiv.appendChild(wordsP);
+
+                 // --- Prepend solved groups for visual order ---
+                 if (solvedGroupsArea.firstChild) {
+                     solvedGroupsArea.insertBefore(groupDiv, solvedGroupsArea.firstChild);
+                 } else {
+                     solvedGroupsArea.appendChild(groupDiv);
+                 }
+                 // ---
+
+                 wordsInGroup.forEach(word => {
+                       const wordDiv = wordGrid.querySelector(`.word-item[data-word="${word}"]`);
+                       if (wordDiv) {
+                            wordDiv.classList.add('solved');
+                            wordDiv.classList.remove('selected'); // Ensure selection is removed
+                            wordDiv.removeEventListener('click', handleWordClick);
+                            wordDiv.style.cursor = 'default';
+                       }
+                  });
+
+                  // Reorder grid: Move solved words to the bottom visually (optional but common)
+                  reorderGrid();
+            }
+
+            function reorderGrid() {
+                const solvedItems = Array.from(wordGrid.querySelectorAll('.word-item.solved'));
+                const activeItems = Array.from(wordGrid.querySelectorAll('.word-item:not(.solved)'));
+
+                // Clear grid and re-append active then solved items
+                wordGrid.innerHTML = '';
+                activeItems.forEach(item => wordGrid.appendChild(item));
+                solvedItems.forEach(item => wordGrid.appendChild(item));
+            }
+
+
+            function shakeWords() {
+                 const selectedDivs = document.querySelectorAll('.word-item.selected');
+                 selectedDivs.forEach(div => {
+                      // Ensure animation plays even if triggered quickly again
+                      div.style.animation = 'none';
+                      void div.offsetWidth; // Trigger reflow
+                      div.style.animation = 'shake 0.5s ease-in-out';
+                 });
+            }
+
+            // --- Game End / State Management ---
+function endGame(isWin) {
+         if (!gameActive) return;
+         gameActive = false;
+         stopTimer();
+         disableAllInteraction();
+         closeShowAnswerModal(); // Ensure modal is closed if game ends some other way
+
+         score = Math.max(0, score);
+         updateScoreDisplay();
+
+         newGameBtn.style.display = 'flex'; // Show Play Again button
+         newGameBtn.onclick = goToHome;
+
+         // Reveal only triggered by button or loss condition below
+         // Removed automatic reveal from here
+    }
+
+            async function revealAllGroups() {
+        if (!currentPuzzle?.puzzle_id) return;
+
+        // Ensure game state reflects end
+        if (gameActive) { // If called directly via modal while game was technically active
+             gameActive = false;
+             stopTimer();
+        }
+        clearFeedback(); // Clear any lingering messages
+        showFeedback('Revealing solution...', '', 0); // Show progress
+
+        try {
+             await new Promise(resolve => setTimeout(resolve, 500)); // Simulate fetch
+             const response = await fetch(`/api/get_solution/${currentPuzzle.puzzle_id}`);
+             if (!response.ok) throw new Error('Could not fetch solution');
+             const solution = await response.json();
+
+             solvedGroupsArea.innerHTML = '';
+             wordGrid.querySelectorAll('.word-item.solved').forEach(el => el.classList.remove('solved'));
+
+             let colorIdx = 0;
+             for (const groupKey in solution.groups) {
+                   if (Object.hasOwnProperty.call(solution.groups, groupKey)) {
+                       const groupData = solution.groups[groupKey];
+                       const groupDesc = groupData.description || "Group " + (colorIdx + 1);
+                       const groupWords = groupData.words || [];
+                       const groupColor = groupData.difficulty_index ?? colorIdx;
+                       displaySolvedGroup(groupDesc, groupWords, groupColor);
+                       colorIdx++;
+                   }
+             }
+             reorderGrid();
+             clearFeedback(); // Clear "Revealing..." message
+             showFeedback('Solution Revealed.', '', 3000); // Short confirmation
+
+        } catch (error) {
+            console.error("Failed to reveal solution:", error);
+            showFeedback('Could not load the full solution.', 'feedback-incorrect', 3000);
+        } finally {
+            disableAllInteraction(); // Ensure everything is disabled
+             if (newGameBtn.style.display === 'none') { // Show Play Again if not already visible
+                newGameBtn.style.display = 'flex';
+                newGameBtn.onclick = goToHome;
+             }
+        }
+    }
+
+
+
+            function disableAllInteraction() {
+                 document.querySelectorAll('.word-item').forEach(el => {
+                      el.removeEventListener('click', handleWordClick);
+                      el.style.cursor = 'default';
+                      if (!el.classList.contains('solved')) {
+                          el.classList.add('disabled'); // Use 'disabled' for consistency
+                          el.classList.remove('selected'); // Ensure no selection style remains
+                      }
+                 });
+                 clearSelectionBtn.disabled = true;
+                 // submitAnswerBtn.disabled = true; // Not visible
+                 hintBtn.disabled = true;
+            }
+
+             function enableAllInteraction() {
+                 document.querySelectorAll('.word-item:not(.solved)').forEach(el => {
+                     el.addEventListener('click', handleWordClick);
+                     el.style.cursor = 'pointer';
+                     el.classList.remove('disabled');
+                 });
+                 updateSelectionUI(); // Updates button states based on game state
+             }
+
+            function goToHome() {
+                 sessionStorage.removeItem('currentPuzzle');
+                 window.location.href = '/'; // Redirect to home/difficulty selection page
+            }
+
+            clearSelectionBtn.addEventListener('click', clearSelection);
+    hintBtn.addEventListener('click', handleHintClick);
+
+    // --- Add Modal Button Listeners ---
+    confirmShowAnswerBtn.addEventListener('click', () => {
+        closeShowAnswerModal();
+        revealAllGroups(); // Trigger the reveal
+    });
+
+    cancelShowAnswerBtn.addEventListener('click', () => {
+        closeShowAnswerModal();
+        // Game continues, no further action needed here
+    });
+
+    // --- Initialize Game on Load ---
+    initGame();
+});
+    </script>
+
+</body>
+</html>
