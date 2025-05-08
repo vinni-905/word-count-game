@@ -1,16 +1,21 @@
+--- START OF FILE game.html ---
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WordLinks - Premium Puzzle</title>
+    <title>WordLinks - Play</title> <!-- Updated title -->
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome (for icons in modal - optional) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-    <!-- Embedded CSS (Enhanced Version) -->
+
+    <!-- Embedded CSS (Enhanced Version with Accessibility additions) -->
     <style>
         /* --- Base & Typography --- */
         :root {
@@ -46,20 +51,22 @@
             --button-success-hover: linear-gradient(135deg, #1e7e34 0%, #155724 100%);
             --button-disabled-bg: #ced4da;
             --button-disabled-text: #6c757d;
+            --container-border: rgba(255, 255, 255, 0.3);
+            --blur-intensity: 10px;
 
             /* Solved Group Colors (More vibrant) */
             --solved-color-0-bg: linear-gradient(135deg, #fefae0 0%, #faedcd 100%); /* Creamy Yellow */
             --solved-color-0-text: #bc6c25;
-            --solved-color-0-border: #faedcd;
+            --solved-color-0-border: #e9c46a; /* Darker Yellow Border */
             --solved-color-1-bg: linear-gradient(135deg, #caf0f8 0%, #ade8f4 100%); /* Light Blue */
             --solved-color-1-text: #0077b6;
-            --solved-color-1-border: #ade8f4;
+            --solved-color-1-border: #48cae4; /* Darker Blue Border */
             --solved-color-2-bg: linear-gradient(135deg, #d8f3dc 0%, #b7e4c7 100%); /* Mint Green */
             --solved-color-2-text: #2d6a4f;
-            --solved-color-2-border: #b7e4c7;
+            --solved-color-2-border: #74c69d; /* Darker Green Border */
             --solved-color-3-bg: linear-gradient(135deg, #fec8d8 0%, #ffacb7 100%); /* Pink */
             --solved-color-3-text: #c9184a;
-            --solved-color-3-border: #ffacb7;
+            --solved-color-3-border: #ff758f; /* Darker Pink Border */
 
 
             /* Shadows */
@@ -142,122 +149,6 @@
             margin-bottom: 30px; /* More space below grid */
         }
 
-        /* --- Modal Styles --- */
-.modal-overlay {
-    position: fixed;
-    inset: 0; /* top, right, bottom, left = 0 */
-    background-color: rgba(0, 0, 0, 0.6); /* Darker overlay */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000; /* Ensure it's on top */
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0s linear 0.3s;
-}
-
-.modal-overlay.modal-open {
-    opacity: 1;
-    visibility: visible;
-    transition: opacity 0.3s ease;
-}
-
-.modal-content {
-    background: var(--container-bg); /* Use container glass effect */
-    padding: 30px 40px;
-    border-radius: 15px;
-    border: 1px solid var(--container-border);
-    box-shadow: var(--shadow-lg);
-    backdrop-filter: blur(var(--blur-intensity));
-    -webkit-backdrop-filter: blur(var(--blur-intensity));
-    max-width: 450px; /* Limit width */
-    width: 90%;
-    text-align: center;
-    color: var(--text-primary);
-    transform: scale(0.9);
-    transition: transform 0.3s ease;
-}
-
-.modal-overlay.modal-open .modal-content {
-    transform: scale(1);
-}
-
-.modal-title {
-    font-size: 1.5em;
-    font-weight: 700;
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    color: var(--accent-primary); /* Highlight title */
-}
-
-.modal-content p {
-    margin-bottom: 25px;
-    font-size: 1em;
-    line-height: 1.6;
-    color: var(--text-secondary);
-}
-
-.modal-actions {
-    display: flex;
-    justify-content: space-around; /* Or center/space-between */
-    gap: 15px;
-    flex-wrap: wrap; /* Allow wrapping on small screens */
-}
-
-.modal-button {
-    padding: 10px 25px;
-    cursor: pointer;
-    border-radius: 25px;
-    border: 1px solid;
-    font-weight: 600;
-    font-size: 0.9em;
-    color: var(--text-primary);
-    background: transparent;
-    transition: background var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease, border-color var(--transition-speed) ease;
-    box-shadow: var(--shadow-sm);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-}
-.modal-button:hover:not(:disabled) {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-md);
-}
-
-.modal-button-confirm {
-    background: var(--button-success-bg); /* Greenish tint */
-    border-color: var(--button-success-border);
-}
-.modal-button-confirm:hover:not(:disabled) {
-    background: var(--button-success-hover-bg);
-    border-color: rgba(40, 167, 69, 1);
-}
-
-.modal-button-cancel {
-    background: var(--button-warning-bg); /* Yellowish tint */
-    border-color: var(--button-warning-border);
-}
-.modal-button-cancel:hover:not(:disabled) {
-    background: var(--button-warning-hover-bg);
-    border-color: rgba(255, 193, 7, 1);
-}
-
-/* Add icons if needed, like previous buttons */
-.modal-button i {
-    font-size: 1.1em;
-}
-
-@media (max-width: 480px) {
-    .modal-content { padding: 20px 25px; }
-    .modal-title { font-size: 1.3em; }
-    .modal-actions { flex-direction: column; align-items: center; }
-    .modal-button { width: 80%; justify-content: center; }
-}
         .word-item {
             background-color: #f8f9fa; /* Lighter base */
             padding: 15px 8px; /* Adjust padding */
@@ -287,6 +178,13 @@
              box-shadow: var(--shadow-md);
         }
 
+        /* --- ACCESSIBILITY: Style for keyboard focus --- */
+        .word-item:focus-visible {
+            outline: 3px solid var(--accent-primary);
+            outline-offset: 2px;
+            box-shadow: var(--shadow-md); /* Enhance focus visibility */
+        }
+
         .word-item.selected {
             background: var(--selected-bg);
             color: var(--selected-text);
@@ -295,22 +193,21 @@
             border: none; /* Remove border when selected */
         }
 
-        .word-item.solved {
+        .word-item.solved,
+        .word-item.disabled { /* Combine solved and disabled styles */
             background-color: var(--solved-bg);
             color: var(--solved-text);
             cursor: default;
             opacity: var(--disabled-opacity);
             box-shadow: none;
-            border: 1px solid #ced4da; /* Show border again but muted */
-             transform: none; /* Reset transforms */
+            border: 1px solid #ced4da;
+            transform: none; /* Reset transforms */
+        }
+        /* Override specific background for solved items if needed, but unified disabled look is often good */
+        .word-item.solved {
+             /* Keep background var(--solved-bg) or customize if needed */
         }
 
-        .word-item.disabled { /* State for end-game */
-            cursor: default;
-            opacity: var(--disabled-opacity);
-             box-shadow: none;
-             transform: none; /* Reset transforms */
-        }
 
         /* --- Controls & Buttons --- */
         .controls {
@@ -367,10 +264,6 @@
         #hint-btn { background: var(--button-info-bg); }
         #hint-btn:hover:not(:disabled) { background: var(--button-info-hover); }
 
-        /* Submit button removed visually, but keep styles if you re-add it */
-        #submit-answer-btn { background: var(--button-primary-bg); }
-        #submit-answer-btn:hover:not(:disabled) { background: var(--button-primary-hover); }
-
         .controls button:disabled {
             background: var(--button-disabled-bg);
             color: var(--button-disabled-text);
@@ -393,7 +286,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, border-color var(--transition-speed) ease;
             border: 1px solid transparent; /* Placeholder for borders */
         }
         .feedback-correct { background-color: var(--correct-bg); color: var(--correct-text); border-color: var(--correct-border); }
@@ -414,10 +307,10 @@
             box-shadow: var(--shadow-md);
             border-width: 2px; /* Make border slightly thicker */
             border-style: solid;
-             transition: transform 0.3s ease-out; /* Add entrance animation */
-             transform: scale(0.95); /* Start slightly smaller */
-             opacity: 0; /* Start hidden */
-             animation: fadeInScale 0.5s ease-out forwards; /* Animation */
+            transition: transform 0.3s ease-out, opacity 0.5s ease-out; /* Updated transition */
+            transform: scale(0.95); /* Start slightly smaller */
+            opacity: 0; /* Start hidden */
+            animation: fadeInScale 0.5s ease-out forwards; /* Animation */
         }
         @keyframes fadeInScale {
             to {
@@ -425,6 +318,15 @@
                 transform: scale(1);
             }
         }
+        /* Add cursor pointer only after game ends */
+        .solved-group.reviewable {
+            cursor: pointer;
+        }
+         .solved-group.reviewable:hover {
+             box-shadow: var(--shadow-lg); /* Add hover effect for review */
+             transform: scale(1.02);
+         }
+
 
         .solved-group strong {
             display: block;
@@ -446,9 +348,30 @@
         .solved-group-color-2 { background: var(--solved-color-2-bg); color: var(--solved-color-2-text); border-color: var(--solved-color-2-border); animation-delay: 0.2s; }
         .solved-group-color-3 { background: var(--solved-color-3-bg); color: var(--solved-color-3-text); border-color: var(--solved-color-3-border); animation-delay: 0.3s; }
 
+
+        /* --- POST-GAME REVIEW HIGHLIGHT --- */
+        .word-item.highlight-review {
+            background-color: var(--hint-bg) !important; /* Use hint color, !important needed to override other states */
+            color: var(--hint-text) !important;
+            border-color: var(--hint-border) !important;
+            opacity: 1 !important; /* Ensure visible */
+            transition: background-color 0.1s ease-out, color 0.1s ease-out, border-color 0.1s ease-out;
+        }
+
+        /* --- VISUAL HINT HIGHLIGHT --- */
+        .word-item.highlight-hint {
+            outline: 3px dashed var(--accent-secondary); /* Dashed outline */
+            outline-offset: 2px;
+            transition: outline 0.2s ease-out;
+            /* Make sure hint outline is visible even on selected items */
+            position: relative; /* Needed for z-index */
+            z-index: 5;
+        }
+
+
         /* --- New Game Button & Utility --- */
         #new-game-btn {
-            display: block;
+            display: block; /* Use block for centering with margin auto */
             width: fit-content; /* Fit content */
             margin: 30px auto 0; /* Centered, with top margin */
             padding: 12px 30px; /* Generous padding */
@@ -461,6 +384,11 @@
             font-weight: 600;
             box-shadow: var(--shadow-md);
             transition: background var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+             /* Add display: flex to easily center icon + text if needed */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         #new-game-btn:hover {
             background: var(--button-success-hover);
@@ -468,23 +396,26 @@
             box-shadow: var(--shadow-lg);
         }
 
-        .error {
-            color: var(--incorrect-text);
-            background-color: var(--incorrect-bg);
-            border: 1px solid var(--incorrect-border);
-            padding: 10px 15px;
-            border-radius: 8px;
-            text-align: center;
-            font-weight: 600;
-            margin-top: 15px;
-        }
-
-        #loading-message, #puzzle-info { /* Consistent styling for info texts */
+        /* --- Error & Loading --- */
+        .error-message, /* Renamed class */
+        #loading-message,
+        #puzzle-info { /* Consistent styling for info texts */
              text-align: center;
              color: var(--text-secondary);
              font-style: italic;
              margin-bottom: 20px;
         }
+        .error-message { /* Specific error styling */
+             color: var(--incorrect-text);
+             background-color: var(--incorrect-bg);
+             border: 1px solid var(--incorrect-border);
+             padding: 10px 15px;
+             border-radius: 8px;
+             font-weight: 600;
+             margin-top: 15px;
+             font-style: normal; /* Override italic */
+        }
+
 
         /* --- Shake Animation --- */
         @keyframes shake {
@@ -493,6 +424,118 @@
             50% { transform: translateX(6px) scale(1.05) translateY(-2px); }
             75% { transform: translateX(-6px) scale(1.05) translateY(-2px); }
         }
+
+        /* --- Modal Styles --- */
+        .modal-overlay {
+            position: fixed;
+            inset: 0; /* top, right, bottom, left = 0 */
+            background-color: rgba(0, 0, 0, 0.6); /* Darker overlay */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000; /* Ensure it's on top */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+        }
+
+        .modal-overlay.modal-open {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-content {
+            background: var(--container-bg);
+            padding: 30px 40px;
+            border-radius: 15px;
+            border: 1px solid var(--container-border);
+            box-shadow: var(--shadow-lg);
+            backdrop-filter: blur(var(--blur-intensity));
+            -webkit-backdrop-filter: blur(var(--blur-intensity));
+            max-width: 450px; /* Limit width */
+            width: 90%;
+            text-align: center;
+            color: var(--text-primary);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.modal-open .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: var(--accent-primary); /* Highlight title */
+        }
+
+        .modal-content p {
+            margin-bottom: 25px;
+            font-size: 1em;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: space-around; /* Or center/space-between */
+            gap: 15px;
+            flex-wrap: wrap; /* Allow wrapping on small screens */
+        }
+
+        .modal-button {
+            padding: 10px 25px;
+            cursor: pointer;
+            border-radius: 25px;
+            border: 1px solid transparent; /* Simplified border */
+            font-weight: 600;
+            font-size: 0.9em;
+            color: #fff; /* White text on gradient buttons */
+            transition: background var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .modal-button:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .modal-button-confirm {
+            background: var(--button-success-bg);
+        }
+        .modal-button-confirm:hover:not(:disabled) {
+            background: var(--button-success-hover);
+        }
+
+        .modal-button-cancel {
+            background: var(--button-warning-bg);
+            color: var(--text-primary); /* Better contrast on yellow */
+        }
+        .modal-button-cancel:hover:not(:disabled) {
+            background: var(--button-warning-hover);
+        }
+
+        /* Add icons if needed, like previous buttons */
+        .modal-button i {
+            font-size: 1.1em;
+        }
+
+        @media (max-width: 480px) {
+            .modal-content { padding: 20px 25px; }
+            .modal-title { font-size: 1.3em; }
+            .modal-actions { flex-direction: column; align-items: center; }
+            .modal-button { width: 80%; justify-content: center; }
+        }
+
 
         /* --- Responsive Adjustments --- */
         @media (max-width: 768px) {
@@ -530,65 +573,68 @@
     </style>
 </head>
 <body>
-    <!-- Container and all child elements remain the same -->
+    <!-- Container and all child elements -->
     <div class="container game-container">
-        <h1>WordLinks</h1> <!-- Simpler Title -->
+        <h1>WordLinks</h1>
         <!-- Status Bar -->
         <div class="status-bar">
             <div>Time: <span id="timer">00:00</span></div>
             <div>Score: <span id="score">1000</span></div>
-            <div>Hints: <span id="hints-used">0</span> / <span id="hints-allowed">3</span></div> <!-- Simplified Label -->
-             <div>Mistakes: <span id="lives-remaining">4</span></div> <!-- Moved Mistakes here -->
+            <div>Hints: <span id="hints-used">0</span> / <span id="hints-allowed">3</span></div>
+            <div>Mistakes: <span id="lives-remaining">4</span></div>
         </div>
 
         <p id="loading-message">Loading puzzle...</p>
-        <p id="error-message" class="error"></p>
+        <p id="error-message" class="error-message" style="display: none;"></p> <!-- Initially hidden -->
         <div id="puzzle-info" style="text-align: center; font-style: italic; margin-bottom: 15px;"></div>
 
         <!-- Solved groups appear above grid -->
         <div id="solved-groups-area"></div>
 
-        <!-- The dynamic grid -->
-        <div id="word-grid"></div>
+        <!-- The dynamic grid with accessibility role -->
+        <div id="word-grid" role="grid"></div>
 
-        <!-- Controls Area - Simplified layout, mistakes moved to status bar -->
+        <!-- Controls Area -->
         <div class="controls">
              <p>Selected: <span id="selected-count">0</span> / 4</p>
              <button id="clear-selection-btn" disabled>Clear</button>
              <button id="hint-btn">Hint</button>
-             <!-- Submit button is not needed due to auto-submit logic -->
-             <!-- <button id="submit-answer-btn" disabled>Submit</button> -->
         </div>
+
+        <!-- Feedback Area with ARIA live region -->
+         <div id="feedback-area" aria-live="polite" aria-atomic="true"></div>
+
         <!-- Show Answer Confirmation Modal -->
-<div id="show-answer-modal" class="modal-overlay" style="display: none;">
-    <div class="modal-content">
-        <h3 class="modal-title"><i class="fas fa-eye"></i> Hints Exhausted</h3>
-        <p>You've used all available hints. Would you like to reveal the solution?</p>
-        <div class="modal-actions">
-            <button id="confirm-show-answer-btn" class="modal-button modal-button-confirm">
-                <i class="fas fa-check"></i> Show Answer
-            </button>
-            <button id="cancel-show-answer-btn" class="modal-button modal-button-cancel">
-                <i class="fas fa-times"></i> Keep Playing
-            </button>
+        <div id="show-answer-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <h3 class="modal-title"><i class="fas fa-eye"></i> Hints Exhausted</h3>
+                <p>You've used all available hints. Would you like to reveal the solution?</p>
+                <div class="modal-actions">
+                    <button id="confirm-show-answer-btn" class="modal-button modal-button-confirm">
+                        <i class="fas fa-check"></i> Show Answer
+                    </button>
+                    <button id="cancel-show-answer-btn" class="modal-button modal-button-cancel">
+                        <i class="fas fa-times"></i> Keep Playing
+                    </button>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
 
-         <div id="feedback-area"></div>
-         <button id="new-game-btn" style="display: none;">Play Again?</button>
+         <!-- Play Again Button -->
+         <button id="new-game-btn" style="display: none;">
+              <i class="fas fa-redo"></i> Play Again? <!-- Optional Icon -->
+         </button>
     </div>
 
-    <!-- Embedded JavaScript (No changes needed here) -->
+    <!-- Embedded JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // --- DOM Element References ---
             const wordGrid = document.getElementById('word-grid');
             const loadingMessage = document.getElementById('loading-message');
-            const errorMessage = document.getElementById('error-message');
+            const errorMessage = document.getElementById('error-message'); // Corrected ID usage
             const selectedCountSpan = document.getElementById('selected-count');
             const clearSelectionBtn = document.getElementById('clear-selection-btn');
-            // const submitAnswerBtn = document.getElementById('submit-answer-btn'); // No longer used visually
             const feedbackArea = document.getElementById('feedback-area');
             const solvedGroupsArea = document.getElementById('solved-groups-area');
             const newGameBtn = document.getElementById('new-game-btn');
@@ -599,10 +645,9 @@
             const hintBtn = document.getElementById('hint-btn');
             const hintsUsedSpan = document.getElementById('hints-used');
             const hintsAllowedSpan = document.getElementById('hints-allowed');
-                const showAnswerModal = document.getElementById('show-answer-modal'); // Add modal reference
-    const confirmShowAnswerBtn = document.getElementById('confirm-show-answer-btn'); // Add button reference
-    const cancelShowAnswerBtn = document.getElementById('cancel-show-answer-btn'); // Add button reference
-
+            const showAnswerModal = document.getElementById('show-answer-modal');
+            const confirmShowAnswerBtn = document.getElementById('confirm-show-answer-btn');
+            const cancelShowAnswerBtn = document.getElementById('cancel-show-answer-btn');
 
             // --- Game Configuration ---
             const STARTING_LIVES = 4;
@@ -610,8 +655,9 @@
             const INCORRECT_GUESS_PENALTY = 75;
             const HINT_PENALTY = 150;
             const MAX_HINTS = 3;
-            const TIME_PENALTY_PER_SECOND = 1; // Keep if desired
-
+            const TIME_PENALTY_PER_SECOND = 1; // Example, currently not used in timer logic
+            const PUZZLE_STORAGE_KEY = 'currentPuzzle'; // From sessionStorage
+            const STATS_STORAGE_KEY = 'wordLinksGameStats'; // From localStorage
 
             // --- Game State Variables ---
             let currentPuzzle = null;
@@ -620,30 +666,40 @@
             let score = STARTING_SCORE;
             let hintsUsed = 0;
             let revealedGroupsCount = 0;
-            let solvedGroupKeys = [];
+            let solvedGroupKeys = []; // Stores keys/IDs of solved groups from backend if provided
             let isSubmitting = false;
             let gameActive = false;
             let timerInterval = null;
             let startTime = null;
+            let feedbackTimeout = null;
+            let gameStats = { wins: 0, losses: 0, currentStreak: 0, maxStreak: 0, fastestTime: null }; // Stats object
 
 
             // --- Initialization Function ---
             function initGame() {
                 closeShowAnswerModal();
-
                 stopTimer();
                 gameActive = false;
 
-                const puzzleDataString = sessionStorage.getItem('currentPuzzle');
+                // ADD: Load stats at the beginning
+                loadStats();
+
+                const puzzleDataString = sessionStorage.getItem(PUZZLE_STORAGE_KEY);
                 if (!puzzleDataString) {
-                    errorMessage.textContent = 'No puzzle data found. Please start a new game from the home page.';
+                    showError('No puzzle data found. Please start a new game from the home page.');
                     loadingMessage.style.display = 'none';
                     disableAllInteraction();
+                    newGameBtn.style.display = 'flex'; // Show play again to allow going back
+                    newGameBtn.onclick = goToHome;
                     return;
                 }
 
                 try {
                     currentPuzzle = JSON.parse(puzzleDataString);
+                    if (!currentPuzzle || !currentPuzzle.words || !currentPuzzle.puzzle_id) {
+                         throw new Error("Invalid puzzle data format.");
+                    }
+
                     lives = STARTING_LIVES;
                     score = STARTING_SCORE;
                     hintsUsed = 0;
@@ -652,22 +708,20 @@
                     revealedGroupsCount = 0;
                     isSubmitting = false;
 
-                    feedbackArea.textContent = '';
-                    feedbackArea.className = 'feedback-area';
+                    clearFeedback();
                     solvedGroupsArea.innerHTML = '';
+                    errorMessage.style.display = 'none'; // Hide error message initially
                     errorMessage.textContent = '';
                     loadingMessage.style.display = 'none';
-                    wordGrid.innerHTML = '';
-                    puzzleInfoDiv.innerHTML = '';
+                    wordGrid.innerHTML = ''; // Clear previous grid
+                    puzzleInfoDiv.innerHTML = ''; // Clear previous info
 
+                    // Display puzzle info (ID, Difficulty)
                     if (currentPuzzle.difficulty || currentPuzzle.puzzle_id) {
                          const infoP = document.createElement('p');
                          let infoText = [];
                          if(currentPuzzle.puzzle_id) infoText.push(`Puzzle #${currentPuzzle.puzzle_id}`);
                          if(currentPuzzle.difficulty) infoText.push(`Difficulty: ${currentPuzzle.difficulty}`);
-                         // if (currentPuzzle.predicted_solve_time && currentPuzzle.predicted_solve_time > 0) {
-                         //      infoText += ` (Predicted: ${currentPuzzle.predicted_solve_time}s)`;
-                         // }
                          infoP.textContent = infoText.join(' | ');
                          puzzleInfoDiv.appendChild(infoP);
                     }
@@ -678,43 +732,56 @@
                     updateHintsDisplay();
                     updateSelectionUI();
 
-                    newGameBtn.style.display = 'none';
-                    enableAllInteraction();
+                    newGameBtn.style.display = 'none'; // Hide until game ends
+                    enableAllInteraction(); // Sets up listeners and ARIA/tabindex
 
                     startTime = Date.now();
                     startTimer();
                     gameActive = true;
 
+                    // ADD: Set initial focus for keyboard users
+                    setInitialFocus();
+
                 } catch (error) {
                     console.error("Error initializing game:", error);
-                    errorMessage.textContent = 'Failed to load puzzle data. Please try starting a new game.';
+                    showError(`Failed to load puzzle: ${error.message}. Please try starting a new game.`);
                     loadingMessage.style.display = 'none';
-                     disableAllInteraction();
+                    disableAllInteraction();
+                     newGameBtn.style.display = 'flex'; // Show play again on error
+                     newGameBtn.onclick = goToHome;
                 }
             }
 
             // --- UI Update Functions ---
 
             function displayWords(words) {
-                wordGrid.innerHTML = '';
-                // --- Slightly randomize word order for visual variety on reload ---
+                wordGrid.innerHTML = ''; // Clear previous items
                 const shuffledWords = [...words].sort(() => Math.random() - 0.5);
-                // ---
 
-                shuffledWords.forEach(word => {
+                shuffledWords.forEach((word) => {
                     const wordDiv = document.createElement('div');
                     wordDiv.classList.add('word-item');
                     wordDiv.textContent = word;
-                    wordDiv.dataset.word = word;
+                    wordDiv.dataset.word = word; // Store word for logic
+
+                    // --- ACCESSIBILITY ADDITIONS ---
+                    wordDiv.setAttribute('role', 'gridcell');
+                    wordDiv.setAttribute('aria-selected', 'false');
+                    // tabindex will be set by enable/disable interaction functions
+                    // --- END ACCESSIBILITY ---
+
                     wordDiv.addEventListener('click', handleWordClick);
+                    wordDiv.addEventListener('keydown', handleWordKeyDown); // ADD: Key listener
+
                     wordGrid.appendChild(wordDiv);
                 });
+
+                setupGridNavigation(); // ADD: Setup arrow key nav
             }
 
             function updateSelectionUI() {
                 selectedCountSpan.textContent = selectedWords.length;
                 clearSelectionBtn.disabled = selectedWords.length === 0 || isSubmitting || !gameActive;
-                // submitAnswerBtn.disabled = true; // No longer used visually
                 hintBtn.disabled = isSubmitting || !gameActive || hintsUsed >= MAX_HINTS || revealedGroupsCount === 4 || lives <= 0;
             }
 
@@ -722,13 +789,13 @@
                  livesRemainingSpan.textContent = lives;
                  const livesDiv = livesRemainingSpan.closest('div');
                  if(livesDiv) {
-                    livesDiv.style.color = lives <= 1 ? '#dc3545' : 'var(--text-secondary)'; // Use red for low lives
-                    livesRemainingSpan.style.color = lives <= 1 ? '#dc3545' : 'var(--accent-primary)'; // Highlight number
+                    livesDiv.style.color = lives <= 1 ? '#dc3545' : 'var(--text-secondary)';
+                    livesRemainingSpan.style.color = lives <= 1 ? '#dc3545' : 'var(--accent-primary)';
                  }
             }
 
             function updateScoreDisplay() {
-                 scoreSpan.textContent = Math.max(0, score);
+                 scoreSpan.textContent = Math.max(0, score); // Ensure score doesn't go below 0 visually
             }
 
             function updateHintsDisplay() {
@@ -739,15 +806,15 @@
 
             // --- Timer Functions ---
             function startTimer() {
-                stopTimer();
+                stopTimer(); // Clear any existing interval
                 timerInterval = setInterval(() => {
                     if (!gameActive || !startTime) return;
 
                     const now = Date.now();
                     const elapsedSeconds = Math.floor((now - startTime) / 1000);
 
-                    // Optional continuous time penalty - uncomment if needed
-                    // if (elapsedSeconds > 0 && elapsedSeconds % 1 === 0) { // Every second
+                    // Optional continuous time penalty - keep commented unless desired
+                    // if (elapsedSeconds > 0 && elapsedSeconds % 1 === 0) {
                     //     score -= TIME_PENALTY_PER_SECOND;
                     //     updateScoreDisplay();
                     // }
@@ -767,194 +834,216 @@
             // --- Event Handlers ---
             function handleWordClick(event) {
                  const wordDiv = event.currentTarget;
+                 // Check states before processing
                  if (!gameActive || isSubmitting || wordDiv.classList.contains('solved') || wordDiv.classList.contains('disabled')) return;
+                 toggleWordSelection(wordDiv); // Use refactored logic
+            }
 
+            // ADD: New handler for keyboard events on words
+            function handleWordKeyDown(event) {
+                // Handle selection keys
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault(); // Prevent default space scroll/enter submit
+                    const wordDiv = event.currentTarget;
+                    if (!gameActive || isSubmitting || wordDiv.classList.contains('solved') || wordDiv.classList.contains('disabled')) return;
+                    toggleWordSelection(wordDiv); // Use the same selection logic
+                }
+                // Arrow keys are handled by the grid listener (setupGridNavigation)
+            }
+
+            // ADD: Refactored word selection logic
+            function toggleWordSelection(wordDiv) {
                  const word = wordDiv.dataset.word;
                  const isSelected = wordDiv.classList.contains('selected');
 
-                 // Clear feedback on interaction
-                 feedbackArea.textContent = '';
-                 feedbackArea.className = 'feedback-area';
+                 clearFeedback(); // Clear feedback on interaction
 
                  if (isSelected) {
                       selectedWords = selectedWords.filter(w => w !== word);
                       wordDiv.classList.remove('selected');
+                      wordDiv.setAttribute('aria-selected', 'false'); // ARIA Update
                  } else {
                       if (selectedWords.length < 4) {
                            selectedWords.push(word);
                            wordDiv.classList.add('selected');
+                           wordDiv.setAttribute('aria-selected', 'true'); // ARIA Update
+                      } else {
+                           // Optional: Indicate max selected visually or audibly if desired
+                           // Maybe shake the 4 selected items briefly?
                       }
                  }
                  updateSelectionUI();
+                 // Auto-submit if 4 words are selected
                  if (selectedWords.length === 4) {
-                     // Auto-submit after a very brief delay to allow visual selection feedback
-                     setTimeout(submitGroupAttempt, 100);
+                     setTimeout(submitGroupAttempt, 150); // Slightly longer delay for visual feedback
                  }
             }
 
             function openShowAnswerModal() {
-        if (showAnswerModal) {
-            showAnswerModal.style.display = 'flex'; // Use flex for centering
-            // Delay adding class slightly to allow display change to register for transition
-            setTimeout(() => {
-                showAnswerModal.classList.add('modal-open');
-            }, 10);
-        }
-    }
-
-    function closeShowAnswerModal() {
-        if (showAnswerModal) {
-            showAnswerModal.classList.remove('modal-open');
-            // Wait for transition before hiding completely
-            // The visibility transition handles this delay
-             setTimeout(() => {
-                if (!showAnswerModal.classList.contains('modal-open')) { // Check if still closed
-                     showAnswerModal.style.display = 'none';
+                if (showAnswerModal) {
+                    showAnswerModal.style.display = 'flex';
+                    setTimeout(() => { showAnswerModal.classList.add('modal-open'); }, 10);
                 }
-             }, 300); // Match CSS transition duration
-        }
-    }
+            }
 
-    function clearSelection() {
-                 // Clear feedback on interaction
-                 feedbackArea.textContent = '';
-                 feedbackArea.className = 'feedback-area';
+            function closeShowAnswerModal() {
+                if (showAnswerModal) {
+                    showAnswerModal.classList.remove('modal-open');
+                    setTimeout(() => {
+                        if (!showAnswerModal.classList.contains('modal-open')) {
+                             showAnswerModal.style.display = 'none';
+                        }
+                    }, 300); // Match CSS transition duration
+                }
+            }
 
+            function clearSelection() {
+                 clearFeedback(); // Clear feedback on interaction
                  selectedWords = [];
                  document.querySelectorAll('.word-item.selected').forEach(el => {
                     el.classList.remove('selected');
+                    el.setAttribute('aria-selected', 'false'); // ARIA Update
                  });
                  updateSelectionUI();
             }
 
-             async function handleHintClick() {
-         if (!gameActive || isSubmitting || hintsUsed >= MAX_HINTS || lives <= 0) return;
+            async function handleHintClick() {
+                if (!gameActive || isSubmitting || hintsUsed >= MAX_HINTS || lives <= 0) return;
 
-         // Optimistic UI update (disable button immediately)
-         isSubmitting = true;
-         updateSelectionUI();
+                isSubmitting = true; // Disable buttons
+                updateSelectionUI();
 
-         // Penalize score and update count *before* API call
-         score -= HINT_PENALTY;
-         hintsUsed++;
-         updateScoreDisplay();
-         updateHintsDisplay(); // This might disable the button if MAX_HINTS reached
+                // Penalize FIRST, then call API
+                score -= HINT_PENALTY;
+                hintsUsed++;
+                updateScoreDisplay();
+                updateHintsDisplay(); // This might disable the button now
 
+                 clearFeedback(); // Clear previous feedback
 
-         try {
-             await new Promise(resolve => setTimeout(resolve, 400)); // Simulate network
-             const response = await fetch('/api/get_hint', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ puzzle_id: currentPuzzle.puzzle_id, solved_group_keys: solvedGroupKeys }),
-             });
+                try {
+                    await new Promise(resolve => setTimeout(resolve, 300)); // Simulate network
+                    const response = await fetch('/api/get_hint', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                             puzzle_id: currentPuzzle.puzzle_id,
+                             solved_group_keys: solvedGroupKeys // Send solved group keys/ids if backend uses them
+                        }),
+                    });
 
-             if (!response.ok) {
-                  const errorData = await response.json().catch(() => ({ detail: `HTTP error ${response.status}` }));
-                  throw new Error(errorData.detail || `Hint Error: ${response.status}`);
-             }
-             const result = await response.json();
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({ detail: `HTTP error ${response.status}` }));
+                        throw new Error(errorData.detail || `Hint Error: ${response.status}`);
+                    }
+                    const result = await response.json();
 
-             if (result.hint) {
-                   // --- HINT EXHAUSTED LOGIC ---
-                   if (hintsUsed >= MAX_HINTS) {
-                       // Show the *last* hint briefly in the feedback area
-                       showFeedback(`Last Hint: ${result.hint}`, 'feedback-hint', 5000); // Show for 5 secs
-                       // Then open the modal
-                       // Release submitting state *before* opening modal
-                       isSubmitting = false;
-                       updateSelectionUI(); // Re-enable interaction for modal buttons
-                       openShowAnswerModal();
-                   } else {
-                       // Normal hint: Show hint feedback for a duration
-                       showFeedback(result.hint, 'feedback-hint', 4000);
-                       isSubmitting = false; // Release submitting state
-                       updateSelectionUI(); // Update button states
-                   }
-                   // -----------------------------
-             } else {
-                   // No hint available from API (e.g., server logic says none left)
-                   showFeedback(result.message || "No hint available.", '', 3000);
-                   // Revert penalty and count if API indicated no hint was provided
-                   hintsUsed--;
-                   score += HINT_PENALTY;
-                   updateScoreDisplay();
-                   updateHintsDisplay();
-                   isSubmitting = false; // Release submitting state
-                   updateSelectionUI();
-             }
+                    // --- MODIFICATION FOR VISUAL HINT ---
+                    // ASSUMPTION: API provides result.words array
+                    if (result.hint && result.words && Array.isArray(result.words)) {
+                        showFeedback(result.hint, 'feedback-hint', 5000); // Show text
+                        highlightHintWords(result.words); // Highlight words visually
 
-         } catch (error) {
-              console.error('Error getting hint:', error);
-              showFeedback(`Hint Failed: ${error.message}`, 'feedback-incorrect', 4000);
-              // Revert penalty/count on API failure ONLY IF WE INCREMENTED IT FIRST
-              if(hintsUsed > 0) { // Check if we actually used a hint count
-                 hintsUsed--;
-                 score += HINT_PENALTY;
-              }
-              updateScoreDisplay();
-              updateHintsDisplay();
-              isSubmitting = false; // Release submitting state
-              updateSelectionUI();
-         }
-         // No finally block needed here as isSubmitting is handled in branches
-    }
-    let feedbackTimeout = null; // Keep track of the timeout
+                        if (hintsUsed >= MAX_HINTS) {
+                             // Release submitting state *before* opening modal
+                             isSubmitting = false;
+                             updateSelectionUI();
+                             // Open modal slightly after showing hint/highlight
+                             setTimeout(openShowAnswerModal, 1000);
+                        } else {
+                             isSubmitting = false; // Release submitting state
+                             updateSelectionUI(); // Update button states
+                        }
+                    } else if (result.hint) { // Fallback: Only hint text provided
+                         showFeedback(result.hint, 'feedback-hint', hintsUsed >= MAX_HINTS ? 5000 : 4000);
+                         if (hintsUsed >= MAX_HINTS) {
+                              isSubmitting = false;
+                              updateSelectionUI();
+                              setTimeout(openShowAnswerModal, 1000);
+                         } else {
+                             isSubmitting = false;
+                             updateSelectionUI();
+                         }
+                    } else {
+                        // No hint available message from backend
+                        showFeedback(result.message || "No hint available.", '', 3000);
+                        // Revert penalty/count if backend indicated no hint was given
+                        hintsUsed--;
+                        score += HINT_PENALTY;
+                        updateScoreDisplay();
+                        updateHintsDisplay();
+                        isSubmitting = false;
+                        updateSelectionUI();
+                    }
+                    // --- END VISUAL HINT ---
+
+                } catch (error) {
+                    console.error('Error getting hint:', error);
+                    showFeedback(`Hint Failed: ${error.message}`, 'feedback-incorrect', 4000);
+                    // Revert penalty/count ONLY IF WE INCREMENTED IT FIRST
+                    if(hintsUsed > 0) { // Check if we actually used a hint count
+                        hintsUsed--;
+                        score += HINT_PENALTY;
+                    }
+                    updateScoreDisplay();
+                    updateHintsDisplay();
+                    isSubmitting = false;
+                    updateSelectionUI();
+                }
+            }
+
 
             function clearFeedback() {
                 if (feedbackTimeout) {
                     clearTimeout(feedbackTimeout);
                     feedbackTimeout = null;
                 }
-                // Ensure feedbackArea exists before manipulating
                 if (feedbackArea) {
                     feedbackArea.textContent = '';
-                    feedbackArea.className = 'feedback-area'; // Reset class
+                    feedbackArea.className = 'feedback-area';
                 }
             }
 
-            function showFeedback(message, className = '', duration = 3000) {
-                 // Ensure feedbackArea exists before manipulating
-                 if (!feedbackArea) {
-                     console.error("Feedback area element not found!");
-                     return;
+             function showFeedback(message, className = '', duration = 3000) {
+                 if (!feedbackArea) { return; }
+                 clearFeedback(); // Clear previous feedback first
+
+                 feedbackArea.textContent = message;
+                 feedbackArea.className = 'feedback-area'; // Reset base class
+                 if (className) {
+                     feedbackArea.classList.add(className);
                  }
 
-                clearFeedback(); // Clear any previous feedback and timeout first
+                 // Only set a timeout if duration is positive
+                 if (duration > 0) {
+                     feedbackTimeout = setTimeout(() => {
+                         if (feedbackArea && feedbackArea.textContent === message) { // Check if message is still the same
+                             clearFeedback();
+                         }
+                     }, duration);
+                 }
+             }
 
-                feedbackArea.textContent = message;
-                feedbackArea.className = 'feedback-area'; // Reset base class
-                if (className) {
-                    feedbackArea.classList.add(className); // Add specific class if provided
-                }
-
-                // Only set a timeout if duration is positive
-                if (duration > 0) {
-                    feedbackTimeout = setTimeout(() => {
-                        // Check if the feedback area still exists and if the message
-                        // hasn't been changed by subsequent calls before clearing.
-                        if (feedbackArea && feedbackArea.textContent === message) {
-                            clearFeedback();
-                        }
-                    }, duration);
-                }
-            }
+             function showError(message) {
+                  errorMessage.textContent = message;
+                  errorMessage.style.display = 'block';
+             }
 
             // --- Game Logic Functions ---
             async function submitGroupAttempt() {
                 if (!gameActive || isSubmitting || selectedWords.length !== 4 || lives <= 0) return;
+
                 isSubmitting = true;
                 updateSelectionUI();
-                feedbackArea.textContent = 'Checking...';
-                feedbackArea.className = 'feedback-area';
+                clearFeedback(); // Clear previous message
+                showFeedback('Checking...', '', 0); // Show indefinite "Checking..." message
 
                 const attemptPayload = {
                      puzzle_id: currentPuzzle.puzzle_id,
-                     groups: { 'attempt': selectedWords } // Backend expects this structure
+                     groups: { 'attempt': selectedWords } // Assuming backend expects this structure
                 };
 
-                 // Simulate network delay
-                 await new Promise(resolve => setTimeout(resolve, 400));
+                await new Promise(resolve => setTimeout(resolve, 300)); // Simulate network delay
 
                 try {
                     const response = await fetch('/api/check_answer', {
@@ -970,14 +1059,11 @@
                     }
 
                     const result = await response.json();
-                    handleAttemptResult(result);
+                    handleAttemptResult(result); // Process the backend response
 
                 } catch (error) {
                      console.error('Error submitting answer:', error);
-                     errorMessage.textContent = `Failed to check answer: ${error.message}. Please try again.`;
-                     feedbackArea.textContent = '';
-                     feedbackArea.className = 'feedback-area';
-                     // Don't penalize lives/score for a network/server error
+                     showFeedback(`Failed to check answer: ${error.message}. Try again.`, 'feedback-incorrect', 4000);
                      clearSelection(); // Clear selection on error
                 } finally {
                      isSubmitting = false;
@@ -986,59 +1072,62 @@
             }
 
              function handleAttemptResult(result) {
-                  let foundCorrectGroup = false;
-                  let correctGroupDescription = "";
-                  let newlySolvedKey = null;
+                 // Determine if the guess was correct based on the backend response structure.
+                 // This might involve checking if a new group key exists in `result.solved_groups`
+                 // compared to the local `solvedGroupKeys` array.
+                 let foundCorrectGroup = false;
+                 let correctGroupDescription = "";
+                 let newlySolvedKey = null;
+                 let difficultyIndex = 0; // Default index if backend doesn't provide one
 
-                  const currentResultSolvedKeys = Object.keys(result.solved_groups || {});
-                  const justSolvedKeys = currentResultSolvedKeys.filter(key => !solvedGroupKeys.includes(key));
+                 const currentResultSolvedKeys = Object.keys(result.solved_groups || {});
+                 const justSolvedKeys = currentResultSolvedKeys.filter(key => !solvedGroupKeys.includes(key));
 
-                  if (justSolvedKeys.length > 0) {
-                      foundCorrectGroup = true;
-                      newlySolvedKey = justSolvedKeys[0];
-                      correctGroupDescription = result.solved_groups[newlySolvedKey];
-                      if (!solvedGroupKeys.includes(newlySolvedKey)) {
-                          solvedGroupKeys.push(newlySolvedKey);
+                 if (justSolvedKeys.length > 0) {
+                     foundCorrectGroup = true;
+                     newlySolvedKey = justSolvedKeys[0]; // Assume only one new group per correct guess
+                     const solvedGroupData = result.solved_groups[newlySolvedKey];
+
+                      if (typeof solvedGroupData === 'object' && solvedGroupData !== null) {
+                         // If backend returns object like { description: "...", difficulty_index: 1 }
+                         correctGroupDescription = solvedGroupData.description || "Group Found";
+                         difficultyIndex = solvedGroupData.difficulty_index !== undefined ? solvedGroupData.difficulty_index : revealedGroupsCount;
+                      } else if (typeof solvedGroupData === 'string') {
+                         // If backend returns just the description string
+                         correctGroupDescription = solvedGroupData;
+                         difficultyIndex = revealedGroupsCount; // Fallback index
                       }
-                  }
+
+                     if (!solvedGroupKeys.includes(newlySolvedKey)) {
+                         solvedGroupKeys.push(newlySolvedKey); // Track solved group keys/IDs if needed
+                     }
+                 }
 
 
                   if (foundCorrectGroup) {
-                       feedbackArea.textContent = result.message || "Correct!"; // Show backend message or default
-                       feedbackArea.className = 'feedback-area feedback-correct';
+                       // --- Correct Guess ---
+                       showFeedback(result.message || "Correct!", 'feedback-correct', 1500); // Show feedback briefly
                        const wordsInSolvedGroup = selectedWords.slice(); // Copy before clearing
 
-                       // Find the correct index for the solved group color/order
-                       // The backend *should* ideally return the difficulty index (0-3)
-                       // If not, we use revealedGroupsCount, assuming they are solved in order of difficulty.
-                       const groupColorIndex = result.difficulty_index !== undefined ? result.difficulty_index : revealedGroupsCount;
-
-                       displaySolvedGroup(correctGroupDescription, wordsInSolvedGroup, groupColorIndex); // Pass color index
+                       // Display the solved group visually
+                       displaySolvedGroup(correctGroupDescription, wordsInSolvedGroup, difficultyIndex);
                        revealedGroupsCount++;
 
-                       selectedWords = []; // Clear selection
+                       selectedWords = []; // Clear selection immediately
                        updateSelectionUI();
 
                        if (revealedGroupsCount === 4) {
-                            setTimeout(() => { // Delay final message slightly
-                                feedbackArea.textContent = "Congratulations! Puzzle Solved!";
-                                feedbackArea.className = 'feedback-area feedback-correct';
+                           // All groups solved - WIN
+                            setTimeout(() => {
+                                showFeedback("Congratulations! Puzzle Solved!", 'feedback-correct', 0); // Indefinite win message
                                 endGame(true); // Win
                             }, 600); // Delay after last group animation
-                       } else {
-                           // Clear correct feedback after a delay
-                            setTimeout(() => {
-                                if (feedbackArea.classList.contains('feedback-correct')) {
-                                     feedbackArea.textContent = '';
-                                     feedbackArea.className = 'feedback-area';
-                                }
-                            }, 1500);
                        }
+                       // No else needed, just wait for next selection
 
                   } else {
-                       // Incorrect Guess
-                       feedbackArea.textContent = result.message || "Incorrect. Try again.";
-                       feedbackArea.className = 'feedback-area feedback-incorrect';
+                       // --- Incorrect Guess ---
+                       showFeedback(result.message || "Incorrect. Try again.", 'feedback-incorrect', 1800); // Show longer
                        lives--;
                        score -= INCORRECT_GUESS_PENALTY;
                        updateScoreDisplay();
@@ -1046,21 +1135,14 @@
                        shakeWords(); // Shake the currently selected (incorrect) words
 
                        if (lives <= 0) {
-                            setTimeout(() => { // Delay game over slightly
-                                feedbackArea.textContent = "Game Over! You're out of mistakes.";
-                                feedbackArea.className = 'feedback-area feedback-incorrect';
+                           // Out of lives - LOSE
+                            setTimeout(() => {
+                                showFeedback("Game Over! You're out of mistakes.", 'feedback-incorrect', 0); // Indefinite loss message
                                 endGame(false); // Lose
-                            }, 600); // After shake
+                            }, 600); // Delay after shake
                        } else {
-                            // Clear selection after shake animation (approx 500ms) + slight pause
+                            // Clear selection after shake animation + pause
                             setTimeout(clearSelection, 800);
-                            // Clear incorrect feedback after a delay
-                             setTimeout(() => {
-                                 if (feedbackArea.classList.contains('feedback-incorrect')) {
-                                      feedbackArea.textContent = '';
-                                      feedbackArea.className = 'feedback-area';
-                                 }
-                             }, 1800);
                        }
                   }
              }
@@ -1068,169 +1150,205 @@
             function displaySolvedGroup(description, wordsInGroup, colorIndex) {
                  const groupDiv = document.createElement('div');
                  groupDiv.classList.add('solved-group');
-                 // Use the determined color index (0-3)
-                 const actualColorIndex = Math.min(Math.max(colorIndex, 0), 3); // Clamp between 0 and 3
+                 // Clamp color index between 0 and 3
+                 const actualColorIndex = Math.min(Math.max(colorIndex, 0), 3);
                  groupDiv.classList.add(`solved-group-color-${actualColorIndex}`);
+
+                 // ADD: Store words for post-game review
+                 groupDiv.dataset.words = JSON.stringify(wordsInGroup);
 
                  const descStrong = document.createElement('strong'); descStrong.textContent = description; groupDiv.appendChild(descStrong);
                  const wordsP = document.createElement('p'); wordsP.textContent = wordsInGroup.sort().join(', '); groupDiv.appendChild(wordsP);
 
-                 // --- Prepend solved groups for visual order ---
+                 // Prepend solved groups
                  if (solvedGroupsArea.firstChild) {
                      solvedGroupsArea.insertBefore(groupDiv, solvedGroupsArea.firstChild);
                  } else {
                      solvedGroupsArea.appendChild(groupDiv);
                  }
-                 // ---
 
+                 // Update word items in the grid
                  wordsInGroup.forEach(word => {
                        const wordDiv = wordGrid.querySelector(`.word-item[data-word="${word}"]`);
                        if (wordDiv) {
                             wordDiv.classList.add('solved');
-                            wordDiv.classList.remove('selected'); // Ensure selection is removed
+                            wordDiv.classList.remove('selected', 'highlight-hint'); // Ensure selection and hint highlights are removed
                             wordDiv.removeEventListener('click', handleWordClick);
+                            wordDiv.removeEventListener('keydown', handleWordKeyDown); // Remove key listener
                             wordDiv.style.cursor = 'default';
+                            // ARIA updates for solved state
+                            wordDiv.setAttribute('aria-selected', 'false');
+                            wordDiv.setAttribute('aria-disabled', 'true');
+                            wordDiv.removeAttribute('tabindex'); // Make non-focusable
                        }
                   });
 
-                  // Reorder grid: Move solved words to the bottom visually (optional but common)
-                  reorderGrid();
+                 reorderGrid(); // Move solved items down visually
             }
 
             function reorderGrid() {
                 const solvedItems = Array.from(wordGrid.querySelectorAll('.word-item.solved'));
                 const activeItems = Array.from(wordGrid.querySelectorAll('.word-item:not(.solved)'));
 
-                // Clear grid and re-append active then solved items
-                wordGrid.innerHTML = '';
-                activeItems.forEach(item => wordGrid.appendChild(item));
-                solvedItems.forEach(item => wordGrid.appendChild(item));
+                wordGrid.innerHTML = ''; // Clear grid content
+                activeItems.forEach(item => wordGrid.appendChild(item)); // Add active first
+                solvedItems.forEach(item => wordGrid.appendChild(item)); // Add solved last
             }
 
-
             function shakeWords() {
-                 const selectedDivs = document.querySelectorAll('.word-item.selected');
-                 selectedDivs.forEach(div => {
-                      // Ensure animation plays even if triggered quickly again
-                      div.style.animation = 'none';
-                      void div.offsetWidth; // Trigger reflow
+                 document.querySelectorAll('.word-item.selected').forEach(div => {
+                      div.style.animation = 'none'; // Reset animation first
+                      void div.offsetWidth; // Trigger reflow to restart animation
                       div.style.animation = 'shake 0.5s ease-in-out';
                  });
             }
 
             // --- Game End / State Management ---
-function endGame(isWin) {
-         if (!gameActive) return;
-         gameActive = false;
-         stopTimer();
-         disableAllInteraction();
-         closeShowAnswerModal(); // Ensure modal is closed if game ends some other way
+            function endGame(isWin) {
+                 if (!gameActive) return; // Prevent multiple calls
+                 gameActive = false;
+                 stopTimer();
+                 disableAllInteraction(); // Make grid non-interactive
+                 closeShowAnswerModal(); // Ensure modal is closed
 
-         score = Math.max(0, score);
-         updateScoreDisplay();
+                 score = Math.max(0, score); // Final score check
+                 updateScoreDisplay();
 
-         newGameBtn.style.display = 'flex'; // Show Play Again button
-         newGameBtn.onclick = goToHome;
+                 // --- STATS TRACKING UPDATE ---
+                 const endTime = Date.now();
+                 const solveTimeSeconds = startTime ? Math.floor((endTime - startTime) / 1000) : null;
 
-         // Reveal only triggered by button or loss condition below
-         // Removed automatic reveal from here
-    }
+                 if (isWin) {
+                     gameStats.wins++;
+                     gameStats.currentStreak++;
+                     gameStats.maxStreak = Math.max(gameStats.maxStreak, gameStats.currentStreak);
+                     if (solveTimeSeconds !== null) {
+                         if (gameStats.fastestTime === null || solveTimeSeconds < gameStats.fastestTime) {
+                             gameStats.fastestTime = solveTimeSeconds;
+                         }
+                     }
+                 } else {
+                     gameStats.losses++;
+                     gameStats.currentStreak = 0;
+                 }
+                 saveStats(); // Save updated stats
+                 // --- END STATS TRACKING ---
+
+                 newGameBtn.style.display = 'flex'; // Show Play Again button
+                 newGameBtn.onclick = goToHome; // Set action
+
+                 // --- ADD POST-GAME REVIEW ---
+                 addPostGameReviewListeners();
+            }
 
             async function revealAllGroups() {
-        if (!currentPuzzle?.puzzle_id) return;
+                if (!currentPuzzle?.puzzle_id) return;
 
-        // Ensure game state reflects end
-        if (gameActive) { // If called directly via modal while game was technically active
-             gameActive = false;
-             stopTimer();
-        }
-        clearFeedback(); // Clear any lingering messages
-        showFeedback('Revealing solution...', '', 0); // Show progress
+                // Ensure game state reflects end if called directly
+                if (gameActive) {
+                    gameActive = false;
+                    stopTimer();
+                }
+                clearFeedback();
+                showFeedback('Revealing solution...', '', 0);
 
-        try {
-             await new Promise(resolve => setTimeout(resolve, 500)); // Simulate fetch
-             const response = await fetch(`/api/get_solution/${currentPuzzle.puzzle_id}`);
-             if (!response.ok) throw new Error('Could not fetch solution');
-             const solution = await response.json();
+                try {
+                     await new Promise(resolve => setTimeout(resolve, 400)); // Simulate fetch
+                     // --- Adjust API endpoint ---
+                     const response = await fetch(`/api/get_solution/${currentPuzzle.puzzle_id}`);
+                     if (!response.ok) throw new Error('Could not fetch solution');
+                     const solution = await response.json();
 
-             solvedGroupsArea.innerHTML = '';
-             wordGrid.querySelectorAll('.word-item.solved').forEach(el => el.classList.remove('solved'));
+                     // Reset visual state before showing solution
+                     solvedGroupsArea.innerHTML = '';
+                     wordGrid.querySelectorAll('.word-item').forEach(el => {
+                          el.classList.remove('solved', 'disabled', 'selected', 'highlight-hint', 'highlight-review');
+                          el.style.animation = ''; // Remove shake animation if present
+                          // Re-attach listeners temporarily might be complex, easier to just disable all later
+                     });
 
-             let colorIdx = 0;
-             for (const groupKey in solution.groups) {
-                   if (Object.hasOwnProperty.call(solution.groups, groupKey)) {
-                       const groupData = solution.groups[groupKey];
-                       const groupDesc = groupData.description || "Group " + (colorIdx + 1);
-                       const groupWords = groupData.words || [];
-                       const groupColor = groupData.difficulty_index ?? colorIdx;
-                       displaySolvedGroup(groupDesc, groupWords, groupColor);
-                       colorIdx++;
-                   }
-             }
-             reorderGrid();
-             clearFeedback(); // Clear "Revealing..." message
-             showFeedback('Solution Revealed.', '', 3000); // Short confirmation
+                     let colorIdx = 0;
+                     // Assuming solution.groups is an object like { groupKey: { description: "...", words: [], difficulty_index: 0 }, ... }
+                     for (const groupKey in solution.groups) {
+                           if (Object.hasOwnProperty.call(solution.groups, groupKey)) {
+                               const groupData = solution.groups[groupKey];
+                               const groupDesc = groupData.description || "Group " + (colorIdx + 1);
+                               const groupWords = groupData.words || [];
+                               const groupColor = groupData.difficulty_index ?? colorIdx;
+                               displaySolvedGroup(groupDesc, groupWords, groupColor); // This also marks words as solved
+                               colorIdx++;
+                           }
+                     }
+                     reorderGrid(); // Ensure order
+                     clearFeedback();
+                     showFeedback('Solution Revealed.', '', 3000);
 
-        } catch (error) {
-            console.error("Failed to reveal solution:", error);
-            showFeedback('Could not load the full solution.', 'feedback-incorrect', 3000);
-        } finally {
-            disableAllInteraction(); // Ensure everything is disabled
-             if (newGameBtn.style.display === 'none') { // Show Play Again if not already visible
-                newGameBtn.style.display = 'flex';
-                newGameBtn.onclick = goToHome;
-             }
-        }
-    }
-
-
+                } catch (error) {
+                    console.error("Failed to reveal solution:", error);
+                    showFeedback('Could not load the full solution.', 'feedback-incorrect', 3000);
+                } finally {
+                    disableAllInteraction(); // Ensure everything is fully disabled after revealing
+                     if (newGameBtn.style.display === 'none') { // Show Play Again if needed
+                        newGameBtn.style.display = 'flex';
+                        newGameBtn.onclick = goToHome;
+                     }
+                     addPostGameReviewListeners(); // Allow review even after revealing
+                }
+            }
 
             function disableAllInteraction() {
                  document.querySelectorAll('.word-item').forEach(el => {
                       el.removeEventListener('click', handleWordClick);
+                      el.removeEventListener('keydown', handleWordKeyDown);
                       el.style.cursor = 'default';
+                      el.style.animation = ''; // Remove any ongoing animation
                       if (!el.classList.contains('solved')) {
-                          el.classList.add('disabled'); // Use 'disabled' for consistency
-                          el.classList.remove('selected'); // Ensure no selection style remains
+                          el.classList.add('disabled'); // Visually disable non-solved items
+                          el.classList.remove('selected');
+                          el.setAttribute('aria-selected', 'false');
                       }
+                     el.setAttribute('aria-disabled', 'true');
+                     el.removeAttribute('tabindex'); // Make non-focusable
                  });
                  clearSelectionBtn.disabled = true;
-                 // submitAnswerBtn.disabled = true; // Not visible
                  hintBtn.disabled = true;
+                 // Remove grid navigation listener if added directly to grid
+                 // (If added in setupGridNavigation, it's okay as items are not focusable)
             }
 
              function enableAllInteraction() {
                  document.querySelectorAll('.word-item:not(.solved)').forEach(el => {
                      el.addEventListener('click', handleWordClick);
+                     el.addEventListener('keydown', handleWordKeyDown);
                      el.style.cursor = 'pointer';
                      el.classList.remove('disabled');
+                     el.setAttribute('aria-disabled', 'false');
+                     el.setAttribute('tabindex', '0'); // Make focusable
                  });
-                 updateSelectionUI(); // Updates button states based on game state
+                 updateSelectionUI(); // Update button states
+                 // Ensure grid navigation is set up (it's idempotent if called multiple times)
+                 setupGridNavigation();
              }
 
             function goToHome() {
-                 sessionStorage.removeItem('currentPuzzle');
-                 window.location.href = '/'; // Redirect to home/difficulty selection page
+                 sessionStorage.removeItem(PUZZLE_STORAGE_KEY); // Clean up session storage
+                 window.location.href = 'home.html'; // Redirect to home page
             }
 
-            clearSelectionBtn.addEventListener('click', clearSelection);
-    hintBtn.addEventListener('click', handleHintClick);
+            // --- Stats Functions ---
+            function loadStats() {
+                const storedStats = localStorage.getItem(STATS_STORAGE_KEY);
+                if (storedStats) {
+                    try {
+                        const parsedStats = JSON.parse(storedStats);
+                        if (typeof parsedStats.wins === 'number' && typeof parsedStats.losses === 'number') {
+                            gameStats = { ...gameStats, ...parsedStats }; // Merge safely
+                        } else { localStorage.removeItem(STATS_STORAGE_KEY); }
+                    } catch (e) { localStorage.removeItem(STATS_STORAGE_KEY); }
+                }
+            }
 
-    // --- Add Modal Button Listeners ---
-    confirmShowAnswerBtn.addEventListener('click', () => {
-        closeShowAnswerModal();
-        revealAllGroups(); // Trigger the reveal
-    });
-
-    cancelShowAnswerBtn.addEventListener('click', () => {
-        closeShowAnswerModal();
-        // Game continues, no further action needed here
-    });
-
-    // --- Initialize Game on Load ---
-    initGame();
-});
-    </script>
-
-</body>
-</html>
+            function saveStats() {
+                try {
+                    localStorage.setItem(STATS_STORAGE_KEY, JSON.stringify(gameStats));
+                } catch (e) { cons

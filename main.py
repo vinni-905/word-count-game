@@ -172,5 +172,3 @@ if __name__ == "__main__":
     # Consider adding reload=True for development, but remove for production
     uvicorn.run(app, host="127.0.0.1", port=8000)
 
-
-#9059634595
