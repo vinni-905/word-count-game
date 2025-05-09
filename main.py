@@ -1,13 +1,13 @@
-from fastapi import FastAPI, Request, Form, HTTPException, Body
+from fastapi import FastAPI, Request, HTTPException, Body
 from fastapi.responses import HTMLResponse, JSONResponse
-# from fastapi.staticfiles import StaticFiles # Not used if only serving templates
 from fastapi.templating import Jinja2Templates
 from typing import List, Dict, Any, Optional
 from pydantic import BaseModel
 import logging
-import os # Import os for path joining if needed, though Jinja2 handles it
+import os
 
 # Import functions and state from puzzle_logic module
+# Make sure puzzle_logic.py is in the same directory or accessible via Python path
 from puzzle_logic import (
     generate_solvable_puzzle,
     check_puzzle_answer,
@@ -38,15 +38,13 @@ class AnswerPayload(BaseModel):
 # --- Templates ---
 # Ensure your 'templates' directory is at the same level as main.py
 # and contains home.html and game.html
-# Project structure:
-# your_project/
-# ├── main.py
-# ├── puzzle_logic.py
-# └── templates/
-#     ├── home.html
-#     └── game.html
+templates_dir = os.path.join(os.path.dirname(__file__), "templates")
+if not os.path.isdir(templates_dir):
+    logger.error(f"Templates directory not found at: {templates_dir}")
+    # You might want to raise an error or exit if templates aren't found
+    # For now, Jinja2Templates will raise an error if the dir doesn't exist.
+templates = Jinja2Templates(directory=templates_dir)
 
-templates = Jinja2Templates(directory="templates")
 
 # --- HTML Routes ---
 
@@ -54,60 +52,64 @@ templates = Jinja2Templates(directory="templates")
 async def read_root(request: Request):
     """Serves the home page (difficulty selection) at the root URL."""
     logger.info("Serving home page (at /).")
-    return templates.TemplateResponse("home.html", {"request": request})
+    try:
+        return templates.TemplateResponse("home.html", {"request": request})
+    except Exception as e:
+        logger.error(f"Error serving home.html from /: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Could not load home page.")
 
-# ****** ADD THIS ROUTE ******
+
 @app.get("/home.html", response_class=HTMLResponse)
 async def read_home_explicit(request: Request):
     """Serves the home page explicitly at /home.html."""
     logger.info("Serving home page (at /home.html).")
-    return templates.TemplateResponse("home.html", {"request": request})
-# ****************************
+    try:
+        return templates.TemplateResponse("home.html", {"request": request})
+    except Exception as e:
+        logger.error(f"Error serving home.html from /home.html: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Could not load home page.")
 
-@app.get("/game", response_class=HTMLResponse) # This was correct
+
+@app.get("/game", response_class=HTMLResponse)
 async def read_game(request: Request):
     """Serves the main game page."""
     logger.info("Serving game page.")
-    return templates.TemplateResponse("game.html", {"request": request})
+    try:
+        return templates.TemplateResponse("game.html", {"request": request})
+    except Exception as e:
+        logger.error(f"Error serving game.html: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Could not load game page.")
 
 # --- API Routes ---
-# (Your API routes remain the same - they look good)
 
 @app.post("/api/generate_puzzle", response_class=JSONResponse)
 async def api_generate_puzzle(request_data: GenerateRequest):
-    """Generates a new puzzle based on selected difficulty."""
     difficulty = request_data.difficulty
     logger.info(f"Received request to generate puzzle with difficulty: {difficulty}")
     try:
-        # Basic validation
         if difficulty not in ["easy", "medium", "hard"]:
              logger.warning(f"Invalid difficulty level received: {difficulty}")
              raise HTTPException(status_code=400, detail="Invalid difficulty level selected.")
-
         puzzle_data = generate_solvable_puzzle(difficulty)
         logger.info(f"Generated puzzle {puzzle_data.get('puzzle_id')} successfully.")
         return JSONResponse(content=puzzle_data)
-
     except ValueError as e:
          logger.error(f"ValueError during puzzle generation: {e}", exc_info=True)
          raise HTTPException(status_code=500, detail=f"Error generating puzzle: {e}")
     except Exception as e:
-        logger.exception("Unexpected error during puzzle generation:") # Logs traceback
+        logger.exception("Unexpected error during puzzle generation:")
         raise HTTPException(status_code=500, detail="Internal server error generating puzzle.")
 
 
 @app.post("/api/check_answer", response_class=JSONResponse)
 async def api_check_answer(payload: AnswerPayload):
-    """Checks the user's submitted groups against the solution."""
     puzzle_id = payload.puzzle_id
     user_groups = payload.groups
     logger.info(f"Received answer check request for puzzle: {puzzle_id}")
-
     try:
         result = check_puzzle_answer(puzzle_id, user_groups)
         logger.info(f"Answer check result for {puzzle_id}: Correct={result.get('correct')}")
         return JSONResponse(content=result)
-
     except HTTPException as e:
         raise e
     except Exception as e:
@@ -117,7 +119,6 @@ async def api_check_answer(payload: AnswerPayload):
 
 @app.post("/api/get_hint", response_class=JSONResponse)
 async def api_get_hint(request_data: HintRequest):
-    """Provides a hint for the given puzzle."""
     puzzle_id = request_data.puzzle_id
     logger.info(f"Received hint request for puzzle: {puzzle_id}")
     try:
@@ -131,7 +132,6 @@ async def api_get_hint(request_data: HintRequest):
         else:
              logger.info(f"Hint provided successfully for puzzle {puzzle_id}")
              return JSONResponse(content=result)
-
     except HTTPException as e:
          raise e
     except Exception as e:
@@ -140,20 +140,25 @@ async def api_get_hint(request_data: HintRequest):
 
 @app.get("/api/get_solution/{puzzle_id}", response_class=JSONResponse)
 async def api_get_solution(puzzle_id: str):
-    """Retrieves the full solution details for a given puzzle ID."""
     logger.info(f"Received request for solution for puzzle: {puzzle_id}")
     if puzzle_id in active_puzzles:
         puzzle_data = active_puzzles[puzzle_id]
         solution_payload = { "groups": {} }
         descriptions = puzzle_data.get("descriptions", {})
         solution_map = puzzle_data.get("solution", {})
-        sorted_group_keys = sorted(solution_map.keys())
+        
+        # Try to get difficulty_index_map if it exists, default to empty dict
+        difficulty_index_map = puzzle_data.get("parameters", {}).get("difficulty_index_map", {})
 
-        for group_key in sorted_group_keys:
+        sorted_group_keys = sorted(solution_map.keys())
+        for i, group_key in enumerate(sorted_group_keys):
             words = solution_map[group_key]
+            # Use the stored difficulty_index if available, otherwise fallback to enumeration order
+            difficulty_idx = difficulty_index_map.get(group_key, i)
             solution_payload["groups"][group_key] = {
-                "description": descriptions.get(group_key, f"Group {group_key}"),
+                "description": descriptions.get(group_key, f"Group {i+1}"),
                 "words": words,
+                "difficulty_index": difficulty_idx
             }
         logger.info(f"Solution retrieved successfully for puzzle: {puzzle_id}")
         return JSONResponse(content=solution_payload)
@@ -166,4 +171,6 @@ async def api_get_solution(puzzle_id: str):
 if __name__ == "__main__":
     import uvicorn
     logger.info("Starting WordLinks server...")
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True) # Added reload=True for dev
+    # Use "main:app" to specify the module and app instance
+    # reload=True is great for development
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
