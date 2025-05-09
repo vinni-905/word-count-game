@@ -5,6 +5,7 @@ from fastapi.templating import Jinja2Templates
 from typing import List, Dict, Any, Optional
 from pydantic import BaseModel
 import logging
+import os # Import os for path joining if needed, though Jinja2 handles it
 
 # Import functions and state from puzzle_logic module
 from puzzle_logic import (
@@ -35,23 +36,42 @@ class AnswerPayload(BaseModel):
 
 
 # --- Templates ---
+# Ensure your 'templates' directory is at the same level as main.py
+# and contains home.html and game.html
+# Project structure:
+# your_project/
+# ├── main.py
+# ├── puzzle_logic.py
+# └── templates/
+#     ├── home.html
+#     └── game.html
+
 templates = Jinja2Templates(directory="templates")
 
 # --- HTML Routes ---
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
-    """Serves the home page (difficulty selection)."""
-    logger.info("Serving home page.")
+    """Serves the home page (difficulty selection) at the root URL."""
+    logger.info("Serving home page (at /).")
     return templates.TemplateResponse("home.html", {"request": request})
 
-@app.get("/game", response_class=HTMLResponse)
+# ****** ADD THIS ROUTE ******
+@app.get("/home.html", response_class=HTMLResponse)
+async def read_home_explicit(request: Request):
+    """Serves the home page explicitly at /home.html."""
+    logger.info("Serving home page (at /home.html).")
+    return templates.TemplateResponse("home.html", {"request": request})
+# ****************************
+
+@app.get("/game", response_class=HTMLResponse) # This was correct
 async def read_game(request: Request):
     """Serves the main game page."""
     logger.info("Serving game page.")
     return templates.TemplateResponse("game.html", {"request": request})
 
 # --- API Routes ---
+# (Your API routes remain the same - they look good)
 
 @app.post("/api/generate_puzzle", response_class=JSONResponse)
 async def api_generate_puzzle(request_data: GenerateRequest):
@@ -84,15 +104,11 @@ async def api_check_answer(payload: AnswerPayload):
     logger.info(f"Received answer check request for puzzle: {puzzle_id}")
 
     try:
-        # Pydantic already validated the basic structure
-        # Optional: Add further validation if needed (e.g., group content)
-
         result = check_puzzle_answer(puzzle_id, user_groups)
         logger.info(f"Answer check result for {puzzle_id}: Correct={result.get('correct')}")
         return JSONResponse(content=result)
 
     except HTTPException as e:
-        # Re-raise HTTPExceptions directly
         raise e
     except Exception as e:
         logger.exception(f"Unexpected error during answer checking for puzzle {puzzle_id}:")
@@ -111,14 +127,13 @@ async def api_get_hint(request_data: HintRequest):
              raise HTTPException(status_code=404, detail=result["message"])
         elif result.get("hint") is None:
              logger.info(f"No hint provided for puzzle {puzzle_id}: {result['message']}")
-             # Handle cases like "no more hints available" gracefully
              return JSONResponse(content={"hint": None, "message": result["message"]})
         else:
              logger.info(f"Hint provided successfully for puzzle {puzzle_id}")
              return JSONResponse(content=result)
 
     except HTTPException as e:
-         raise e # Re-raise FastAPI HTTP exceptions
+         raise e
     except Exception as e:
         logger.exception(f"Unexpected error getting hint for puzzle {puzzle_id}:")
         raise HTTPException(status_code=500, detail="Internal server error processing hint request.")
@@ -129,14 +144,9 @@ async def api_get_solution(puzzle_id: str):
     logger.info(f"Received request for solution for puzzle: {puzzle_id}")
     if puzzle_id in active_puzzles:
         puzzle_data = active_puzzles[puzzle_id]
-        # Structure the response as the JS likely expects
-        solution_payload = {
-            "groups": {}
-        }
+        solution_payload = { "groups": {} }
         descriptions = puzzle_data.get("descriptions", {})
         solution_map = puzzle_data.get("solution", {})
-
-        # Attempt to maintain a consistent group order if possible (e.g., group_1, group_2...)
         sorted_group_keys = sorted(solution_map.keys())
 
         for group_key in sorted_group_keys:
@@ -144,8 +154,6 @@ async def api_get_solution(puzzle_id: str):
             solution_payload["groups"][group_key] = {
                 "description": descriptions.get(group_key, f"Group {group_key}"),
                 "words": words,
-                # Add difficulty_index here if you calculate/store it during generation
-                # "difficulty_index": puzzle_data.get("parameters", {}).get("difficulty_index_map", {}).get(group_key, 0)
             }
         logger.info(f"Solution retrieved successfully for puzzle: {puzzle_id}")
         return JSONResponse(content=solution_payload)
@@ -154,21 +162,8 @@ async def api_get_solution(puzzle_id: str):
         raise HTTPException(status_code=404, detail="Puzzle solution not found or puzzle is no longer active.")
 
 
-# Example of accessing stored puzzle data (for debugging/admin)
-# Keep commented out or protected in production
-# @app.get("/api/debug/puzzle/{puzzle_id}")
-# async def get_puzzle_details_debug(puzzle_id: str):
-#     """Retrieve ALL details of an active puzzle (DEBUGGING ONLY)."""
-#     if puzzle_id in active_puzzles:
-#         return JSONResponse(content={"puzzle_id": puzzle_id, "details": active_puzzles[puzzle_id]})
-#     else:
-#         raise HTTPException(status_code=404, detail="Puzzle not found or already solved.")
-
-
 # --- Server Runner ---
 if __name__ == "__main__":
     import uvicorn
     logger.info("Starting WordLinks server...")
-    # Consider adding reload=True for development, but remove for production
-    uvicorn.run(app, host="127.0.0.1", port=8000)
-
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True) # Added reload=True for dev
