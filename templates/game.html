@@ -1,41 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"> <!-- Theme class added by JS -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WordLinks - Play</title>
-
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome (for icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
-        /* --- Base & Typography --- */
-        :root {
-            --bg-gradient-start: #f8f9fa;
-            --bg-gradient-end: #ffffff;
-            --container-bg: #ffffff;
-            --text-primary: #343a40;
-            --text-secondary: #6c757d;
-            --accent-primary: #007bff;
-            --accent-secondary: #8f94fb;
-            --selected-bg: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            --selected-text: #ffffff;
-            --solved-bg: #e9ecef; /* Base for solved/disabled */
-            --solved-text: #adb5bd; /* Base for solved/disabled */
-            --disabled-opacity: 0.6;
-            --correct-bg: #d1e7dd;
-            --correct-text: #0f5132;
-            --correct-border: #badbcc;
-            --incorrect-bg: #f8d7da;
-            --incorrect-text: #842029;
-            --incorrect-border: #f5c2c7;
-            --hint-bg: #cff4fc;
-            --hint-text: #055160;
-            --hint-border: #b6effb;
+        :root { /* Light Theme (Default) */
+            --bg-gradient-start: #f8f9fa; --bg-gradient-end: #ffffff;
+            --container-bg: #ffffff; --text-primary: #343a40; --text-secondary: #6c757d;
+            --accent-primary: #007bff; --accent-secondary: #8f94fb;
+            --selected-bg: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); --selected-text: #ffffff;
+            --solved-bg: #e9ecef; --solved-text: #adb5bd; --disabled-opacity: 0.6;
+            --correct-bg: #d1e7dd; --correct-text: #0f5132; --correct-border: #badbcc;
+            --incorrect-bg: #f8d7da; --incorrect-text: #842029; --incorrect-border: #f5c2c7;
+            --hint-bg: #cff4fc; --hint-text: #055160; --hint-border: #b6effb;
             --button-primary-bg: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
             --button-primary-hover: linear-gradient(135deg, #0056b3 0%, #004085 100%);
             --button-warning-bg: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
@@ -44,28 +27,52 @@
             --button-info-hover: linear-gradient(135deg, #117a8b 0%, #0f6674 100%);
             --button-success-bg: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
             --button-success-hover: linear-gradient(135deg, #1e7e34 0%, #155724 100%);
-            --button-disabled-bg: #ced4da;
-            --button-disabled-text: #6c757d;
-            --container-border: rgba(255, 255, 255, 0.3);
-            --blur-intensity: 10px;
-
+            --button-disabled-bg: #ced4da; --button-disabled-text: #6c757d;
+            --container-border: rgba(255, 255, 255, 0.3); --blur-intensity: 10px;
             --solved-color-0-bg: linear-gradient(135deg, #fefae0 0%, #faedcd 100%);
-            --solved-color-0-text: #bc6c25;
-            --solved-color-0-border: #e9c46a;
+            --solved-color-0-text: #bc6c25; --solved-color-0-border: #e9c46a;
             --solved-color-1-bg: linear-gradient(135deg, #caf0f8 0%, #ade8f4 100%);
-            --solved-color-1-text: #0077b6;
-            --solved-color-1-border: #48cae4;
+            --solved-color-1-text: #0077b6; --solved-color-1-border: #48cae4;
             --solved-color-2-bg: linear-gradient(135deg, #d8f3dc 0%, #b7e4c7 100%);
-            --solved-color-2-text: #2d6a4f;
-            --solved-color-2-border: #74c69d;
+            --solved-color-2-text: #2d6a4f; --solved-color-2-border: #74c69d;
             --solved-color-3-bg: linear-gradient(135deg, #fec8d8 0%, #ffacb7 100%);
-            --solved-color-3-text: #c9184a;
-            --solved-color-3-border: #ff758f;
+            --solved-color-3-text: #c9184a; --solved-color-3-border: #ff758f;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1); --shadow-md: 0 4px 8px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 20px rgba(0,0,0,0.1); --transition-speed: 0.25s;
+            --word-item-base-bg: #f8f9fa; --word-item-base-border: #dee2e6;
+            --controls-bg: #f8f9fa; --status-bar-bg: #f8f9fa;
+            --modal-overlay-bg: rgba(0, 0, 0, 0.6);
+            --theme-toggle-btn-color: var(--text-secondary);
+            --theme-toggle-btn-hover-color: var(--text-primary);
+            --error-message-bg: var(--incorrect-bg); --error-message-text: var(--incorrect-text);
+            --error-message-border: var(--incorrect-border);
+        }
 
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
-            --shadow-md: 0 4px 8px rgba(0,0,0,0.1);
-            --shadow-lg: 0 10px 20px rgba(0,0,0,0.1);
-            --transition-speed: 0.25s;
+        html.dark-theme { /* Dark Theme Overrides */
+            --bg-gradient-start: #212529; --bg-gradient-end: #343a40;
+            --container-bg: #495057; --text-primary: #f8f9fa; --text-secondary: #adb5bd;
+            --accent-primary: #0d6efd;
+            --selected-bg: linear-gradient(135deg, #5e31a7 0%, #1a5bbd 100%);
+            --solved-bg: #343a40; --solved-text: #6c757d;
+            --correct-bg: #14452F; --correct-text: #a3d4b8; --correct-border: #2f6f4f;
+            --incorrect-bg: #591C21; --incorrect-text: #f5c2c7; --incorrect-border: #8c222c;
+            --hint-bg: #033C4A; --hint-text: #b6effb; --hint-border: #0f6674;
+            --button-disabled-bg: #5a6268; --button-disabled-text: #adb5bd;
+            --solved-color-0-bg: linear-gradient(135deg, #4d441e 0%, #443b19 100%);
+            --solved-color-0-text: #fefae0; --solved-color-0-border: #8a6d3b;
+            --solved-color-1-bg: linear-gradient(135deg, #004c75 0%, #003d5e 100%);
+            --solved-color-1-text: #caf0f8; --solved-color-1-border: #006298;
+            --solved-color-2-bg: linear-gradient(135deg, #1c4b33 0%, #153826 100%);
+            --solved-color-2-text: #d8f3dc; --solved-color-2-border: #255a40;
+            --solved-color-3-bg: linear-gradient(135deg, #8a1234 0%, #700f2b 100%);
+            --solved-color-3-text: #fec8d8; --solved-color-3-border: #b01742;
+            --word-item-base-bg: #3E444A; --word-item-base-border: #5A6268;
+            --controls-bg: #343a40; --status-bar-bg: #343a40;
+            --modal-overlay-bg: rgba(0, 0, 0, 0.8);
+            --theme-toggle-btn-color: var(--text-secondary);
+            --theme-toggle-btn-hover-color: var(--text-primary);
+            --error-message-bg: var(--incorrect-bg); --error-message-text: var(--incorrect-text);
+            --error-message-border: var(--incorrect-border);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -75,49 +82,69 @@
             background: linear-gradient(to bottom, var(--bg-gradient-start), var(--bg-gradient-end));
             color: var(--text-primary); padding: 20px; min-height: 100vh;
             display: flex; align-items: center; justify-content: center;
+            opacity: 0; animation: fadeInPage 0.5s ease-out forwards; /* Page transition */
+            transition: background var(--transition-speed) ease, color var(--transition-speed) ease;
         }
+        @keyframes fadeInPage { to { opacity: 1; } }
+        body.fade-out { opacity: 1; animation: fadeOutPage 0.3s ease-in forwards; }
+        @keyframes fadeOutPage { to { opacity: 0; } }
 
         .container {
             width: 100%; max-width: 700px; margin: 20px auto;
             background: var(--container-bg); padding: 30px;
             border-radius: 16px; box-shadow: var(--shadow-lg);
+            position: relative; /* For theme toggle button */
+            transition: background-color var(--transition-speed) ease;
         }
+        #theme-toggle-btn {
+            position: absolute; top: 15px; right: 15px;
+            background: none; border: none; font-size: 1.3em; cursor: pointer;
+            color: var(--theme-toggle-btn-color); padding: 5px;
+            transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
+        }
+        #theme-toggle-btn:hover { color: var(--theme-toggle-btn-hover-color); transform: scale(1.1); }
 
-        h1 { text-align: center; color: var(--text-primary); margin-bottom: 15px; font-weight: 700; }
-        h2 { text-align: center; color: var(--text-secondary); margin-bottom: 25px; font-weight: 600; }
+
+        h1 { text-align: center; color: var(--text-primary); margin-bottom: 10px; font-weight: 700; transition: color var(--transition-speed) ease;}
+        h2 { text-align: center; color: var(--text-secondary); margin-bottom: 20px; font-weight: 600; transition: color var(--transition-speed) ease;}
 
         .status-bar {
             display: flex; justify-content: space-around; align-items: center;
-            padding: 15px 0; margin-bottom: 25px; border-bottom: 1px solid #dee2e6;
-            flex-wrap: wrap; gap: 15px; background-color: #f8f9fa;
+            padding: 15px 0; margin-bottom: 20px; border-bottom: 1px solid var(--word-item-base-border);
+            flex-wrap: wrap; gap: 15px; background-color: var(--status-bar-bg);
             border-radius: 8px; box-shadow: var(--shadow-sm);
+            transition: background-color var(--transition-speed) ease, border-color var(--transition-speed) ease;
         }
         .status-bar div {
             font-weight: 600; font-size: 0.9em; text-align: center;
             flex-basis: auto; flex-grow: 1; color: var(--text-secondary);
+            transition: color var(--transition-speed) ease;
         }
         .status-bar span {
             font-weight: 700; color: var(--accent-primary);
             font-size: 1.1em; margin-left: 5px;
+            transition: color var(--transition-speed) ease;
         }
         #timer { min-width: 80px; }
 
-        #word-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr);
-            gap: 12px; margin-bottom: 30px;
-        }
+        #word-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 25px; }
         .word-item {
-            background-color: #f8f9fa; padding: 15px 8px; text-align: center;
-            border-radius: 8px; cursor: pointer; font-weight: 600;
-            text-transform: uppercase;
+            background-color: var(--word-item-base-bg); padding: 15px 8px; text-align: center;
+            border-radius: 8px; cursor: pointer; font-weight: 600; text-transform: uppercase;
             transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease,
-                        transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+                        transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease, border-color var(--transition-speed) ease;
             user-select: none; min-height: 3.5em; display: flex;
             align-items: center; justify-content: center; line-height: 1.2;
-            word-break: break-word; box-shadow: var(--shadow-sm); border: 1px solid #dee2e6;
+            word-break: break-word; box-shadow: var(--shadow-sm); border: 1px solid var(--word-item-base-border);
+            color: var(--text-primary); /* Ensure text color adapts with theme */
         }
         .word-item:hover:not(.selected):not(.solved):not(.disabled) {
-             background-color: #e9ecef; transform: translateY(-3px); box-shadow: var(--shadow-md);
+             background-color: var(--accent-secondary); /* Lighter hover for dark theme */
+             color: var(--selected-text); /* Ensure contrast on hover */
+             transform: translateY(-3px); box-shadow: var(--shadow-md);
+        }
+        html.dark-theme .word-item:hover:not(.selected):not(.solved):not(.disabled) {
+            background-color: #5f67ee; /* Slightly different hover for dark */
         }
         .word-item:focus-visible, .solved-group.reviewable:focus-visible {
             outline: 3px solid var(--accent-primary); outline-offset: 2px; box-shadow: var(--shadow-md);
@@ -130,41 +157,52 @@
         .word-item.disabled {
             background-color: var(--solved-bg); color: var(--solved-text);
             cursor: default; opacity: var(--disabled-opacity); box-shadow: none;
-            border: 1px solid #ced4da; transform: none;
+            border: 1px solid var(--solved-text); transform: none; /* Use solved-text for border for consistency */
         }
-        /* .word-item.solved {} */ /* Linter warning for empty rule was here, removed */
+
+        /* Correct Match Animation */
+        .word-item.correct-match-animation { animation: correctMatchPop 0.6s ease-out forwards; }
+        @keyframes correctMatchPop {
+            0% { transform: scale(1.05) translateY(-2px); opacity: 1; }
+            50% { transform: scale(1.2) translateY(-5px) rotate(3deg); opacity: 0.9; background-color: var(--correct-bg); color: var(--correct-text); }
+            100% { transform: scale(1); opacity: 1; /* Settle into its final 'solved' look before moving */ }
+        }
+
 
         .controls {
-            text-align: center; margin-bottom: 25px; display: flex;
+            text-align: center; margin-bottom: 20px; display: flex;
             justify-content: space-between; align-items: center; flex-wrap: wrap;
-            gap: 15px; padding: 15px; background-color: #f8f9fa;
+            gap: 15px; padding: 15px; background-color: var(--controls-bg);
             border-radius: 8px; box-shadow: var(--shadow-sm);
+            transition: background-color var(--transition-speed) ease;
         }
         .controls p {
             margin: 0; white-space: nowrap; font-size: 0.9em;
             color: var(--text-secondary); flex-grow: 1; text-align: center;
+            transition: color var(--transition-speed) ease;
         }
-        .controls p span { font-weight: 700; color: var(--accent-primary); font-size: 1.1em; }
-        .controls button { /* Base style for control buttons AND post-game buttons if class is reused */
+        .controls p span { font-weight: 700; color: var(--accent-primary); font-size: 1.1em; transition: color var(--transition-speed) ease;}
+        .controls button, .post-game-actions button { /* Shared style for all action buttons */
             padding: 10px 20px; cursor: pointer; border-radius: 25px;
             border: none; font-weight: 600; font-size: 0.9em; color: white;
             transition: background var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
             box-shadow: var(--shadow-sm); flex-shrink: 0;
-            display: inline-flex; align-items: center; justify-content: center; gap: 8px; /* For icons */
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
         }
-        .controls button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: var(--shadow-md); }
-        .controls button:active:not(:disabled) { transform: translateY(0); box-shadow: var(--shadow-sm); }
+        .controls button:hover:not(:disabled), .post-game-actions button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .controls button:active:not(:disabled), .post-game-actions button:active:not(:disabled) { transform: translateY(0); box-shadow: var(--shadow-sm); }
+
         #clear-selection-btn { background: var(--button-warning-bg); }
         #clear-selection-btn:hover:not(:disabled) { background: var(--button-warning-hover); }
         #hint-btn { background: var(--button-info-bg); }
         #hint-btn:hover:not(:disabled) { background: var(--button-info-hover); }
-        .controls button:disabled {
+        .controls button:disabled, .post-game-actions button:disabled {
             background: var(--button-disabled-bg); color: var(--button-disabled-text);
             cursor: not-allowed; box-shadow: none; transform: none;
         }
 
         #feedback-area {
-            margin-top: 15px; margin-bottom: 25px; padding: 15px 20px;
+            margin-top: 15px; margin-bottom: 20px; padding: 15px 20px;
             border-radius: 8px; min-height: 3em; text-align: center; font-weight: 600;
             box-sizing: border-box; display: flex; align-items: center; justify-content: center;
             transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, border-color var(--transition-speed) ease;
@@ -174,24 +212,17 @@
         .feedback-incorrect { background-color: var(--incorrect-bg); color: var(--incorrect-text); border-color: var(--incorrect-border); }
         .feedback-hint { background-color: var(--hint-bg); color: var(--hint-text); border-color: var(--hint-border); }
 
-        #solved-groups-area {
-            margin-bottom: 30px; display: grid;
-            grid-template-columns: 1fr; gap: 15px;
-        }
+        #solved-groups-area { margin-bottom: 25px; display: grid; grid-template-columns: 1fr; gap: 15px; }
         .solved-group {
             border-radius: 12px; padding: 15px 20px; text-align: center;
             box-shadow: var(--shadow-md); border-width: 2px; border-style: solid;
-            transition: transform 0.3s ease-out, opacity 0.5s ease-out;
-            transform: scale(0.95); opacity: 0;
-            animation: fadeInScale 0.5s ease-out forwards;
+            transition: transform 0.3s ease-out, opacity 0.5s ease-out, background var(--transition-speed) ease, color var(--transition-speed) ease, border-color var(--transition-speed) ease;
+            transform: scale(0.95); opacity: 0; animation: fadeInScale 0.5s ease-out forwards;
         }
         @keyframes fadeInScale { to { opacity: 1; transform: scale(1); } }
         .solved-group.reviewable { cursor: pointer; }
         .solved-group.reviewable:hover { box-shadow: var(--shadow-lg); transform: scale(1.02); }
-        .solved-group strong {
-            display: block; margin-bottom: 8px; text-transform: uppercase;
-            font-size: 1em; font-weight: 700;
-        }
+        .solved-group strong { display: block; margin-bottom: 8px; text-transform: uppercase; font-size: 1em; font-weight: 700; }
         .solved-group p { margin: 0; font-size: 0.95em; font-weight: 400; line-height: 1.5; }
         .solved-group-color-0 { background: var(--solved-color-0-bg); color: var(--solved-color-0-text); border-color: var(--solved-color-0-border); animation-delay: 0s; }
         .solved-group-color-1 { background: var(--solved-color-1-bg); color: var(--solved-color-1-text); border-color: var(--solved-color-1-border); animation-delay: 0.1s; }
@@ -200,8 +231,7 @@
 
         .word-item.highlight-review {
             background-color: var(--hint-bg) !important; color: var(--hint-text) !important;
-            border: 2px solid var(--hint-border) !important; opacity: 1 !important;
-            transform: scale(1.03);
+            border: 2px solid var(--hint-border) !important; opacity: 1 !important; transform: scale(1.03);
             transition: background-color 0.1s ease-out, color 0.1s ease-out, border-color 0.1s ease-out, transform 0.1s ease-out;
         }
         .word-item.highlight-hint {
@@ -209,54 +239,38 @@
             transition: outline 0.2s ease-out; position: relative; z-index: 5;
         }
 
-        /* Post-game actions div and its buttons */
-        .post-game-actions {
-            /* display: none; by default set in JS */
-            /* margin-top: 30px; margin-bottom: 0; /* Adjusted from #new-game-btn's original margin */
-            /* text-align: center; /* Already there */
-            /* These will be set by JS:
-            display: flex;
-            justify-content: center;
-            gap: 15px; */
-        }
-        /* #new-game-btn is styled by .controls button if it takes that class, or its own ID styles */
-        /* #view-solution-btn inherits from .controls button via class attribute */
-        /* Individual button styles like background are applied via ID or specific class if needed */
-        #new-game-btn { /* Specific style for Play Again in post-game context if needed */
-            background: var(--button-success-bg); /* Ensure it's green */
-            /* margin: 0; /* Reset individual margin if controlled by flex gap */
-        }
-         #new-game-btn:hover:not(:disabled) { background: var(--button-success-hover); }
-
-        #view-solution-btn { /* Already has .controls .button for base style */
-            background: var(--button-info-bg); /* Specific color for View Solution */
-            /* margin: 0; /* Reset individual margin if controlled by flex gap */
-        }
+        .post-game-actions { margin-top: 25px; /* Other styles set by JS */ }
+        #new-game-btn { background: var(--button-success-bg); }
+        #new-game-btn:hover:not(:disabled) { background: var(--button-success-hover); }
+        #view-solution-btn { background: var(--button-info-bg); }
         #view-solution-btn:hover:not(:disabled) { background: var(--button-info-hover); }
 
-
-        .error-message, #loading-message, #puzzle-info {
-             text-align: center; color: var(--text-secondary);
-             font-style: italic; margin-bottom: 20px;
-        }
         .error-message {
-             color: var(--incorrect-text); background-color: var(--incorrect-bg);
-             border: 1px solid var(--incorrect-border); padding: 10px 15px;
-             border-radius: 8px; font-weight: 600; margin-top: 15px; font-style: normal;
+             text-align: center; color: var(--error-message-text); font-style: normal;
+             background-color: var(--error-message-bg); border: 1px solid var(--error-message-border);
+             padding: 10px 15px; border-radius: 8px; font-weight: 600; margin-top: 15px; margin-bottom: 20px;
+             transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, border-color var(--transition-speed) ease;
+        }
+        #loading-message, #puzzle-info {
+             text-align: center; color: var(--text-secondary);
+             font-style: italic; margin-bottom: 15px;
+             transition: color var(--transition-speed) ease;
         }
 
-        @keyframes shake {
+
+        @keyframes shake { /* Shake for incorrect selected words */
             0%, 100% { transform: translateX(0) scale(1.05) translateY(-2px); }
-            25% { transform: translateX(-6px) scale(1.05) translateY(-2px); }
-            50% { transform: translateX(6px) scale(1.05) translateY(-2px); }
-            75% { transform: translateX(-6px) scale(1.05) translateY(-2px); }
+            20% { transform: translateX(-7px) scale(1.05) translateY(-2px) rotate(-2deg); }
+            40% { transform: translateX(7px) scale(1.05) translateY(-2px) rotate(2deg); }
+            60% { transform: translateX(-5px) scale(1.05) translateY(-2px) rotate(-1deg); }
+            80% { transform: translateX(5px) scale(1.05) translateY(-2px) rotate(1deg); }
         }
 
         .modal-overlay {
-            position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.6);
+            position: fixed; inset: 0; background-color: var(--modal-overlay-bg);
             display: flex; align-items: center; justify-content: center;
             z-index: 1000; opacity: 0; visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+            transition: opacity 0.3s ease, visibility 0s linear 0.3s, background-color var(--transition-speed) ease;
         }
         .modal-overlay.modal-open { opacity: 1; visibility: visible; }
         .modal-content {
@@ -264,20 +278,21 @@
             border: 1px solid var(--container-border); box-shadow: var(--shadow-lg);
             backdrop-filter: blur(var(--blur-intensity)); -webkit-backdrop-filter: blur(var(--blur-intensity));
             max-width: 450px; width: 90%; text-align: center; color: var(--text-primary);
-            transform: scale(0.9); transition: transform 0.3s ease;
+            transform: scale(0.9);
+            transition: transform 0.3s ease, background-color var(--transition-speed) ease, color var(--transition-speed) ease, border-color var(--transition-speed) ease;
         }
         .modal-overlay.modal-open .modal-content { transform: scale(1); }
         .modal-title {
             font-size: 1.5em; font-weight: 700; margin-bottom: 15px;
             display: flex; align-items: center; justify-content: center;
             gap: 10px; color: var(--accent-primary);
+            transition: color var(--transition-speed) ease;
         }
-        .modal-content p { margin-bottom: 25px; font-size: 1em; line-height: 1.6; color: var(--text-secondary); }
+        .modal-content p { margin-bottom: 25px; font-size: 1em; line-height: 1.6; color: var(--text-secondary); transition: color var(--transition-speed) ease;}
         .modal-actions { display: flex; justify-content: space-around; gap: 15px; flex-wrap: wrap; }
-        .modal-button { /* Also a .controls .button candidate if styles match */
+        .modal-button {
             padding: 10px 25px; cursor: pointer; border-radius: 25px;
-            border: 1px solid transparent; font-weight: 600; font-size: 0.9em;
-            color: #fff;
+            border: 1px solid transparent; font-weight: 600; font-size: 0.9em; color: #fff;
             transition: background var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
             box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 8px;
         }
@@ -285,7 +300,8 @@
         .modal-button:focus-visible { outline: 3px solid var(--accent-primary); outline-offset: 1px; }
         .modal-button-confirm { background: var(--button-success-bg); }
         .modal-button-confirm:hover:not(:disabled) { background: var(--button-success-hover); }
-        .modal-button-cancel { background: var(--button-warning-bg); color: var(--text-primary); }
+        .modal-button-cancel { background: var(--button-warning-bg); color: var(--text-primary); } /* Text color for contrast on yellow */
+        html.dark-theme .modal-button-cancel { color: var(--text-primary); } /* Ensure contrast on dark theme if yellow stays light */
         .modal-button-cancel:hover:not(:disabled) { background: var(--button-warning-hover); }
         .modal-button i { font-size: 1.1em; }
 
@@ -294,15 +310,14 @@
             .modal-actions { flex-direction: column; align-items: center; }
             .modal-button { width: 80%; justify-content: center; }
         }
-
         @media (max-width: 768px) {
-            .container { padding: 20px; } h1 { font-size: 1.8em; }
+            .container { padding: 20px; } #theme-toggle-btn { top: 10px; right: 10px; }
+            h1 { font-size: 1.8em; }
             .status-bar { padding: 10px; } .status-bar div { font-size: 0.85em; } .status-bar span { font-size: 1em; }
             #word-grid { gap: 10px; } .word-item { font-size: 0.9em; min-height: 3.2em; padding: 12px 5px; }
             .controls { flex-direction: column; gap: 10px; padding: 10px; }
             .controls p { order: -1; margin-bottom: 10px; text-align: center; }
-            .controls button { width: 60%; padding: 10px 15px; font-size: 0.9em;}
-            .post-game-actions button { width: 60%;} /* Ensure post-game buttons also adapt */
+            .controls button, .post-game-actions button { width: 70%; padding: 10px 15px; font-size: 0.9em;}
         }
         @media (max-width: 480px) {
             body { padding: 10px; } .container { padding: 15px; border-radius: 12px; }
@@ -311,15 +326,25 @@
             .status-bar div { text-align: left; padding: 0 10px; }
             #word-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 20px;}
             .word-item { font-size: 0.85em; min-height: 3.5em; font-weight: 600; }
-            .controls button { width: 80%; }
-            .post-game-actions button { width: 80%;} /* Ensure post-game buttons also adapt */
+            .controls button, .post-game-actions button { width: 85%; }
             #feedback-area { padding: 10px 15px; font-size: 0.9em;}
             .solved-group { padding: 10px 15px; } .solved-group strong { font-size: 0.9em; } .solved-group p { font-size: 0.9em; }
         }
     </style>
 </head>
 <body>
+    <!-- Sound effect elements -->
+    <audio id="select-sound" src="/static/sounds/select.mp3" preload="auto"></audio>
+    <audio id="correct-sound" src="/static/sounds/correct.mp3" preload="auto"></audio>
+    <audio id="incorrect-sound" src="/static/sounds/incorrect.mp3" preload="auto"></audio>
+    <audio id="win-sound" src="/static/sounds/win.mp3" preload="auto"></audio>
+    <audio id="lose-sound" src="/static/sounds/lose.mp3" preload="auto"></audio>
+
     <div class="container game-container">
+        <button id="theme-toggle-btn" aria-label="Toggle dark mode">
+            <i class="fas fa-moon"></i> <!-- Initial icon, JS will update -->
+        </button>
+
         <h1>WordLinks</h1>
         <div class="status-bar">
             <div>Time: <span id="timer">00:00</span></div>
@@ -330,7 +355,7 @@
 
         <p id="loading-message">Loading puzzle...</p>
         <p id="error-message" class="error-message" style="display: none;"></p>
-        <div id="puzzle-info" style="text-align: center; font-style: italic; margin-bottom: 15px;"></div>
+        <div id="puzzle-info"></div>
 
         <div id="solved-groups-area"></div>
         <div id="word-grid" role="grid"></div>
@@ -343,16 +368,14 @@
 
         <div id="feedback-area" aria-live="polite" aria-atomic="true"></div>
 
-        <!-- Post Game Actions Container (initially hidden) -->
-        <div class="post-game-actions" style="display: none; margin-top: 25px;">
-            <button id="view-solution-btn" class="controls button"> <!-- Reusing .controls .button for base style -->
+        <div class="post-game-actions" style="display: none;">
+            <button id="view-solution-btn">
                 <i class="fas fa-eye"></i> View Solution
             </button>
-            <button id="new-game-btn" class="controls button"> <!-- Reusing .controls .button for base style -->
+            <button id="new-game-btn">
                 <i class="fas fa-redo"></i> Play Again?
             </button>
         </div>
-
 
         <div id="show-answer-modal" class="modal-overlay" style="display: none;" role="dialog" aria-labelledby="show-answer-modal-title" aria-modal="true">
             <div class="modal-content">
@@ -389,100 +412,79 @@
             const showAnswerModal = document.getElementById('show-answer-modal');
             const confirmShowAnswerBtn = document.getElementById('confirm-show-answer-btn');
             const cancelShowAnswerBtn = document.getElementById('cancel-show-answer-btn');
-
-            // New post-game buttons
             const postGameActionsDiv = document.querySelector('.post-game-actions');
             const viewSolutionBtn = document.getElementById('view-solution-btn');
-            const newGameBtn = document.getElementById('new-game-btn'); // Already existed, but now part of post-game
+            const newGameBtn = document.getElementById('new-game-btn');
+            const themeToggleBtn = document.getElementById('theme-toggle-btn');
 
-            const STARTING_LIVES = 4;
-            const STARTING_SCORE = 1000;
-            const INCORRECT_GUESS_PENALTY = 75;
-            const HINT_PENALTY = 150;
-            const MAX_HINTS = 3;
-            const PUZZLE_STORAGE_KEY = 'currentPuzzle';
-            const STATS_STORAGE_KEY = 'wordLinksGameStats';
+            // Sound elements
+            const selectSound = document.getElementById('select-sound');
+            const correctSound = document.getElementById('correct-sound');
+            const incorrectSound = document.getElementById('incorrect-sound');
+            const winSound = document.getElementById('win-sound');
+            const loseSound = document.getElementById('lose-sound');
 
-            let currentPuzzle = null;
-            let selectedWords = [];
-            let lives = STARTING_LIVES;
-            let score = STARTING_SCORE;
-            let hintsUsed = 0;
-            let revealedGroupsCount = 0;
-            let solvedGroupKeys = [];
-            let isSubmitting = false;
-            let gameActive = false;
-            let timerInterval = null;
-            let startTime = null;
-            let feedbackTimeout = null;
+            const STARTING_LIVES = 4; const STARTING_SCORE = 1000;
+            const INCORRECT_GUESS_PENALTY = 75; const HINT_PENALTY = 150;
+            const MAX_HINTS = 3; const PUZZLE_STORAGE_KEY = 'currentPuzzle';
+            const STATS_STORAGE_KEY = 'wordLinksGameStats'; const THEME_STORAGE_KEY = 'wordLinksTheme';
+
+            let currentPuzzle = null, selectedWords = [], lives = STARTING_LIVES, score = STARTING_SCORE;
+            let hintsUsed = 0, revealedGroupsCount = 0, solvedGroupKeys = [], isSubmitting = false;
+            let gameActive = false, timerInterval = null, startTime = null, feedbackTimeout = null;
             let gameStats = { wins: 0, losses: 0, currentStreak: 0, maxStreak: 0, fastestTime: null };
-            let hintHighlightTimeout = null;
-            let elementToFocusOnModalClose = null;
-            let modalFocusableElements = [];
-            let currentOpenModal = null;
+            let hintHighlightTimeout = null, elementToFocusOnModalClose = null;
+            let modalFocusableElements = [], currentOpenModal = null;
+            const sunIconClass = 'fa-sun', moonIconClass = 'fa-moon';
+
+
+            function playSound(soundElement) {
+                if (soundElement && typeof soundElement.play === 'function') {
+                    soundElement.currentTime = 0;
+                    soundElement.play().catch(error => console.warn("Audio play failed (user interaction might be needed first):", error));
+                }
+            }
 
             function initGame() {
-                closeShowAnswerModal();
-                stopTimer();
-                gameActive = false;
-                loadStats();
+                closeShowAnswerModal(); stopTimer(); gameActive = false;
+                loadStats(); // Load game stats
+                // Apply theme is called at the end of the script
 
                 const puzzleDataString = sessionStorage.getItem(PUZZLE_STORAGE_KEY);
                 if (!puzzleDataString) {
                     showError('No puzzle data found. Please start a new game from the home page.');
-                    loadingMessage.style.display = 'none';
-                    disableAllInteraction();
-                    if (postGameActionsDiv) postGameActionsDiv.style.display = 'flex'; // Show only Play Again
+                    loadingMessage.style.display = 'none'; disableAllInteraction();
+                    if (postGameActionsDiv) postGameActionsDiv.style.display = 'flex';
                     if (viewSolutionBtn) viewSolutionBtn.style.display = 'none';
-                    if (newGameBtn) {
-                        newGameBtn.style.display = 'inline-flex'; // Or 'flex'
-                        newGameBtn.onclick = goToHome;
-                    }
+                    if (newGameBtn) { newGameBtn.style.display = 'inline-flex'; newGameBtn.onclick = goToHome; }
                     return;
                 }
-
                 try {
                     currentPuzzle = JSON.parse(puzzleDataString);
-                    if (!currentPuzzle || !currentPuzzle.words || !currentPuzzle.puzzle_id) {
-                         throw new Error("Invalid puzzle data format.");
-                    }
-
+                    if (!currentPuzzle || !currentPuzzle.words || !currentPuzzle.puzzle_id) throw new Error("Invalid puzzle data format.");
                     lives = STARTING_LIVES; score = STARTING_SCORE; hintsUsed = 0;
-                    selectedWords = []; solvedGroupKeys = []; revealedGroupsCount = 0;
-                    isSubmitting = false;
-
+                    selectedWords = []; solvedGroupKeys = []; revealedGroupsCount = 0; isSubmitting = false;
                     clearFeedback(); solvedGroupsArea.innerHTML = '';
                     errorMessage.style.display = 'none'; errorMessage.textContent = '';
-                    loadingMessage.style.display = 'none'; wordGrid.innerHTML = '';
-                    puzzleInfoDiv.innerHTML = '';
-
+                    loadingMessage.style.display = 'none'; wordGrid.innerHTML = ''; puzzleInfoDiv.innerHTML = '';
                     if (currentPuzzle.difficulty || currentPuzzle.puzzle_id) {
-                         const infoP = document.createElement('p');
-                         let infoText = [];
+                         const infoP = document.createElement('p'); let infoText = [];
                          if(currentPuzzle.puzzle_id) infoText.push(`Puzzle #${currentPuzzle.puzzle_id}`);
                          if(currentPuzzle.difficulty) infoText.push(`Difficulty: ${currentPuzzle.difficulty}`);
-                         infoP.textContent = infoText.join(' | ');
-                         puzzleInfoDiv.appendChild(infoP);
+                         infoP.textContent = infoText.join(' | '); puzzleInfoDiv.appendChild(infoP);
                     }
-
                     displayWords(currentPuzzle.words);
                     updateScoreDisplay(); updateLivesDisplay(); updateHintsDisplay(); updateSelectionUI();
-
-                    if (postGameActionsDiv) postGameActionsDiv.style.display = 'none'; // Hide post-game buttons
-                    enableAllInteraction();
-                    startTime = Date.now(); startTimer(); gameActive = true;
+                    if (postGameActionsDiv) postGameActionsDiv.style.display = 'none';
+                    enableAllInteraction(); startTime = Date.now(); startTimer(); gameActive = true;
                     setInitialFocus();
                 } catch (error) {
                     console.error("Error initializing game:", error);
                     showError(`Failed to load puzzle: ${error.message}. Please try starting a new game.`);
-                    loadingMessage.style.display = 'none';
-                    disableAllInteraction();
+                    loadingMessage.style.display = 'none'; disableAllInteraction();
                     if (postGameActionsDiv) postGameActionsDiv.style.display = 'flex';
                     if (viewSolutionBtn) viewSolutionBtn.style.display = 'none';
-                    if (newGameBtn) {
-                        newGameBtn.style.display = 'inline-flex';
-                        newGameBtn.onclick = goToHome;
-                    }
+                    if (newGameBtn) { newGameBtn.style.display = 'inline-flex'; newGameBtn.onclick = goToHome; }
                 }
             }
 
@@ -490,12 +492,10 @@
                 wordGrid.innerHTML = '';
                 const shuffledWords = [...words].sort(() => Math.random() - 0.5);
                 shuffledWords.forEach((word) => {
-                    const wordDiv = document.createElement('div');
-                    wordDiv.classList.add('word-item'); wordDiv.textContent = word;
-                    wordDiv.dataset.word = word; wordDiv.setAttribute('role', 'gridcell');
-                    wordDiv.setAttribute('aria-selected', 'false');
-                    wordDiv.addEventListener('click', handleWordClick);
-                    wordDiv.addEventListener('keydown', handleWordKeyDown);
+                    const wordDiv = document.createElement('div'); wordDiv.classList.add('word-item');
+                    wordDiv.textContent = word; wordDiv.dataset.word = word;
+                    wordDiv.setAttribute('role', 'gridcell'); wordDiv.setAttribute('aria-selected', 'false');
+                    wordDiv.addEventListener('click', handleWordClick); wordDiv.addEventListener('keydown', handleWordKeyDown);
                     wordGrid.appendChild(wordDiv);
                 });
             }
@@ -505,13 +505,11 @@
                 clearSelectionBtn.disabled = selectedWords.length === 0 || isSubmitting || !gameActive;
                 hintBtn.disabled = isSubmitting || !gameActive || hintsUsed >= MAX_HINTS || revealedGroupsCount === 4 || lives <= 0;
             }
-
             function updateLivesDisplay() {
-                 livesRemainingSpan.textContent = lives;
-                 const livesDiv = livesRemainingSpan.closest('div');
+                 livesRemainingSpan.textContent = lives; const livesDiv = livesRemainingSpan.closest('div');
                  if(livesDiv) {
-                    livesDiv.style.color = lives <= 1 ? '#dc3545' : 'var(--text-secondary)';
-                    livesRemainingSpan.style.color = lives <= 1 ? '#dc3545' : 'var(--accent-primary)';
+                    livesDiv.style.color = lives <= 1 ? 'var(--incorrect-text)' : 'var(--text-secondary)'; // Use CSS var for color
+                    livesRemainingSpan.style.color = lives <= 1 ? 'var(--incorrect-text)' : 'var(--accent-primary)'; // Use CSS var
                  }
             }
             function updateScoreDisplay() { scoreSpan.textContent = Math.max(0, score); }
@@ -519,8 +517,7 @@
                  hintsUsedSpan.textContent = hintsUsed; hintsAllowedSpan.textContent = MAX_HINTS;
                  hintBtn.disabled = isSubmitting || !gameActive || hintsUsed >= MAX_HINTS || revealedGroupsCount === 4 || lives <= 0;
             }
-
-            function startTimer() {
+            function startTimer() { /* ... same as before ... */
                 stopTimer();
                 timerInterval = setInterval(() => {
                     if (!gameActive || !startTime) return;
@@ -532,12 +529,12 @@
             }
             function stopTimer() { clearInterval(timerInterval); timerInterval = null; }
 
-            function handleWordClick(event) {
+            function handleWordClick(event) { /* ... same as before ... */
                  const wordDiv = event.currentTarget;
                  if (!gameActive || isSubmitting || wordDiv.classList.contains('solved') || wordDiv.classList.contains('disabled')) return;
                  toggleWordSelection(wordDiv);
             }
-            function handleWordKeyDown(event) {
+            function handleWordKeyDown(event) { /* ... same as before ... */
                 if (event.key === 'Enter' || event.key === ' ') {
                     event.preventDefault(); const wordDiv = event.currentTarget;
                     if (!gameActive || isSubmitting || wordDiv.classList.contains('solved') || wordDiv.classList.contains('disabled')) return;
@@ -554,12 +551,13 @@
                       if (selectedWords.length < 4) {
                            selectedWords.push(word); wordDiv.classList.add('selected');
                            wordDiv.setAttribute('aria-selected', 'true');
+                           playSound(selectSound); // Play select sound
                       }
                  }
                  updateSelectionUI();
                  if (selectedWords.length === 4) setTimeout(submitGroupAttempt, 150);
             }
-            function clearSelection() {
+            function clearSelection() { /* ... same as before ... */
                  clearFeedback(); selectedWords = [];
                  document.querySelectorAll('.word-item.selected').forEach(el => {
                     el.classList.remove('selected'); el.setAttribute('aria-selected', 'false');
@@ -567,7 +565,7 @@
                  updateSelectionUI();
             }
 
-            async function handleHintClick() {
+            async function handleHintClick() { /* ... same as before ... */
                 if (!gameActive || isSubmitting || hintsUsed >= MAX_HINTS || lives <= 0) return;
                 isSubmitting = true; updateSelectionUI();
                 score -= HINT_PENALTY; hintsUsed++;
@@ -593,7 +591,7 @@
                          else { isSubmitting = false; updateSelectionUI(); }
                     } else {
                         showFeedback(result.message || "No hint available.", '', 3000);
-                        hintsUsed--; score += HINT_PENALTY; updateScoreDisplay(); updateHintsDisplay();
+                        if (hintsUsed > 0) { hintsUsed--; score += HINT_PENALTY; updateScoreDisplay(); updateHintsDisplay(); }
                         isSubmitting = false; updateSelectionUI();
                     }
                 } catch (error) {
@@ -603,7 +601,7 @@
                     updateScoreDisplay(); updateHintsDisplay(); isSubmitting = false; updateSelectionUI();
                 }
             }
-            function highlightHintWords(wordsArray) {
+            function highlightHintWords(wordsArray) { /* ... same as before ... */
                 if (hintHighlightTimeout) clearTimeout(hintHighlightTimeout);
                 document.querySelectorAll('.word-item.highlight-hint').forEach(el => el.classList.remove('highlight-hint'));
                 if (!wordsArray || wordsArray.length === 0) return;
@@ -617,14 +615,14 @@
                 }, 5000);
             }
 
-            function clearFeedback() {
+            function clearFeedback() { /* ... same as before ... */
                 if (feedbackTimeout) clearTimeout(feedbackTimeout); feedbackTimeout = null;
                 if (feedbackArea) {
                     feedbackArea.textContent = ''; feedbackArea.className = '';
                     feedbackArea.classList.add('feedback-area');
                 }
             }
-            function showFeedback(message, className = '', duration = 3000) {
+            function showFeedback(message, className = '', duration = 3000) { /* ... same as before ... */
                  if (!feedbackArea) return; clearFeedback();
                  feedbackArea.textContent = message;
                  if (className) feedbackArea.classList.add(className);
@@ -636,7 +634,7 @@
             }
             function showError(message) { errorMessage.textContent = message; errorMessage.style.display = 'block'; }
 
-            async function submitGroupAttempt() {
+            async function submitGroupAttempt() { /* ... same as before ... */
                 if (!gameActive || isSubmitting || selectedWords.length !== 4 || lives <= 0) return;
                 isSubmitting = true; updateSelectionUI(); clearFeedback(); showFeedback('Checking...', '', 0);
                 const attemptPayload = { puzzle_id: currentPuzzle.puzzle_id, groups: { 'attempt': selectedWords } };
@@ -662,6 +660,7 @@
                  let newlySolvedKey = null; let difficultyIndex = revealedGroupsCount;
                  const currentResultSolvedKeys = Object.keys(result.solved_groups || {});
                  const justSolvedKeys = currentResultSolvedKeys.filter(key => !solvedGroupKeys.includes(key));
+
                  if (justSolvedKeys.length > 0) {
                      foundCorrectGroup = true; newlySolvedKey = justSolvedKeys[0];
                      const solvedGroupData = result.solved_groups[newlySolvedKey];
@@ -671,21 +670,44 @@
                       } else if (typeof solvedGroupData === 'string') { correctGroupDescription = solvedGroupData; }
                      if (!solvedGroupKeys.includes(newlySolvedKey)) solvedGroupKeys.push(newlySolvedKey);
                  }
+
                   if (foundCorrectGroup) {
+                       playSound(correctSound);
                        showFeedback(result.message || "Correct!", 'feedback-correct', 1500);
-                       const wordsInSolvedGroup = selectedWords.slice();
-                       displaySolvedGroup(correctGroupDescription, wordsInSolvedGroup, difficultyIndex);
-                       revealedGroupsCount++; selectedWords = []; updateSelectionUI();
-                       if (revealedGroupsCount === 4) setTimeout(() => { showFeedback("Congratulations! Puzzle Solved!", 'feedback-correct', 0); endGame(true); }, 600);
+                       const wordsInSolvedGroupForAnim = selectedWords.slice();
+                       wordsInSolvedGroupForAnim.forEach(word => {
+                           const wordDiv = wordGrid.querySelector(`.word-item[data-word="${word}"]`);
+                           if (wordDiv) {
+                               wordDiv.classList.add('correct-match-animation');
+                               wordDiv.addEventListener('animationend', () => {
+                                   wordDiv.classList.remove('correct-match-animation');
+                               }, { once: true });
+                           }
+                       });
+                       setTimeout(() => { // Delay displaySolvedGroup for animation
+                           displaySolvedGroup(correctGroupDescription, wordsInSolvedGroupForAnim, difficultyIndex);
+                           revealedGroupsCount++; selectedWords = []; updateSelectionUI();
+                           if (revealedGroupsCount === 4) {
+                                setTimeout(() => {
+                                    showFeedback("Congratulations! Puzzle Solved!", 'feedback-correct', 0);
+                                    playSound(winSound); endGame(true);
+                                }, 300); // Short delay after last group animation settles
+                           }
+                       }, 600); // Match animation duration
                   } else {
+                       playSound(incorrectSound);
                        showFeedback(result.message || "Incorrect. Try again.", 'feedback-incorrect', 1800);
                        lives--; score -= INCORRECT_GUESS_PENALTY; updateScoreDisplay(); updateLivesDisplay();
                        shakeWords();
-                       if (lives <= 0) setTimeout(() => { showFeedback("Game Over! You're out of mistakes.", 'feedback-incorrect', 0); endGame(false); }, 600);
-                       else setTimeout(clearSelection, 800);
+                       if (lives <= 0) {
+                            setTimeout(() => {
+                                showFeedback("Game Over! You're out of mistakes.", 'feedback-incorrect', 0);
+                                playSound(loseSound); endGame(false);
+                            }, 600);
+                       } else { setTimeout(clearSelection, 800); }
                   }
             }
-            function displaySolvedGroup(description, wordsInGroup, colorIndex) {
+            function displaySolvedGroup(description, wordsInGroup, colorIndex) { /* ... same as before ... */
                  const groupDiv = document.createElement('div'); groupDiv.classList.add('solved-group');
                  const actualColorIndex = Math.min(Math.max(colorIndex, 0), 3);
                  groupDiv.classList.add(`solved-group-color-${actualColorIndex}`);
@@ -697,7 +719,7 @@
                  wordsInGroup.forEach(word => {
                        const wordDiv = wordGrid.querySelector(`.word-item[data-word="${word}"]`);
                        if (wordDiv) {
-                            wordDiv.classList.add('solved'); wordDiv.classList.remove('selected', 'highlight-hint');
+                            wordDiv.classList.add('solved'); wordDiv.classList.remove('selected', 'highlight-hint', 'correct-match-animation');
                             wordDiv.removeEventListener('click', handleWordClick); wordDiv.removeEventListener('keydown', handleWordKeyDown);
                             wordDiv.style.cursor = 'default'; wordDiv.setAttribute('aria-selected', 'false');
                             wordDiv.setAttribute('aria-disabled', 'true'); wordDiv.removeAttribute('tabindex');
@@ -705,14 +727,14 @@
                   });
                  reorderGrid();
             }
-            function reorderGrid() {
+            function reorderGrid() { /* ... same as before ... */
                 const solvedItems = Array.from(wordGrid.querySelectorAll('.word-item.solved'));
                 const activeItems = Array.from(wordGrid.querySelectorAll('.word-item:not(.solved)'));
                 wordGrid.innerHTML = '';
                 activeItems.forEach(item => wordGrid.appendChild(item));
                 solvedItems.forEach(item => wordGrid.appendChild(item));
             }
-            function shakeWords() {
+            function shakeWords() { /* ... same as before ... */
                  document.querySelectorAll('.word-item.selected').forEach(div => {
                       div.style.animation = 'none'; void div.offsetWidth;
                       div.style.animation = 'shake 0.5s ease-in-out';
@@ -740,72 +762,64 @@
                     postGameActionsDiv.style.gap = '15px';
                 }
                 if (newGameBtn) {
-                     newGameBtn.style.display = 'inline-flex'; // Ensure it's visible
-                     newGameBtn.onclick = goToHome;
+                     newGameBtn.style.display = 'inline-flex'; newGameBtn.onclick = goToHome;
                 }
                 if (viewSolutionBtn) {
-                    viewSolutionBtn.style.display = 'inline-flex'; // Ensure it's visible
+                    viewSolutionBtn.style.display = 'inline-flex';
+                    viewSolutionBtn.disabled = false;
+                    viewSolutionBtn.innerHTML = '<i class="fas fa-eye"></i> View Solution';
                     viewSolutionBtn.onclick = async () => {
                         viewSolutionBtn.disabled = true;
                         viewSolutionBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Revealing...';
-                        await revealAllGroups();
-                        viewSolutionBtn.innerHTML = '<i class="fas fa-check"></i> Solution Shown';
-                        // Stays disabled after showing
+                        await revealAllGroups(); // This will update the button text upon completion
                     };
-                    viewSolutionBtn.disabled = false; // Reset if previously disabled by modal
-                    viewSolutionBtn.innerHTML = '<i class="fas fa-eye"></i> View Solution';
                 }
                 addPostGameReviewListeners();
             }
 
-            async function revealAllGroups() {
+            async function revealAllGroups() { /* ... same as before, with check for viewSolutionBtn state ... */
                 if (!currentPuzzle?.puzzle_id) return;
-                if (gameActive) { gameActive = false; stopTimer(); } // Should already be false if endGame was called
+                if (gameActive) { gameActive = false; stopTimer(); }
                 clearFeedback(); showFeedback('Revealing solution...', '', 0);
                 try {
                      await new Promise(resolve => setTimeout(resolve, 400));
                      const response = await fetch(`/api/get_solution/${currentPuzzle.puzzle_id}`);
-                     if (!response.ok) throw new Error('Could not fetch solution');
+                     if (!response.ok) throw new Error('Could not fetch solution from server.');
                      const solution = await response.json();
+                     if (!solution || !solution.groups || typeof solution.groups !== 'object') {
+                        throw new Error("Invalid solution format received from server.");
+                     }
                      solvedGroupsArea.innerHTML = '';
                      wordGrid.querySelectorAll('.word-item').forEach(el => {
-                          el.classList.remove('solved', 'disabled', 'selected', 'highlight-hint', 'highlight-review');
+                          el.classList.remove('solved', 'disabled', 'selected', 'highlight-hint', 'highlight-review', 'correct-match-animation');
                           el.style.animation = '';
                      });
                      let colorIdx = 0;
-                     // Check if solution.groups is an object
-                     if (solution.groups && typeof solution.groups === 'object') {
-                        for (const groupKey in solution.groups) {
-                            if (Object.hasOwnProperty.call(solution.groups, groupKey)) {
-                                const groupData = solution.groups[groupKey];
-                                const groupDesc = groupData.description || "Group " + (colorIdx + 1);
-                                const groupWords = groupData.words || [];
-                                const groupColor = groupData.difficulty_index ?? colorIdx;
-                                displaySolvedGroup(groupDesc, groupWords, groupColor);
-                                colorIdx++;
-                            }
+                     for (const groupKey in solution.groups) {
+                        if (Object.hasOwnProperty.call(solution.groups, groupKey)) {
+                            const groupData = solution.groups[groupKey];
+                            const groupDesc = groupData.description || "Group " + (colorIdx + 1);
+                            const groupWords = groupData.words || [];
+                            const groupColor = groupData.difficulty_index ?? colorIdx;
+                            displaySolvedGroup(groupDesc, groupWords, groupColor);
+                            colorIdx++;
                         }
-                     } else {
-                        console.error("Solution.groups is not in the expected format:", solution.groups);
-                        throw new Error("Invalid solution format from server.");
                      }
                      reorderGrid(); clearFeedback(); showFeedback('Solution Revealed.', '', 3000);
                 } catch (error) {
                     console.error("Failed to reveal solution:", error);
-                    showFeedback(`Could not load the full solution: ${error.message}`, 'feedback-incorrect', 3000);
+                    showFeedback(`Could not load the full solution: ${error.message}`, 'feedback-incorrect', 4000);
                 } finally {
-                    disableAllInteraction(); // Ensure everything is fully disabled
-                    // Post-game buttons are already managed by endGame or modal's confirm.
-                    // Update viewSolutionBtn state if it was the one that triggered reveal.
+                    disableAllInteraction();
                     if (viewSolutionBtn && viewSolutionBtn.innerHTML.includes('Revealing...')) {
                          viewSolutionBtn.innerHTML = '<i class="fas fa-check"></i> Solution Shown';
-                         viewSolutionBtn.disabled = true;
+                         viewSolutionBtn.disabled = true; // Keep it disabled after showing
                     }
                     addPostGameReviewListeners();
                 }
             }
 
-            function disableAllInteraction() {
+            function disableAllInteraction() { /* ... same as before ... */
                  wordGrid.removeEventListener('keydown', actualGridNavigationHandler);
                  document.querySelectorAll('.word-item').forEach(el => {
                       el.removeEventListener('click', handleWordClick); el.removeEventListener('keydown', handleWordKeyDown);
@@ -818,7 +832,7 @@
                  });
                  clearSelectionBtn.disabled = true; hintBtn.disabled = true;
             }
-            function enableAllInteraction() {
+            function enableAllInteraction() { /* ... same as before ... */
                  document.querySelectorAll('.word-item:not(.solved)').forEach(el => {
                      el.addEventListener('click', handleWordClick); el.addEventListener('keydown', handleWordKeyDown);
                      el.style.cursor = 'pointer'; el.classList.remove('disabled');
@@ -826,31 +840,26 @@
                  });
                  updateSelectionUI(); setupGridNavigation();
             }
-            function goToHome() { sessionStorage.removeItem(PUZZLE_STORAGE_KEY); window.location.href = '/home.html'; }
+            function goToHome() {
+                sessionStorage.removeItem(PUZZLE_STORAGE_KEY);
+                document.body.classList.add('fade-out');
+                setTimeout(() => { window.location.href = '/home.html'; }, 300);
+            }
 
-            function loadStats() {
+            function loadStats() { /* ... same as before ... */
                 const storedStats = localStorage.getItem(STATS_STORAGE_KEY);
-                if (storedStats) {
-                    try {
-                        const parsedStats = JSON.parse(storedStats);
-                        if (typeof parsedStats.wins === 'number' && typeof parsedStats.losses === 'number') {
-                            gameStats = { ...gameStats, ...parsedStats };
-                        } else { localStorage.removeItem(STATS_STORAGE_KEY); }
-                    } catch (e) { localStorage.removeItem(STATS_STORAGE_KEY); console.error("Error loading stats:", e); }
-                }
+                if (storedStats) { try { const ps = JSON.parse(storedStats); if (typeof ps.wins === 'number') gameStats = { ...gameStats, ...ps }; else localStorage.removeItem(STATS_STORAGE_KEY); } catch (e) { localStorage.removeItem(STATS_STORAGE_KEY); console.error("Error loading stats:", e); }}
             }
-            function saveStats() {
-                try { localStorage.setItem(STATS_STORAGE_KEY, JSON.stringify(gameStats)); }
-                catch (e) { console.error('Error saving stats:', e); }
+            function saveStats() { /* ... same as before ... */
+                try { localStorage.setItem(STATS_STORAGE_KEY, JSON.stringify(gameStats)); } catch (e) { console.error('Error saving stats:', e); }
             }
-
-            function setInitialFocus() {
+            function setInitialFocus() { /* ... same as before ... */
                 const firstFocusableWord = wordGrid.querySelector('.word-item:not(.solved):not(.disabled)');
                 if (firstFocusableWord) firstFocusableWord.focus();
                 else if (newGameBtn && newGameBtn.style.display !== 'none') newGameBtn.focus();
                 else if (hintBtn && !hintBtn.disabled) hintBtn.focus();
             }
-            const actualGridNavigationHandler = (event) => {
+            const actualGridNavigationHandler = (event) => { /* ... same as before ... */
                 const { key } = event; const activeElement = document.activeElement;
                 if (!activeElement || !activeElement.classList.contains('word-item') || !wordGrid.contains(activeElement) || activeElement.classList.contains('solved') || activeElement.classList.contains('disabled')) return;
                 if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) return;
@@ -868,75 +877,59 @@
                 }
                 if (targetIndex >= 0 && targetIndex < focusableItems.length) focusableItems[targetIndex].focus();
             };
-            function setupGridNavigation() {
+            function setupGridNavigation() { /* ... same as before ... */
                 wordGrid.removeEventListener('keydown', actualGridNavigationHandler);
                 wordGrid.addEventListener('keydown', actualGridNavigationHandler);
             }
-            function addPostGameReviewListeners() {
+            function addPostGameReviewListeners() { /* ... same as before ... */
                 const solvedGroupDivs = solvedGroupsArea.querySelectorAll('.solved-group');
                 solvedGroupDivs.forEach(groupDiv => {
                     groupDiv.classList.add('reviewable'); groupDiv.setAttribute('tabindex', '0');
                     groupDiv.addEventListener('click', handleReviewGroupClick);
-                    groupDiv.addEventListener('keydown', (event) => {
-                        if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); handleReviewGroupClick(event); }
-                    });
+                    groupDiv.addEventListener('keydown', (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); handleReviewGroupClick(event); }});
                 });
             }
-            function handleReviewGroupClick(event) {
-                const groupDiv = event.currentTarget;
-                const wordsToHighlight = JSON.parse(groupDiv.dataset.words || '[]');
+            function handleReviewGroupClick(event) { /* ... same as before ... */
+                const groupDiv = event.currentTarget; const wordsToHighlight = JSON.parse(groupDiv.dataset.words || '[]');
                 wordGrid.querySelectorAll('.word-item.highlight-review').forEach(el => el.classList.remove('highlight-review'));
-                wordsToHighlight.forEach(word => {
-                    const wordItem = wordGrid.querySelector(`.word-item.solved[data-word="${word}"]`);
-                    if (wordItem) wordItem.classList.add('highlight-review');
+                wordsToHighlight.forEach(word => { const wordItem = wordGrid.querySelector(`.word-item.solved[data-word="${word}"]`); if (wordItem) wordItem.classList.add('highlight-review'); });
+            }
+            function openShowAnswerModal() { /* ... same as before ... */
+                if (showAnswerModal) { elementToFocusOnModalClose = document.activeElement; currentOpenModal = showAnswerModal; showAnswerModal.style.display = 'flex'; setTimeout(() => { showAnswerModal.classList.add('modal-open'); modalFocusableElements = Array.from(showAnswerModal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')).filter(el => el.offsetParent !== null); if (modalFocusableElements.length > 0) modalFocusableElements[0].focus(); document.addEventListener('keydown', handleModalFocusTrap); }, 10); }
+            }
+            function closeShowAnswerModal() { /* ... same as before ... */
+                if (showAnswerModal && currentOpenModal === showAnswerModal) { document.removeEventListener('keydown', handleModalFocusTrap); showAnswerModal.classList.remove('modal-open'); currentOpenModal = null; setTimeout(() => { if (!showAnswerModal.classList.contains('modal-open')) showAnswerModal.style.display = 'none'; if (elementToFocusOnModalClose) { elementToFocusOnModalClose.focus(); elementToFocusOnModalClose = null; } }, 300); }
+            }
+            function handleModalFocusTrap(event) { /* ... same as before ... */
+                if (!currentOpenModal || !currentOpenModal.classList.contains('modal-open')) return; if (event.key === 'Tab') { if (modalFocusableElements.length === 0) { event.preventDefault(); return; } const firstElement = modalFocusableElements[0]; const lastElement = modalFocusableElements[modalFocusableElements.length - 1]; if (event.shiftKey) { if (document.activeElement === firstElement) { lastElement.focus(); event.preventDefault(); } } else { if (document.activeElement === lastElement) { firstElement.focus(); event.preventDefault(); } } } else if (event.key === 'Escape') { if (currentOpenModal === showAnswerModal) closeShowAnswerModal(); }
+            }
+
+            // Theme Toggle Logic
+            function applyTheme(theme) {
+                if (theme === 'dark') {
+                    document.documentElement.classList.add('dark-theme');
+                    if (themeToggleBtn) themeToggleBtn.innerHTML = `<i class="fas ${sunIconClass}"></i>`;
+                    localStorage.setItem(THEME_STORAGE_KEY, 'dark');
+                } else {
+                    document.documentElement.classList.remove('dark-theme');
+                    if (themeToggleBtn) themeToggleBtn.innerHTML = `<i class="fas ${moonIconClass}"></i>`;
+                    localStorage.setItem(THEME_STORAGE_KEY, 'light');
+                }
+            }
+            if (themeToggleBtn) {
+                themeToggleBtn.addEventListener('click', () => {
+                    if (document.documentElement.classList.contains('dark-theme')) applyTheme('light');
+                    else applyTheme('dark');
                 });
             }
+            const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (savedTheme) applyTheme(savedTheme); else if (prefersDark) applyTheme('dark'); else applyTheme('light');
 
-            function openShowAnswerModal() {
-                if (showAnswerModal) {
-                    elementToFocusOnModalClose = document.activeElement; currentOpenModal = showAnswerModal;
-                    showAnswerModal.style.display = 'flex';
-                    setTimeout(() => {
-                        showAnswerModal.classList.add('modal-open');
-                        modalFocusableElements = Array.from(
-                            showAnswerModal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')
-                        ).filter(el => el.offsetParent !== null);
-                        if (modalFocusableElements.length > 0) modalFocusableElements[0].focus();
-                        document.addEventListener('keydown', handleModalFocusTrap);
-                    }, 10);
-                }
-            }
-            function closeShowAnswerModal() {
-                if (showAnswerModal && currentOpenModal === showAnswerModal) {
-                    document.removeEventListener('keydown', handleModalFocusTrap);
-                    showAnswerModal.classList.remove('modal-open'); currentOpenModal = null;
-                    setTimeout(() => {
-                        if (!showAnswerModal.classList.contains('modal-open')) showAnswerModal.style.display = 'none';
-                        if (elementToFocusOnModalClose) { elementToFocusOnModalClose.focus(); elementToFocusOnModalClose = null; }
-                    }, 300);
-                }
-            }
-            function handleModalFocusTrap(event) {
-                if (!currentOpenModal || !currentOpenModal.classList.contains('modal-open')) return;
-                if (event.key === 'Tab') {
-                    if (modalFocusableElements.length === 0) { event.preventDefault(); return; }
-                    const firstElement = modalFocusableElements[0];
-                    const lastElement = modalFocusableElements[modalFocusableElements.length - 1];
-                    if (event.shiftKey) { if (document.activeElement === firstElement) { lastElement.focus(); event.preventDefault(); } }
-                    else { if (document.activeElement === lastElement) { firstElement.focus(); event.preventDefault(); } }
-                } else if (event.key === 'Escape') { if (currentOpenModal === showAnswerModal) closeShowAnswerModal(); }
-            }
-
+            // Event Listeners & Init
             clearSelectionBtn.addEventListener('click', clearSelection);
             hintBtn.addEventListener('click', handleHintClick);
-            confirmShowAnswerBtn.addEventListener('click', async () => { // Modified
-                closeShowAnswerModal(); // Close modal first
-                await revealAllGroups(); // Then reveal (this might call endGame or disable interactions)
-                // If revealAllGroups doesn't trigger endGame, you might need to call endGame(false) or similar
-                // to ensure the post-game buttons are shown correctly.
-                // However, revealAllGroups already disables interaction and shows post-game buttons
-                // via its own logic, so this might be sufficient.
-            });
+            confirmShowAnswerBtn.addEventListener('click', async () => { closeShowAnswerModal(); await revealAllGroups(); });
             cancelShowAnswerBtn.addEventListener('click', closeShowAnswerModal);
             initGame();
         });

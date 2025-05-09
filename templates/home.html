@@ -1,32 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"> <!-- Add class for theme here via JS -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WordLinks - Home</title>
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome (for icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
-        :root {
+        :root { /* Light Theme (Default) */
             --bg-gradient-start: #f8f9fa;
             --bg-gradient-end: #ffffff;
             --container-bg: #ffffff;
             --text-primary: #343a40;
             --text-secondary: #6c757d;
             --accent-primary: #007bff;
-            --accent-secondary: #8f94fb;
-            --button-easy-bg: linear-gradient(135deg, #28a745 0%, #1e7e34 100%); /* Green */
+            --button-easy-bg: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
             --button-easy-hover: linear-gradient(135deg, #1e7e34 0%, #155724 100%);
-            --button-medium-bg: linear-gradient(135deg, #ffc107 0%, #e0a800 100%); /* Yellow/Orange */
+            --button-medium-bg: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
             --button-medium-hover: linear-gradient(135deg, #e0a800 0%, #c69500 100%);
-            --button-hard-bg: linear-gradient(135deg, #dc3545 0%, #b02a37 100%); /* Red */
+            --button-hard-bg: linear-gradient(135deg, #dc3545 0%, #b02a37 100%);
             --button-hard-hover: linear-gradient(135deg, #b02a37 0%, #8c222c 100%);
-            --button-stats-bg: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%); /* Cyan */
+            --button-stats-bg: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%);
             --button-stats-hover: linear-gradient(135deg, #117a8b 0%, #0f6674 100%);
             --button-disabled-bg: #ced4da;
             --button-disabled-text: #6c757d;
@@ -34,6 +31,43 @@
             --shadow-md: 0 4px 8px rgba(0,0,0,0.1);
             --shadow-lg: 0 10px 20px rgba(0,0,0,0.1);
             --transition-speed: 0.25s;
+            --modal-overlay-bg: rgba(0, 0, 0, 0.6);
+            --stat-item-bg: #f8f9fa;
+            --theme-toggle-btn-color: var(--text-secondary);
+            --theme-toggle-btn-hover-color: var(--text-primary);
+            --error-bg: #f8d7da;
+            --error-text: #842029;
+            --error-border: #f5c2c7;
+            --spinner-light: #f3f3f3;
+            --spinner-dark: var(--accent-primary);
+        }
+
+        html.dark-theme { /* Dark Theme Overrides */
+            --bg-gradient-start: #212529;
+            --bg-gradient-end: #343a40;
+            --container-bg: #495057;
+            --text-primary: #f8f9fa;
+            --text-secondary: #adb5bd;
+            --accent-primary: #0d6efd; /* Or a brighter blue for dark mode */
+            --button-easy-bg: linear-gradient(135deg, #1a6130 0%, #144b24 100%);
+            --button-easy-hover: linear-gradient(135deg, #144b24 0%, #0e3619 100%);
+            --button-medium-bg: linear-gradient(135deg, #b38600 0%, #997100 100%);
+            --button-medium-hover: linear-gradient(135deg, #997100 0%, #7d5c00 100%);
+            --button-hard-bg: linear-gradient(135deg, #9a2430 0%, #7a1d26 100%);
+            --button-hard-hover: linear-gradient(135deg, #7a1d26 0%, #5c161c 100%);
+            --button-stats-bg: linear-gradient(135deg, #0f7485 0%, #0b5a68 100%);
+            --button-stats-hover: linear-gradient(135deg, #0b5a68 0%, #084c58 100%);
+            --button-disabled-bg: #5a6268;
+            --button-disabled-text: #adb5bd;
+            --modal-overlay-bg: rgba(0, 0, 0, 0.8);
+            --stat-item-bg: #343a40;
+            --theme-toggle-btn-color: var(--text-secondary);
+            --theme-toggle-btn-hover-color: var(--text-primary);
+            --error-bg: #591C21;
+            --error-text: #f5c2c7;
+            --error-border: #c87079;
+            --spinner-light: #495057;
+            --spinner-dark: var(--accent-primary);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -49,7 +83,14 @@
             align-items: center;
             justify-content: center;
             text-align: center;
+            opacity: 0; /* For page transition */
+            animation: fadeInPage 0.5s ease-out forwards;
+            transition: background var(--transition-speed) ease, color var(--transition-speed) ease;
         }
+        @keyframes fadeInPage { to { opacity: 1; } }
+        body.fade-out { opacity: 1; animation: fadeOutPage 0.3s ease-in forwards; }
+        @keyframes fadeOutPage { to { opacity: 0; } }
+
 
         .container {
             width: 100%;
@@ -59,55 +100,47 @@
             padding: 40px;
             border-radius: 16px;
             box-shadow: var(--shadow-lg);
+            position: relative; /* For theme toggle button positioning */
+            transition: background-color var(--transition-speed) ease;
         }
+
+        #theme-toggle-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none; border: none; font-size: 1.3em; cursor: pointer;
+            color: var(--theme-toggle-btn-color);
+            padding: 5px;
+            transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
+        }
+        #theme-toggle-btn:hover {
+            color: var(--theme-toggle-btn-hover-color);
+            transform: scale(1.1);
+        }
+
 
         h1 {
-            color: var(--text-primary);
-            margin-bottom: 15px;
-            font-weight: 700;
-            font-size: 2.5em;
+            color: var(--text-primary); margin-bottom: 15px; font-weight: 700; font-size: 2.5em;
+            transition: color var(--transition-speed) ease;
         }
-
         h2 {
-            color: var(--text-secondary);
-            margin-bottom: 30px;
-            font-weight: 400;
-            font-size: 1.1em;
+            color: var(--text-secondary); margin-bottom: 30px; font-weight: 400; font-size: 1.1em;
+            transition: color var(--transition-speed) ease;
         }
 
-        .difficulty-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 20px; /* Increased gap */
-            margin-bottom: 30px;
-        }
-
+        .difficulty-buttons { display: flex; flex-direction: column; gap: 20px; margin-bottom: 30px; }
         .difficulty-buttons button, .utility-button {
-            padding: 15px 25px; /* Increased padding */
-            cursor: pointer;
-            border-radius: 30px; /* Pill shape */
-            border: none;
-            font-weight: 600;
-            font-size: 1.1em; /* Larger font */
-            color: white;
+            padding: 15px 25px; cursor: pointer; border-radius: 30px; border: none;
+            font-weight: 600; font-size: 1.1em; color: white;
             transition: background var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
-            box-shadow: var(--shadow-md);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px; /* Space for icon */
+            box-shadow: var(--shadow-md); display: flex; align-items: center; justify-content: center; gap: 10px;
         }
         .difficulty-buttons button:hover:not(:disabled),
         .utility-button:hover:not(:disabled) {
-            transform: translateY(-3px) scale(1.02); /* More pronounced hover */
-            box-shadow: var(--shadow-lg);
+            transform: translateY(-3px) scale(1.02); box-shadow: var(--shadow-lg);
         }
         .difficulty-buttons button:active:not(:disabled),
-        .utility-button:active:not(:disabled) {
-            transform: translateY(0) scale(1);
-            box-shadow: var(--shadow-md);
-        }
-
+        .utility-button:active:not(:disabled) { transform: translateY(0) scale(1); box-shadow: var(--shadow-md); }
 
         #easy-btn    { background: var(--button-easy-bg); }
         #easy-btn:hover:not(:disabled) { background: var(--button-easy-hover); }
@@ -118,61 +151,47 @@
         #stats-btn { background: var(--button-stats-bg); }
         #stats-btn:hover:not(:disabled) { background: var(--button-stats-hover); }
 
-
         .difficulty-buttons button:disabled, .utility-button:disabled {
-            background: var(--button-disabled-bg);
-            color: var(--button-disabled-text);
-            cursor: not-allowed;
-            box-shadow: none;
-            transform: none;
+            background: var(--button-disabled-bg); color: var(--button-disabled-text);
+            cursor: not-allowed; box-shadow: none; transform: none;
         }
-        .difficulty-buttons button i, .utility-button i {
-            font-size: 1.2em; /* Slightly larger icons */
-        }
+        .difficulty-buttons button i, .utility-button i { font-size: 1.2em; }
 
         #loading-spinner {
-            display: none; /* Hidden by default */
-            margin: 20px auto;
-            width: 40px;
-            height: 40px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid var(--accent-primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+            display: none; margin: 20px auto; width: 40px; height: 40px;
+            border: 5px solid var(--spinner-light);
+            border-top: 5px solid var(--spinner-dark);
+            border-radius: 50%; animation: spin 1s linear infinite;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         #error-message-home {
-            display: none;
-            margin-top: 20px;
-            padding: 10px 15px;
-            background-color: #f8d7da;
-            color: #842029;
-            border: 1px solid #f5c2c7;
-            border-radius: 8px;
-            font-weight: 600;
+            display: none; margin-top: 20px; padding: 10px 15px;
+            background-color: var(--error-bg); color: var(--error-text);
+            border: 1px solid var(--error-border);
+            border-radius: 8px; font-weight: 600;
+            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, border-color var(--transition-speed) ease;
         }
 
-        /* Stats Modal */
         .modal-overlay {
-            position: fixed; inset: 0;
-            background-color: rgba(0, 0, 0, 0.6);
+            position: fixed; inset: 0; background-color: var(--modal-overlay-bg);
             display: none; align-items: center; justify-content: center;
             z-index: 1000; opacity: 0; visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+            transition: opacity 0.3s ease, visibility 0s linear 0.3s, background-color var(--transition-speed) ease;
         }
         .modal-overlay.modal-open { opacity: 1; visibility: visible; display:flex; transition: opacity 0.3s ease; }
         .modal-content {
             background: var(--container-bg); padding: 30px 40px; border-radius: 15px;
             box-shadow: var(--shadow-lg); max-width: 400px; width: 90%;
             text-align: left; color: var(--text-primary); transform: scale(0.9);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, background-color var(--transition-speed) ease, color var(--transition-speed) ease;
         }
         .modal-overlay.modal-open .modal-content { transform: scale(1); }
         .modal-title {
             font-size: 1.5em; font-weight: 700; margin-bottom: 20px;
             display: flex; align-items: center; justify-content: space-between;
             color: var(--accent-primary);
+            transition: color var(--transition-speed) ease;
         }
         .modal-title .close-modal-btn {
             background: none; border: none; font-size: 1.5em; cursor: pointer;
@@ -180,25 +199,37 @@
         }
         .modal-title .close-modal-btn:hover { color: var(--text-primary); }
         .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 25px; }
-        .stat-item { background-color: #f8f9fa; padding: 15px; border-radius: 8px; text-align: center; box-shadow: var(--shadow-sm); }
-        .stat-item h4 { margin-bottom: 8px; font-size: 0.9em; color: var(--text-secondary); font-weight: 600; text-transform: uppercase;}
-        .stat-item p { font-size: 1.5em; font-weight: 700; color: var(--accent-primary); margin:0;}
-        .modal-actions { text-align: right; } /* For close button if outside title */
+        .stat-item {
+            background-color: var(--stat-item-bg); padding: 15px; border-radius: 8px;
+            text-align: center; box-shadow: var(--shadow-sm);
+            transition: background-color var(--transition-speed) ease;
+        }
+        .stat-item h4 {
+            margin-bottom: 8px; font-size: 0.9em; color: var(--text-secondary);
+            font-weight: 600; text-transform: uppercase;
+            transition: color var(--transition-speed) ease;
+        }
+        .stat-item p {
+            font-size: 1.5em; font-weight: 700; color: var(--accent-primary); margin:0;
+            transition: color var(--transition-speed) ease;
+        }
 
         @media (max-width: 480px) {
-            .container { padding: 25px; }
-            h1 { font-size: 2em; }
-            h2 { font-size: 1em; }
+            .container { padding: 25px 15px; } /* Less horizontal padding on small screens */
+            #theme-toggle-btn { top: 10px; right: 10px; font-size: 1.2em; }
+            h1 { font-size: 2em; } h2 { font-size: 1em; }
             .difficulty-buttons button, .utility-button { font-size: 1em; padding: 12px 20px; }
-            .modal-content { padding: 20px 25px; }
-            .modal-title { font-size: 1.3em; }
-            .stats-grid { grid-template-columns: 1fr; } /* Stack stats on small screens */
-            .stat-item p { font-size: 1.3em;}
+            .modal-content { padding: 20px 25px; } .modal-title { font-size: 1.3em; }
+            .stats-grid { grid-template-columns: 1fr; } .stat-item p { font-size: 1.3em;}
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <button id="theme-toggle-btn" aria-label="Toggle dark mode">
+            <i class="fas fa-moon"></i> <!-- Initial icon, JS will update -->
+        </button>
+
         <h1>WordLinks</h1>
         <h2>Select a difficulty to start a new game.</h2>
 
@@ -214,7 +245,6 @@
         <p id="error-message-home"></p>
     </div>
 
-    <!-- Stats Modal -->
     <div id="stats-modal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-title">
@@ -226,7 +256,7 @@
                 <div class="stat-item"><h4>Losses</h4><p id="stats-losses">0</p></div>
                 <div class="stat-item"><h4>Current Streak</h4><p id="stats-current-streak">0</p></div>
                 <div class="stat-item"><h4>Max Streak</h4><p id="stats-max-streak">0</p></div>
-                <div class="stat-item" style="grid-column: span 2;"> <!-- Spans two columns -->
+                <div class="stat-item" style="grid-column: span 2;">
                     <h4>Fastest Solve Time (Overall)</h4>
                     <p id="stats-fastest-time">N/A</p>
                 </div>
@@ -239,25 +269,28 @@
             const difficultyButtons = document.querySelectorAll('.difficulty-buttons button');
             const loadingSpinner = document.getElementById('loading-spinner');
             const errorMessageHome = document.getElementById('error-message-home');
-            const PUZZLE_STORAGE_KEY = 'currentPuzzle'; // Key for sessionStorage
+            const PUZZLE_STORAGE_KEY = 'currentPuzzle';
+            const STATS_STORAGE_KEY = 'wordLinksGameStats';
+            const THEME_STORAGE_KEY = 'wordLinksTheme';
 
-            // Stats Modal Elements
             const statsBtn = document.getElementById('stats-btn');
             const statsModal = document.getElementById('stats-modal');
             const closeStatsModalBtn = document.getElementById('close-stats-modal-btn');
-            const STATS_STORAGE_KEY = 'wordLinksGameStats'; // Key for localStorage
+            const themeToggleBtn = document.getElementById('theme-toggle-btn');
+            const sunIconClass = 'fa-sun';
+            const moonIconClass = 'fa-moon';
 
             function showLoading(show = true) {
                 loadingSpinner.style.display = show ? 'block' : 'none';
                 difficultyButtons.forEach(btn => btn.disabled = show);
                 if (statsBtn) statsBtn.disabled = show;
-                errorMessageHome.style.display = 'none'; // Hide error when loading starts
+                errorMessageHome.style.display = 'none';
             }
 
             function showError(message) {
                 errorMessageHome.textContent = message;
                 errorMessageHome.style.display = 'block';
-                showLoading(false); // Hide spinner on error
+                showLoading(false);
             }
 
             async function startGame(difficulty) {
@@ -268,35 +301,28 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ difficulty: difficulty })
                     });
-
                     if (!response.ok) {
                         const errorData = await response.json().catch(() => ({ detail: `HTTP error ${response.status}` }));
                         throw new Error(errorData.detail || `Failed to generate puzzle: ${response.statusText}`);
                     }
-
                     const puzzleData = await response.json();
                     if (puzzleData && puzzleData.puzzle_id && puzzleData.words) {
                         sessionStorage.setItem(PUZZLE_STORAGE_KEY, JSON.stringify(puzzleData));
-                        window.location.href = '/game'; // Navigate to the game page
+                        document.body.classList.add('fade-out');
+                        setTimeout(() => { window.location.href = '/game'; }, 300);
                     } else {
                         throw new Error("Received invalid puzzle data from server.");
                     }
-
                 } catch (error) {
                     console.error("Failed to start game:", error);
                     showError(`Failed to start game: ${error.message}. Please try again.`);
                 }
-                // No need to call showLoading(false) here if navigating away on success
             }
 
             difficultyButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const difficulty = button.dataset.difficulty;
-                    startGame(difficulty);
-                });
+                button.addEventListener('click', () => startGame(button.dataset.difficulty));
             });
 
-            // Stats Modal Logic
             function displayStats() {
                 const storedStats = localStorage.getItem(STATS_STORAGE_KEY);
                 let stats = { wins: 0, losses: 0, currentStreak: 0, maxStreak: 0, fastestTime: null };
@@ -306,12 +332,10 @@
                         if (typeof parsed.wins === 'number') stats = { ...stats, ...parsed };
                     } catch(e) { console.error("Error parsing stats", e); }
                 }
-
                 document.getElementById('stats-wins').textContent = stats.wins;
                 document.getElementById('stats-losses').textContent = stats.losses;
                 document.getElementById('stats-current-streak').textContent = stats.currentStreak;
                 document.getElementById('stats-max-streak').textContent = stats.maxStreak;
-
                 if (stats.fastestTime !== null && stats.fastestTime !== undefined) {
                     const minutes = Math.floor(stats.fastestTime / 60);
                     const seconds = stats.fastestTime % 60;
@@ -324,37 +348,46 @@
 
             function openStatsModal() {
                 displayStats();
-                statsModal.style.display = 'flex'; // Use flex as per modal-open
+                statsModal.style.display = 'flex';
                 setTimeout(() => statsModal.classList.add('modal-open'), 10);
             }
-
             function closeStatsModal() {
                 statsModal.classList.remove('modal-open');
-                setTimeout(() => {
-                    if(!statsModal.classList.contains('modal-open')) { // check in case of rapid clicks
-                        statsModal.style.display = 'none';
-                    }
-                }, 300); // Match CSS transition
+                setTimeout(() => { if(!statsModal.classList.contains('modal-open')) statsModal.style.display = 'none'; }, 300);
+            }
+            if (statsBtn) statsBtn.addEventListener('click', openStatsModal);
+            if (closeStatsModalBtn) closeStatsModalBtn.addEventListener('click', closeStatsModal);
+            statsModal.addEventListener('click', (event) => { if (event.target === statsModal) closeStatsModal(); });
+            document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && statsModal.classList.contains('modal-open')) closeStatsModal(); });
+
+            // Theme Toggle Logic
+            function applyTheme(theme) {
+                if (theme === 'dark') {
+                    document.documentElement.classList.add('dark-theme');
+                    if (themeToggleBtn) themeToggleBtn.innerHTML = `<i class="fas ${sunIconClass}"></i>`;
+                    localStorage.setItem(THEME_STORAGE_KEY, 'dark');
+                } else {
+                    document.documentElement.classList.remove('dark-theme');
+                    if (themeToggleBtn) themeToggleBtn.innerHTML = `<i class="fas ${moonIconClass}"></i>`;
+                    localStorage.setItem(THEME_STORAGE_KEY, 'light');
+                }
             }
 
-            if (statsBtn) {
-                statsBtn.addEventListener('click', openStatsModal);
+            if (themeToggleBtn) {
+                themeToggleBtn.addEventListener('click', () => {
+                    if (document.documentElement.classList.contains('dark-theme')) {
+                        applyTheme('light');
+                    } else {
+                        applyTheme('dark');
+                    }
+                });
             }
-            if (closeStatsModalBtn) {
-                closeStatsModalBtn.addEventListener('click', closeStatsModal);
-            }
-            // Close modal if clicking outside
-            statsModal.addEventListener('click', (event) => {
-                if (event.target === statsModal) {
-                    closeStatsModal();
-                }
-            });
-            // Close modal with Escape key
-            document.addEventListener('keydown', (event) => {
-                if (event.key === 'Escape' && statsModal.classList.contains('modal-open')) {
-                    closeStatsModal();
-                }
-            });
+
+            const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (savedTheme) { applyTheme(savedTheme); }
+            else if (prefersDark) { applyTheme('dark'); }
+            else { applyTheme('light'); } // Default to light if no preference/save
         });
     </script>
 </body>
