@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
+        /* --- Base & Typography --- */
         :root { /* Light Theme (Default) */
             --bg-gradient-start: #f8f9fa; --bg-gradient-end: #ffffff;
             --container-bg: #ffffff; --text-primary: #343a40; --text-secondary: #6c757d;
@@ -395,6 +396,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Element References ---
             const wordGrid = document.getElementById('word-grid');
             const loadingMessage = document.getElementById('loading-message');
             const errorMessage = document.getElementById('error-message');
@@ -417,38 +419,64 @@
             const newGameBtn = document.getElementById('new-game-btn');
             const themeToggleBtn = document.getElementById('theme-toggle-btn');
 
-            // Sound elements
             const selectSound = document.getElementById('select-sound');
             const correctSound = document.getElementById('correct-sound');
             const incorrectSound = document.getElementById('incorrect-sound');
             const winSound = document.getElementById('win-sound');
             const loseSound = document.getElementById('lose-sound');
 
-            const STARTING_LIVES = 4; const STARTING_SCORE = 1000;
-            const INCORRECT_GUESS_PENALTY = 75; const HINT_PENALTY = 150;
-            const MAX_HINTS = 3; const PUZZLE_STORAGE_KEY = 'currentPuzzle';
-            const STATS_STORAGE_KEY = 'wordLinksGameStats'; const THEME_STORAGE_KEY = 'wordLinksTheme';
+            // --- Game Configuration ---
+            const STARTING_LIVES = 4;
+            const STARTING_SCORE = 1000;
+            const INCORRECT_GUESS_PENALTY = 75;
+            const HINT_PENALTY = 150;
+            const MAX_HINTS = 3;
+            const PUZZLE_STORAGE_KEY = 'currentPuzzle';
+            const STATS_STORAGE_KEY = 'wordLinksGameStats';
+            const THEME_STORAGE_KEY = 'wordLinksTheme';
 
+            const POINTS_PER_CORRECT_GROUP = 200;
+            const TIME_BONUS_TARGET_SECONDS = 180;
+            const TIME_BONUS_PER_SECOND_SAVED = 2;
+            const GROUP_STREAK_THRESHOLD = 2;
+            const GROUP_STREAK_BONUS_MULTIPLIER = 50;
+            const PUZZLE_STREAK_BONUS_PER_STREAK = 100;
+
+
+            // --- Game State Variables ---
             let currentPuzzle = null, selectedWords = [], lives = STARTING_LIVES, score = STARTING_SCORE;
             let hintsUsed = 0, revealedGroupsCount = 0, solvedGroupKeys = [], isSubmitting = false;
             let gameActive = false, timerInterval = null, startTime = null, feedbackTimeout = null;
-            let gameStats = { wins: 0, losses: 0, currentStreak: 0, maxStreak: 0, fastestTime: null };
+            let gameStats = { wins: 0, losses: 0, currentStreak: 0, maxStreak: 0, fastestTime: null, perfectWins: 0 };
             let hintHighlightTimeout = null, elementToFocusOnModalClose = null;
             let modalFocusableElements = [], currentOpenModal = null;
             const sunIconClass = 'fa-sun', moonIconClass = 'fa-moon';
+            let currentGroupStreak = 0;
 
 
             function playSound(soundElement) {
                 if (soundElement && typeof soundElement.play === 'function') {
-                    soundElement.currentTime = 0;
-                    soundElement.play().catch(error => console.warn("Audio play failed (user interaction might be needed first):", error));
+                    if (soundElement.readyState >= 2 || !soundElement.error) {
+                        soundElement.currentTime = 0;
+                        soundElement.play().catch(error => console.warn("Audio play failed:", soundElement.id, error));
+                    } else if (soundElement.error) {
+                         console.warn("Cannot play sound, media error:", soundElement.id, soundElement.error);
+                    } else {
+                         console.warn("Cannot play sound, not enough data or error:", soundElement.id, "ReadyState:", soundElement.readyState);
+                    }
+                } else if (soundElement) {
+                    console.warn("Attempted to play sound on a non-playable audio element:", soundElement.id);
                 }
             }
 
             function initGame() {
                 closeShowAnswerModal(); stopTimer(); gameActive = false;
-                loadStats(); // Load game stats
-                // Apply theme is called at the end of the script
+                loadStats();
+                score = STARTING_SCORE;
+                if (gameStats.currentStreak > 0) {
+                    const puzzleStreakBonus = gameStats.currentStreak * PUZZLE_STREAK_BONUS_PER_STREAK;
+                    score += puzzleStreakBonus;
+                }
 
                 const puzzleDataString = sessionStorage.getItem(PUZZLE_STORAGE_KEY);
                 if (!puzzleDataString) {
@@ -462,8 +490,10 @@
                 try {
                     currentPuzzle = JSON.parse(puzzleDataString);
                     if (!currentPuzzle || !currentPuzzle.words || !currentPuzzle.puzzle_id) throw new Error("Invalid puzzle data format.");
-                    lives = STARTING_LIVES; score = STARTING_SCORE; hintsUsed = 0;
+                    lives = STARTING_LIVES; hintsUsed = 0;
                     selectedWords = []; solvedGroupKeys = []; revealedGroupsCount = 0; isSubmitting = false;
+                    currentGroupStreak = 0;
+
                     clearFeedback(); solvedGroupsArea.innerHTML = '';
                     errorMessage.style.display = 'none'; errorMessage.textContent = '';
                     loadingMessage.style.display = 'none'; wordGrid.innerHTML = ''; puzzleInfoDiv.innerHTML = '';
@@ -508,8 +538,8 @@
             function updateLivesDisplay() {
                  livesRemainingSpan.textContent = lives; const livesDiv = livesRemainingSpan.closest('div');
                  if(livesDiv) {
-                    livesDiv.style.color = lives <= 1 ? 'var(--incorrect-text)' : 'var(--text-secondary)'; // Use CSS var for color
-                    livesRemainingSpan.style.color = lives <= 1 ? 'var(--incorrect-text)' : 'var(--accent-primary)'; // Use CSS var
+                    livesDiv.style.color = lives <= 1 ? 'var(--incorrect-text)' : 'var(--text-secondary)';
+                    livesRemainingSpan.style.color = lives <= 1 ? 'var(--incorrect-text)' : 'var(--accent-primary)';
                  }
             }
             function updateScoreDisplay() { scoreSpan.textContent = Math.max(0, score); }
@@ -517,7 +547,7 @@
                  hintsUsedSpan.textContent = hintsUsed; hintsAllowedSpan.textContent = MAX_HINTS;
                  hintBtn.disabled = isSubmitting || !gameActive || hintsUsed >= MAX_HINTS || revealedGroupsCount === 4 || lives <= 0;
             }
-            function startTimer() { /* ... same as before ... */
+            function startTimer() {
                 stopTimer();
                 timerInterval = setInterval(() => {
                     if (!gameActive || !startTime) return;
@@ -529,12 +559,12 @@
             }
             function stopTimer() { clearInterval(timerInterval); timerInterval = null; }
 
-            function handleWordClick(event) { /* ... same as before ... */
+            function handleWordClick(event) {
                  const wordDiv = event.currentTarget;
                  if (!gameActive || isSubmitting || wordDiv.classList.contains('solved') || wordDiv.classList.contains('disabled')) return;
                  toggleWordSelection(wordDiv);
             }
-            function handleWordKeyDown(event) { /* ... same as before ... */
+            function handleWordKeyDown(event) {
                 if (event.key === 'Enter' || event.key === ' ') {
                     event.preventDefault(); const wordDiv = event.currentTarget;
                     if (!gameActive || isSubmitting || wordDiv.classList.contains('solved') || wordDiv.classList.contains('disabled')) return;
@@ -551,13 +581,13 @@
                       if (selectedWords.length < 4) {
                            selectedWords.push(word); wordDiv.classList.add('selected');
                            wordDiv.setAttribute('aria-selected', 'true');
-                           playSound(selectSound); // Play select sound
+                           playSound(selectSound);
                       }
                  }
                  updateSelectionUI();
                  if (selectedWords.length === 4) setTimeout(submitGroupAttempt, 150);
             }
-            function clearSelection() { /* ... same as before ... */
+            function clearSelection() {
                  clearFeedback(); selectedWords = [];
                  document.querySelectorAll('.word-item.selected').forEach(el => {
                     el.classList.remove('selected'); el.setAttribute('aria-selected', 'false');
@@ -565,7 +595,7 @@
                  updateSelectionUI();
             }
 
-            async function handleHintClick() { /* ... same as before ... */
+            async function handleHintClick() {
                 if (!gameActive || isSubmitting || hintsUsed >= MAX_HINTS || lives <= 0) return;
                 isSubmitting = true; updateSelectionUI();
                 score -= HINT_PENALTY; hintsUsed++;
@@ -601,7 +631,7 @@
                     updateScoreDisplay(); updateHintsDisplay(); isSubmitting = false; updateSelectionUI();
                 }
             }
-            function highlightHintWords(wordsArray) { /* ... same as before ... */
+            function highlightHintWords(wordsArray) {
                 if (hintHighlightTimeout) clearTimeout(hintHighlightTimeout);
                 document.querySelectorAll('.word-item.highlight-hint').forEach(el => el.classList.remove('highlight-hint'));
                 if (!wordsArray || wordsArray.length === 0) return;
@@ -615,14 +645,14 @@
                 }, 5000);
             }
 
-            function clearFeedback() { /* ... same as before ... */
+            function clearFeedback() {
                 if (feedbackTimeout) clearTimeout(feedbackTimeout); feedbackTimeout = null;
                 if (feedbackArea) {
                     feedbackArea.textContent = ''; feedbackArea.className = '';
                     feedbackArea.classList.add('feedback-area');
                 }
             }
-            function showFeedback(message, className = '', duration = 3000) { /* ... same as before ... */
+            function showFeedback(message, className = '', duration = 3000) {
                  if (!feedbackArea) return; clearFeedback();
                  feedbackArea.textContent = message;
                  if (className) feedbackArea.classList.add(className);
@@ -634,7 +664,7 @@
             }
             function showError(message) { errorMessage.textContent = message; errorMessage.style.display = 'block'; }
 
-            async function submitGroupAttempt() { /* ... same as before ... */
+            async function submitGroupAttempt() {
                 if (!gameActive || isSubmitting || selectedWords.length !== 4 || lives <= 0) return;
                 isSubmitting = true; updateSelectionUI(); clearFeedback(); showFeedback('Checking...', '', 0);
                 const attemptPayload = { puzzle_id: currentPuzzle.puzzle_id, groups: { 'attempt': selectedWords } };
@@ -655,6 +685,7 @@
                      clearSelection();
                 } finally { isSubmitting = false; }
             }
+
             function handleAttemptResult(result) {
                  let foundCorrectGroup = false; let correctGroupDescription = "";
                  let newlySolvedKey = null; let difficultyIndex = revealedGroupsCount;
@@ -673,7 +704,17 @@
 
                   if (foundCorrectGroup) {
                        playSound(correctSound);
-                       showFeedback(result.message || "Correct!", 'feedback-correct', 1500);
+                       score += POINTS_PER_CORRECT_GROUP;
+                       currentGroupStreak++;
+
+                       if (currentGroupStreak >= GROUP_STREAK_THRESHOLD) {
+                           const groupStreakBonus = (currentGroupStreak - (GROUP_STREAK_THRESHOLD - 1)) * GROUP_STREAK_BONUS_MULTIPLIER;
+                           score += groupStreakBonus;
+                           showFeedback(`Correct! Group Streak: +${groupStreakBonus}pts!`, 'feedback-correct', 2000);
+                       } else {
+                           showFeedback(result.message || "Correct!", 'feedback-correct', 1500);
+                       }
+                       updateScoreDisplay();
                        const wordsInSolvedGroupForAnim = selectedWords.slice();
                        wordsInSolvedGroupForAnim.forEach(word => {
                            const wordDiv = wordGrid.querySelector(`.word-item[data-word="${word}"]`);
@@ -684,20 +725,23 @@
                                }, { once: true });
                            }
                        });
-                       setTimeout(() => { // Delay displaySolvedGroup for animation
+                       setTimeout(() => {
                            displaySolvedGroup(correctGroupDescription, wordsInSolvedGroupForAnim, difficultyIndex);
                            revealedGroupsCount++; selectedWords = []; updateSelectionUI();
                            if (revealedGroupsCount === 4) {
                                 setTimeout(() => {
                                     showFeedback("Congratulations! Puzzle Solved!", 'feedback-correct', 0);
                                     playSound(winSound); endGame(true);
-                                }, 300); // Short delay after last group animation settles
+                                }, 300);
                            }
-                       }, 600); // Match animation duration
+                       }, 600);
                   } else {
                        playSound(incorrectSound);
+                       currentGroupStreak = 0;
+                       score -= INCORRECT_GUESS_PENALTY;
+                       lives--;
+                       updateScoreDisplay(); updateLivesDisplay();
                        showFeedback(result.message || "Incorrect. Try again.", 'feedback-incorrect', 1800);
-                       lives--; score -= INCORRECT_GUESS_PENALTY; updateScoreDisplay(); updateLivesDisplay();
                        shakeWords();
                        if (lives <= 0) {
                             setTimeout(() => {
@@ -707,7 +751,7 @@
                        } else { setTimeout(clearSelection, 800); }
                   }
             }
-            function displaySolvedGroup(description, wordsInGroup, colorIndex) { /* ... same as before ... */
+            function displaySolvedGroup(description, wordsInGroup, colorIndex) {
                  const groupDiv = document.createElement('div'); groupDiv.classList.add('solved-group');
                  const actualColorIndex = Math.min(Math.max(colorIndex, 0), 3);
                  groupDiv.classList.add(`solved-group-color-${actualColorIndex}`);
@@ -727,14 +771,14 @@
                   });
                  reorderGrid();
             }
-            function reorderGrid() { /* ... same as before ... */
+            function reorderGrid() {
                 const solvedItems = Array.from(wordGrid.querySelectorAll('.word-item.solved'));
                 const activeItems = Array.from(wordGrid.querySelectorAll('.word-item:not(.solved)'));
                 wordGrid.innerHTML = '';
                 activeItems.forEach(item => wordGrid.appendChild(item));
                 solvedItems.forEach(item => wordGrid.appendChild(item));
             }
-            function shakeWords() { /* ... same as before ... */
+            function shakeWords() {
                  document.querySelectorAll('.word-item.selected').forEach(div => {
                       div.style.animation = 'none'; void div.offsetWidth;
                       div.style.animation = 'shake 0.5s ease-in-out';
@@ -744,7 +788,20 @@
             function endGame(isWin) {
                  if (!gameActive) return; gameActive = false;
                  stopTimer(); disableAllInteraction(); closeShowAnswerModal();
+
+                 if (isWin) {
+                    const now = Date.now();
+                    const elapsedSeconds = startTime ? Math.floor((now - startTime) / 1000) : Infinity;
+                    let timeBonus = 0;
+                    if (elapsedSeconds < TIME_BONUS_TARGET_SECONDS) {
+                        timeBonus = (TIME_BONUS_TARGET_SECONDS - elapsedSeconds) * TIME_BONUS_PER_SECOND_SAVED;
+                        score += timeBonus;
+                        // Optional: show time bonus message explicitly
+                        // setTimeout(() => showFeedback(`Time Bonus: +${timeBonus}!`, 'feedback-correct', 3000), 700);
+                    }
+                 }
                  score = Math.max(0, score); updateScoreDisplay();
+
                  const endTime = Date.now();
                  const solveTimeSeconds = startTime ? Math.floor((endTime - startTime) / 1000) : null;
                  if (isWin) {
@@ -752,6 +809,9 @@
                      gameStats.maxStreak = Math.max(gameStats.maxStreak, gameStats.currentStreak);
                      if (solveTimeSeconds !== null && (gameStats.fastestTime === null || solveTimeSeconds < gameStats.fastestTime)) {
                          gameStats.fastestTime = solveTimeSeconds;
+                     }
+                     if (hintsUsed === 0 && lives === STARTING_LIVES) {
+                         gameStats.perfectWins = (gameStats.perfectWins || 0) + 1;
                      }
                  } else { gameStats.losses++; gameStats.currentStreak = 0; }
                  saveStats();
@@ -771,13 +831,13 @@
                     viewSolutionBtn.onclick = async () => {
                         viewSolutionBtn.disabled = true;
                         viewSolutionBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Revealing...';
-                        await revealAllGroups(); // This will update the button text upon completion
+                        await revealAllGroups();
                     };
                 }
                 addPostGameReviewListeners();
             }
 
-            async function revealAllGroups() { /* ... same as before, with check for viewSolutionBtn state ... */
+            async function revealAllGroups() {
                 if (!currentPuzzle?.puzzle_id) return;
                 if (gameActive) { gameActive = false; stopTimer(); }
                 clearFeedback(); showFeedback('Revealing solution...', '', 0);
@@ -808,18 +868,18 @@
                      reorderGrid(); clearFeedback(); showFeedback('Solution Revealed.', '', 3000);
                 } catch (error) {
                     console.error("Failed to reveal solution:", error);
-                    showFeedback(`Could not load the full solution: ${error.message}`, 'feedback-incorrect', 4000);
+                    showFeedback(`Could not load the full solution: ${error.message}`, 'feedback-incorrect', 3000);
                 } finally {
                     disableAllInteraction();
                     if (viewSolutionBtn && viewSolutionBtn.innerHTML.includes('Revealing...')) {
                          viewSolutionBtn.innerHTML = '<i class="fas fa-check"></i> Solution Shown';
-                         viewSolutionBtn.disabled = true; // Keep it disabled after showing
+                         viewSolutionBtn.disabled = true;
                     }
                     addPostGameReviewListeners();
                 }
             }
 
-            function disableAllInteraction() { /* ... same as before ... */
+            function disableAllInteraction() {
                  wordGrid.removeEventListener('keydown', actualGridNavigationHandler);
                  document.querySelectorAll('.word-item').forEach(el => {
                       el.removeEventListener('click', handleWordClick); el.removeEventListener('keydown', handleWordKeyDown);
@@ -832,7 +892,7 @@
                  });
                  clearSelectionBtn.disabled = true; hintBtn.disabled = true;
             }
-            function enableAllInteraction() { /* ... same as before ... */
+            function enableAllInteraction() {
                  document.querySelectorAll('.word-item:not(.solved)').forEach(el => {
                      el.addEventListener('click', handleWordClick); el.addEventListener('keydown', handleWordKeyDown);
                      el.style.cursor = 'pointer'; el.classList.remove('disabled');
@@ -846,20 +906,20 @@
                 setTimeout(() => { window.location.href = '/home.html'; }, 300);
             }
 
-            function loadStats() { /* ... same as before ... */
+            function loadStats() {
                 const storedStats = localStorage.getItem(STATS_STORAGE_KEY);
-                if (storedStats) { try { const ps = JSON.parse(storedStats); if (typeof ps.wins === 'number') gameStats = { ...gameStats, ...ps }; else localStorage.removeItem(STATS_STORAGE_KEY); } catch (e) { localStorage.removeItem(STATS_STORAGE_KEY); console.error("Error loading stats:", e); }}
+                if (storedStats) { try { const ps = JSON.parse(storedStats); if (typeof ps.wins === 'number') gameStats = { wins: 0, losses: 0, currentStreak: 0, maxStreak: 0, fastestTime: null, perfectWins: 0, ...ps }; else localStorage.removeItem(STATS_STORAGE_KEY); } catch (e) { localStorage.removeItem(STATS_STORAGE_KEY); console.error("Error loading stats:", e); }}
             }
-            function saveStats() { /* ... same as before ... */
+            function saveStats() {
                 try { localStorage.setItem(STATS_STORAGE_KEY, JSON.stringify(gameStats)); } catch (e) { console.error('Error saving stats:', e); }
             }
-            function setInitialFocus() { /* ... same as before ... */
+            function setInitialFocus() {
                 const firstFocusableWord = wordGrid.querySelector('.word-item:not(.solved):not(.disabled)');
                 if (firstFocusableWord) firstFocusableWord.focus();
                 else if (newGameBtn && newGameBtn.style.display !== 'none') newGameBtn.focus();
                 else if (hintBtn && !hintBtn.disabled) hintBtn.focus();
             }
-            const actualGridNavigationHandler = (event) => { /* ... same as before ... */
+            const actualGridNavigationHandler = (event) => {
                 const { key } = event; const activeElement = document.activeElement;
                 if (!activeElement || !activeElement.classList.contains('word-item') || !wordGrid.contains(activeElement) || activeElement.classList.contains('solved') || activeElement.classList.contains('disabled')) return;
                 if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) return;
@@ -877,11 +937,11 @@
                 }
                 if (targetIndex >= 0 && targetIndex < focusableItems.length) focusableItems[targetIndex].focus();
             };
-            function setupGridNavigation() { /* ... same as before ... */
+            function setupGridNavigation() {
                 wordGrid.removeEventListener('keydown', actualGridNavigationHandler);
                 wordGrid.addEventListener('keydown', actualGridNavigationHandler);
             }
-            function addPostGameReviewListeners() { /* ... same as before ... */
+            function addPostGameReviewListeners() {
                 const solvedGroupDivs = solvedGroupsArea.querySelectorAll('.solved-group');
                 solvedGroupDivs.forEach(groupDiv => {
                     groupDiv.classList.add('reviewable'); groupDiv.setAttribute('tabindex', '0');
@@ -889,18 +949,18 @@
                     groupDiv.addEventListener('keydown', (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); handleReviewGroupClick(event); }});
                 });
             }
-            function handleReviewGroupClick(event) { /* ... same as before ... */
+            function handleReviewGroupClick(event) {
                 const groupDiv = event.currentTarget; const wordsToHighlight = JSON.parse(groupDiv.dataset.words || '[]');
                 wordGrid.querySelectorAll('.word-item.highlight-review').forEach(el => el.classList.remove('highlight-review'));
                 wordsToHighlight.forEach(word => { const wordItem = wordGrid.querySelector(`.word-item.solved[data-word="${word}"]`); if (wordItem) wordItem.classList.add('highlight-review'); });
             }
-            function openShowAnswerModal() { /* ... same as before ... */
+            function openShowAnswerModal() {
                 if (showAnswerModal) { elementToFocusOnModalClose = document.activeElement; currentOpenModal = showAnswerModal; showAnswerModal.style.display = 'flex'; setTimeout(() => { showAnswerModal.classList.add('modal-open'); modalFocusableElements = Array.from(showAnswerModal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')).filter(el => el.offsetParent !== null); if (modalFocusableElements.length > 0) modalFocusableElements[0].focus(); document.addEventListener('keydown', handleModalFocusTrap); }, 10); }
             }
-            function closeShowAnswerModal() { /* ... same as before ... */
+            function closeShowAnswerModal() {
                 if (showAnswerModal && currentOpenModal === showAnswerModal) { document.removeEventListener('keydown', handleModalFocusTrap); showAnswerModal.classList.remove('modal-open'); currentOpenModal = null; setTimeout(() => { if (!showAnswerModal.classList.contains('modal-open')) showAnswerModal.style.display = 'none'; if (elementToFocusOnModalClose) { elementToFocusOnModalClose.focus(); elementToFocusOnModalClose = null; } }, 300); }
             }
-            function handleModalFocusTrap(event) { /* ... same as before ... */
+            function handleModalFocusTrap(event) {
                 if (!currentOpenModal || !currentOpenModal.classList.contains('modal-open')) return; if (event.key === 'Tab') { if (modalFocusableElements.length === 0) { event.preventDefault(); return; } const firstElement = modalFocusableElements[0]; const lastElement = modalFocusableElements[modalFocusableElements.length - 1]; if (event.shiftKey) { if (document.activeElement === firstElement) { lastElement.focus(); event.preventDefault(); } } else { if (document.activeElement === lastElement) { firstElement.focus(); event.preventDefault(); } } } else if (event.key === 'Escape') { if (currentOpenModal === showAnswerModal) closeShowAnswerModal(); }
             }
 
