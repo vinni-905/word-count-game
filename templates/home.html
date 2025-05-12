@@ -25,6 +25,8 @@
             --button-hard-hover: linear-gradient(135deg, #b02a37 0%, #8c222c 100%);
             --button-stats-bg: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%);
             --button-stats-hover: linear-gradient(135deg, #117a8b 0%, #0f6674 100%);
+            --button-daily-bg: linear-gradient(135deg, #6f42c1 0%, #4a2490 100%); /* Purple example */
+            --button-daily-hover: linear-gradient(135deg, #4a2490 0%, #321861 100%);
             --button-disabled-bg: #ced4da;
             --button-disabled-text: #6c757d;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
@@ -44,8 +46,8 @@
             --input-border: #ced4da;
             --input-focus-border: var(--accent-primary);
             --label-color: var(--text-secondary);
-            --star-color: #FFD700; /* Gold for stars */
-            --badge-perfect-bg: var(--button-success-bg); /* Badge uses success color */
+            --star-color: #FFD700;
+            --badge-perfect-bg: var(--button-success-bg);
         }
 
         html.dark-theme { /* Dark Theme Overrides */
@@ -63,6 +65,8 @@
             --button-hard-hover: linear-gradient(135deg, #7a1d26 0%, #5c161c 100%);
             --button-stats-bg: linear-gradient(135deg, #0f7485 0%, #0b5a68 100%);
             --button-stats-hover: linear-gradient(135deg, #0b5a68 0%, #084c58 100%);
+            --button-daily-bg: linear-gradient(135deg, #59359a 0%, #3c1e72 100%);
+            --button-daily-hover: linear-gradient(135deg, #3c1e72 0%, #2c1553 100%);
             --button-disabled-bg: #5a6268;
             --button-disabled-text: #adb5bd;
             --modal-overlay-bg: rgba(0, 0, 0, 0.8);
@@ -78,7 +82,7 @@
             --input-border: #6c757d;
             --input-focus-border: var(--accent-primary);
             --label-color: var(--text-secondary);
-            --star-color: #FFC107; /* Slightly different gold for dark mode */
+            --star-color: #FFC107;
             --badge-perfect-bg: var(--button-success-bg);
         }
 
@@ -144,17 +148,21 @@
             box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--input-focus-border) 25%, transparent);
         }
         #countdown-settings { margin-left: 25px; display: none; }
-        .difficulty-buttons { display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px; }
-        .difficulty-buttons button, .utility-button {
+        .difficulty-buttons { display: flex; flex-direction: column; gap: 15px; margin-bottom: 15px; } /* Reduced margin */
+        .difficulty-buttons button, .utility-button, #daily-challenge-btn { /* Apply shared style */
             padding: 15px 25px; cursor: pointer; border-radius: 30px; border: none;
             font-weight: 600; font-size: 1.1em; color: white;
             transition: background var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
             box-shadow: var(--shadow-md); display: flex; align-items: center; justify-content: center; gap: 10px;
         }
         .difficulty-buttons button:hover:not(:disabled),
-        .utility-button:hover:not(:disabled) { transform: translateY(-3px) scale(1.02); box-shadow: var(--shadow-lg); }
+        .utility-button:hover:not(:disabled),
+        #daily-challenge-btn:hover:not(:disabled) { transform: translateY(-3px) scale(1.02); box-shadow: var(--shadow-lg); }
+
         .difficulty-buttons button:active:not(:disabled),
-        .utility-button:active:not(:disabled) { transform: translateY(0) scale(1); box-shadow: var(--shadow-md); }
+        .utility-button:active:not(:disabled),
+        #daily-challenge-btn:active:not(:disabled) { transform: translateY(0) scale(1); box-shadow: var(--shadow-md); }
+
         #easy-btn    { background: var(--button-easy-bg); }
         #easy-btn:hover:not(:disabled) { background: var(--button-easy-hover); }
         #medium-btn  { background: var(--button-medium-bg); }
@@ -163,11 +171,16 @@
         #hard-btn:hover:not(:disabled) { background: var(--button-hard-hover); }
         #stats-btn { background: var(--button-stats-bg); }
         #stats-btn:hover:not(:disabled) { background: var(--button-stats-hover); }
-        .difficulty-buttons button:disabled, .utility-button:disabled {
+        #daily-challenge-btn { background: var(--button-daily-bg); margin-top: 0; margin-bottom: 25px; } /* Adjusted margin */
+        #daily-challenge-btn:hover:not(:disabled) { background: var(--button-daily-hover); }
+
+
+        .difficulty-buttons button:disabled, .utility-button:disabled, #daily-challenge-btn:disabled {
             background: var(--button-disabled-bg); color: var(--button-disabled-text);
             cursor: not-allowed; box-shadow: none; transform: none;
         }
-        .difficulty-buttons button i, .utility-button i { font-size: 1.2em; }
+        .difficulty-buttons button i, .utility-button i, #daily-challenge-btn i { font-size: 1.2em; }
+
         #loading-spinner {
             display: none; margin: 20px auto; width: 40px; height: 40px;
             border: 5px solid var(--spinner-light); border-top: 5px solid var(--spinner-dark);
@@ -217,12 +230,10 @@
         }
         .stat-item p {
             font-size: 1.5em; font-weight: 700; color: var(--accent-primary); margin:0;
-            display: flex; align-items: center; justify-content: center; /* For aligning number and stars */
+            display: flex; align-items: center; justify-content: center;
             transition: color var(--transition-speed) ease;
         }
-        .stat-item .stars {
-            margin-left: 8px; color: var(--star-color); font-size: 0.8em;
-        }
+        .stat-item .stars { margin-left: 8px; color: var(--star-color); font-size: 0.8em; }
         .stat-item .stars .fa-star { margin-right: 2px; }
         .badge {
             display: inline-block; padding: 0.25em 0.6em; font-size: 75%;
@@ -238,7 +249,7 @@
             h1 { font-size: 2em; } h2 { font-size: 1em; margin-bottom: 15px;}
             .game-options h3 { font-size: 1em; }
             .mode-selection, .duration-selection { gap: 10px; }
-            .difficulty-buttons button, .utility-button { font-size: 1em; padding: 12px 20px; }
+            .difficulty-buttons button, .utility-button, #daily-challenge-btn { font-size: 1em; padding: 12px 20px; }
             .modal-content { padding: 20px 25px; } .modal-title { font-size: 1.3em; }
             .stats-grid { grid-template-columns: 1fr; } .stat-item p { font-size: 1.3em;}
         }
@@ -251,7 +262,7 @@
         </button>
 
         <h1>WordLinks</h1>
-        <h2>Select a difficulty and game mode.</h2>
+        <h2>Select a difficulty, game mode, or try the Daily Challenge!</h2>
 
         <div class="game-options">
             <h3>Game Mode</h3>
@@ -277,7 +288,9 @@
             <button id="hard-btn" data-difficulty="hard"><i class="fas fa-fire"></i> Hard</button>
         </div>
 
-        <button id="stats-btn" class="utility-button"><i class="fas fa-chart-bar"></i> View Stats</button>
+        <button id="daily-challenge-btn"><i class="fas fa-calendar-day"></i> Daily Challenge</button>
+
+        <button id="stats-btn" class="utility-button" style="margin-top: 25px;"><i class="fas fa-chart-bar"></i> View Stats</button>
 
         <div id="loading-spinner"></div>
         <p id="error-message-home"></p>
@@ -287,7 +300,7 @@
         <div class="modal-content">
             <div class="modal-title">
                 <span>Game Statistics</span>
-                <button id="close-stats-modal-btn" class="close-modal-btn" aria-label="Close statistics modal">×</button>
+                <button id="close-stats-modal-btn" class="close-modal-btn" aria-label="Close statistics modal">&times;</button>
             </div>
             <div class="stats-grid">
                 <div class="stat-item"><h4>Wins</h4><p id="stats-wins">0</p></div>
@@ -315,6 +328,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const difficultyButtons = document.querySelectorAll('.difficulty-buttons button');
+            const dailyChallengeBtn = document.getElementById('daily-challenge-btn');
             const loadingSpinner = document.getElementById('loading-spinner');
             const errorMessageHome = document.getElementById('error-message-home');
             const PUZZLE_STORAGE_KEY = 'currentPuzzle';
@@ -336,6 +350,7 @@
             function showLoading(show = true) {
                 loadingSpinner.style.display = show ? 'block' : 'none';
                 difficultyButtons.forEach(btn => btn.disabled = show);
+                if (dailyChallengeBtn) dailyChallengeBtn.disabled = show;
                 if (statsBtn) statsBtn.disabled = show;
                 errorMessageHome.style.display = 'none';
             }
@@ -348,45 +363,53 @@
                 }
             }
 
-            async function startGame(difficulty) {
+            async function startGame(difficulty, isDaily = false) {
                 showLoading(true);
 
                 let selectedGameMode = 'classic';
-                document.querySelectorAll('input[name="gameMode"]').forEach(radio => {
-                    if (radio.checked) {
-                        selectedGameMode = radio.value;
-                    }
-                });
-
                 let countdownDurationSeconds = 0;
-                if (selectedGameMode === 'countdown') {
-                    const minutes = parseInt(countdownDurationInput.value, 10);
-                    if (isNaN(minutes) || minutes < 1 || minutes > 10) {
-                        showError("Please enter a valid countdown duration (1-10 minutes).");
-                        return;
+
+                if (!isDaily) {
+                    document.querySelectorAll('input[name="gameMode"]').forEach(radio => {
+                        if (radio.checked) selectedGameMode = radio.value;
+                    });
+                    if (selectedGameMode === 'countdown') {
+                        const minutes = parseInt(countdownDurationInput.value, 10);
+                        if (isNaN(minutes) || minutes < 1 || minutes > 10) {
+                            showError("Please enter a valid countdown duration (1-10 minutes).");
+                            return; // Important to return here to stop execution
+                        }
+                        countdownDurationSeconds = minutes * 60;
                     }
-                    countdownDurationSeconds = minutes * 60;
                 }
 
                 try {
-                    const response = await fetch('/api/generate_puzzle', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ difficulty: difficulty })
-                    });
+                    let response;
+                    if (isDaily) {
+                        response = await fetch('/api/daily_challenge');
+                    } else {
+                        response = await fetch('/api/generate_puzzle', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ difficulty: difficulty })
+                        });
+                    }
+
                     if (!response.ok) {
                         const errorData = await response.json().catch(() => ({ detail: `HTTP error ${response.status}` }));
-                        throw new Error(errorData.detail || `Failed to generate puzzle: ${response.statusText}`);
+                        throw new Error(errorData.detail || `Failed to load puzzle: ${response.statusText}`);
                     }
                     const puzzleData = await response.json();
                     if (puzzleData && puzzleData.puzzle_id && puzzleData.words) {
                         sessionStorage.setItem(PUZZLE_STORAGE_KEY, JSON.stringify(puzzleData));
-                        sessionStorage.setItem('gameMode', selectedGameMode);
-                        if (selectedGameMode === 'countdown') {
+                        sessionStorage.setItem('gameMode', isDaily ? 'classic' : selectedGameMode);
+                        if (!isDaily && selectedGameMode === 'countdown') {
                             sessionStorage.setItem('countdownDuration', countdownDurationSeconds.toString());
                         } else {
                             sessionStorage.removeItem('countdownDuration');
                         }
+                        sessionStorage.setItem('isDailyChallenge', isDaily.toString());
+
                         document.body.classList.add('fade-out');
                         setTimeout(() => { window.location.href = '/game'; }, 300);
                     } else {
@@ -395,12 +418,17 @@
                 } catch (error) {
                     console.error("Failed to start game:", error);
                     showError(`Failed to start game: ${error.message}. Please try again.`);
+                    // No need to call showLoading(false) as showError handles it
                 }
             }
 
             difficultyButtons.forEach(button => {
-                button.addEventListener('click', () => startGame(button.dataset.difficulty));
+                button.addEventListener('click', () => startGame(button.dataset.difficulty, false));
             });
+
+            if (dailyChallengeBtn) {
+                dailyChallengeBtn.addEventListener('click', () => startGame(null, true));
+            }
 
             gameModeRadios.forEach(radio => {
                 radio.addEventListener('change', function() {

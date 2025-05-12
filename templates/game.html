@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
-        /* --- Base & Typography --- */
         :root { /* Light Theme (Default) */
             --bg-gradient-start: #f8f9fa; --bg-gradient-end: #ffffff;
             --container-bg: #ffffff; --text-primary: #343a40; --text-secondary: #6c757d;
@@ -49,6 +48,8 @@
             --error-message-border: var(--incorrect-border);
             --timer-default-color: var(--accent-primary);
             --timer-warning-color: var(--incorrect-text);
+            --daily-indicator-bg: color-mix(in srgb, var(--accent-primary) 15%, transparent);
+            --daily-indicator-text: var(--accent-primary);
         }
 
         html.dark-theme { /* Dark Theme Overrides */
@@ -78,10 +79,11 @@
             --error-message-border: var(--incorrect-border);
             --timer-default-color: var(--accent-primary);
             --timer-warning-color: var(--incorrect-text);
+            --daily-indicator-bg: color-mix(in srgb, var(--accent-primary) 25%, transparent);
+            --daily-indicator-text: var(--accent-primary);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
         body {
             font-family: 'Poppins', sans-serif; line-height: 1.6;
             background: linear-gradient(to bottom, var(--bg-gradient-start), var(--bg-gradient-end));
@@ -93,7 +95,6 @@
         @keyframes fadeInPage { to { opacity: 1; } }
         body.fade-out { opacity: 1; animation: fadeOutPage 0.3s ease-in forwards; }
         @keyframes fadeOutPage { to { opacity: 0; } }
-
         .container {
             width: 100%; max-width: 700px; margin: 20px auto;
             background: var(--container-bg); padding: 30px;
@@ -108,9 +109,17 @@
             transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
         }
         #theme-toggle-btn:hover { color: var(--theme-toggle-btn-hover-color); transform: scale(1.1); }
+        h1 { text-align: center; color: var(--text-primary); margin-bottom: 5px; font-weight: 700; transition: color var(--transition-speed) ease;} /* Reduced margin */
 
-        h1 { text-align: center; color: var(--text-primary); margin-bottom: 10px; font-weight: 700; transition: color var(--transition-speed) ease;}
-        h2 { text-align: center; color: var(--text-secondary); margin-bottom: 20px; font-weight: 600; transition: color var(--transition-speed) ease;}
+        .daily-challenge-indicator {
+            text-align: center; font-weight: bold; color: var(--daily-indicator-text);
+            background-color: var(--daily-indicator-bg);
+            padding: 5px 0; margin-bottom: 10px; border-radius: 6px;
+            font-size: 0.9em;
+            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+        }
+
+        h2 { text-align: center; color: var(--text-secondary); margin-bottom: 15px; font-weight: 600; transition: color var(--transition-speed) ease;} /* Reduced margin */
 
         .status-bar {
             display: flex; justify-content: space-around; align-items: center;
@@ -131,8 +140,7 @@
         }
         #timer-container {}
         #timer {
-            min-width: 80px;
-            color: var(--timer-default-color);
+            min-width: 80px; color: var(--timer-default-color);
             transition: color 0.3s ease;
         }
         #timer.countdown-active { font-weight: bold; }
@@ -342,6 +350,9 @@
         </button>
 
         <h1>WordLinks</h1>
+        <div id="daily-challenge-indicator" class="daily-challenge-indicator" style="display: none;">
+            🌟 Daily Challenge 🌟
+        </div>
         <div class="status-bar">
             <div id="timer-container">
                 <span id="timer-label">Time: </span><span id="timer">00:00</span>
@@ -415,6 +426,8 @@
             const viewSolutionBtn = document.getElementById('view-solution-btn');
             const newGameBtn = document.getElementById('new-game-btn');
             const themeToggleBtn = document.getElementById('theme-toggle-btn');
+            const dailyChallengeIndicator = document.getElementById('daily-challenge-indicator');
+
 
             const selectSound = document.getElementById('select-sound');
             const correctSound = document.getElementById('correct-sound');
@@ -451,6 +464,7 @@
             let gameMode = "classic";
             let countdownDuration = 0;
             let timeLeft = 0;
+            let isDailyChallenge = false;
 
 
             function playSound(soundElement) {
@@ -472,8 +486,17 @@
                 closeShowAnswerModal(); stopTimer(); gameActive = false;
                 loadStats();
 
-                gameMode = sessionStorage.getItem('gameMode') || "classic";
-                if (gameMode === "countdown") {
+                isDailyChallenge = sessionStorage.getItem('isDailyChallenge') === 'true';
+                if (isDailyChallenge) {
+                    gameMode = "classic";
+                    if (dailyChallengeIndicator) dailyChallengeIndicator.style.display = 'block';
+                    if (puzzleInfoDiv) puzzleInfoDiv.innerHTML = '';
+                } else {
+                    if (dailyChallengeIndicator) dailyChallengeIndicator.style.display = 'none';
+                    gameMode = sessionStorage.getItem('gameMode') || "classic";
+                }
+
+                if (gameMode === "countdown" && !isDailyChallenge) {
                     countdownDuration = parseInt(sessionStorage.getItem('countdownDuration'), 10) || 180;
                     timeLeft = countdownDuration;
                     if(timerLabelSpan) timerLabelSpan.textContent = "Time Left: ";
@@ -487,7 +510,7 @@
                 }
 
                 score = STARTING_SCORE;
-                if (gameStats.currentStreak > 0 && gameMode === "classic") {
+                if (gameStats.currentStreak > 0 && gameMode === "classic" && !isDailyChallenge) {
                     const puzzleStreakBonus = gameStats.currentStreak * PUZZLE_STREAK_BONUS_PER_STREAK;
                     score += puzzleStreakBonus;
                 }
@@ -510,13 +533,18 @@
 
                     clearFeedback(); solvedGroupsArea.innerHTML = '';
                     errorMessage.style.display = 'none'; errorMessage.textContent = '';
-                    loadingMessage.style.display = 'none'; wordGrid.innerHTML = ''; puzzleInfoDiv.innerHTML = '';
-                    if (currentPuzzle.difficulty || currentPuzzle.puzzle_id) {
+                    loadingMessage.style.display = 'none'; wordGrid.innerHTML = '';
+                    if (puzzleInfoDiv && !isDailyChallenge && (currentPuzzle.difficulty || currentPuzzle.puzzle_id)) {
                          const infoP = document.createElement('p'); let infoText = [];
-                         if(currentPuzzle.puzzle_id) infoText.push(`Puzzle #${currentPuzzle.puzzle_id}`);
+                         if(currentPuzzle.puzzle_id && !currentPuzzle.puzzle_id.startsWith("daily_")) infoText.push(`Puzzle #${currentPuzzle.puzzle_id}`);
                          if(currentPuzzle.difficulty) infoText.push(`Difficulty: ${currentPuzzle.difficulty}`);
-                         infoP.textContent = infoText.join(' | '); puzzleInfoDiv.appendChild(infoP);
+                         infoP.textContent = infoText.join(' | ');
+                         puzzleInfoDiv.innerHTML = ''; // Clear previous before appending
+                         puzzleInfoDiv.appendChild(infoP);
+                    } else if (puzzleInfoDiv) {
+                        puzzleInfoDiv.innerHTML = ''; // Clear for daily or if no info
                     }
+
                     displayWords(currentPuzzle.words);
                     updateScoreDisplay(); updateLivesDisplay(); updateHintsDisplay(); updateSelectionUI();
                     if (postGameActionsDiv) postGameActionsDiv.style.display = 'none';
@@ -676,12 +704,11 @@
                 } catch (error) {
                     console.error('Error getting hint:', error);
                     showFeedback(`Hint Failed: ${error.message}`, 'feedback-incorrect', 4000);
-                    // Adjust score correctly if a hint bonus was applied initially
                     let baseScore = STARTING_SCORE;
-                    if (gameMode === "classic" && gameStats.currentStreak > 0) {
+                    if (gameMode === "classic" && gameStats.currentStreak > 0 && !isDailyChallenge) { // Adjust base score for streak bonus
                         baseScore += gameStats.currentStreak * PUZZLE_STREAK_BONUS_PER_STREAK;
                     }
-                    if(hintsUsed > 0 && score + HINT_PENALTY <= baseScore + (MAX_HINTS * HINT_PENALTY) ) { // Max possible score before hint penalties
+                    if(hintsUsed > 0 && score + HINT_PENALTY <= baseScore + (MAX_HINTS * HINT_PENALTY) ) {
                          hintsUsed--; score += HINT_PENALTY;
                     }
                     updateScoreDisplay(); updateHintsDisplay(); isSubmitting = false; updateSelectionUI();
@@ -846,7 +873,7 @@
                  stopTimer(); disableAllInteraction(); closeShowAnswerModal();
 
                  if (isWin) {
-                    if (gameMode === "classic") {
+                    if (gameMode === "classic" && !isDailyChallenge) { // Time bonus only for classic non-daily
                         const now = Date.now();
                         const elapsedSeconds = startTime ? Math.floor((now - startTime) / 1000) : Infinity;
                         let timeBonus = 0;
@@ -854,27 +881,40 @@
                             timeBonus = (TIME_BONUS_TARGET_SECONDS - elapsedSeconds) * TIME_BONUS_PER_SECOND_SAVED;
                             score += timeBonus;
                         }
-                    } else if (gameMode === "countdown") {
+                    } else if (gameMode === "countdown" && !isDailyChallenge) { // Countdown bonus for non-daily
                         if (timeLeft > 0) {
                            score += timeLeft * COUNTDOWN_WIN_BONUS_PER_SECOND;
                         }
                     }
+                    // No specific time/countdown bonus for daily challenges, or define separately
                  }
                  score = Math.max(0, score); updateScoreDisplay();
 
                  const endTime = Date.now();
                  const solveTimeSeconds = startTime ? Math.floor((endTime - startTime) / 1000) : null;
-                 if (isWin) {
-                     gameStats.wins++; gameStats.currentStreak++;
-                     gameStats.maxStreak = Math.max(gameStats.maxStreak, gameStats.currentStreak);
-                     if (gameMode === "classic" && solveTimeSeconds !== null && (gameStats.fastestTime === null || solveTimeSeconds < gameStats.fastestTime)) {
-                         gameStats.fastestTime = solveTimeSeconds;
-                     }
-                     if (hintsUsed === 0 && lives === STARTING_LIVES) {
-                         gameStats.perfectWins = (gameStats.perfectWins || 0) + 1;
-                     }
-                 } else { gameStats.losses++; gameStats.currentStreak = 0; }
-                 saveStats();
+
+                 // Only update general game stats if it's NOT a daily challenge
+                 // Daily challenges might have separate leaderboards/tracking later
+                 if (!isDailyChallenge) {
+                    if (isWin) {
+                        gameStats.wins++; gameStats.currentStreak++;
+                        gameStats.maxStreak = Math.max(gameStats.maxStreak, gameStats.currentStreak);
+                        if (gameMode === "classic" && solveTimeSeconds !== null && (gameStats.fastestTime === null || solveTimeSeconds < gameStats.fastestTime)) {
+                            gameStats.fastestTime = solveTimeSeconds;
+                        }
+                        if (hintsUsed === 0 && lives === STARTING_LIVES) {
+                            gameStats.perfectWins = (gameStats.perfectWins || 0) + 1;
+                        }
+                    } else {
+                        gameStats.losses++; gameStats.currentStreak = 0;
+                    }
+                    saveStats();
+                 } else if (isWin) {
+                     // Could record daily challenge completion, e.g.
+                     // localStorage.setItem(`dailyChallenge_${currentPuzzle.puzzle_id}_completed`, 'true');
+                     console.info("Daily challenge completed successfully!");
+                 }
+
 
                 if (postGameActionsDiv) {
                     postGameActionsDiv.style.display = 'flex';
@@ -964,6 +1004,7 @@
                 sessionStorage.removeItem(PUZZLE_STORAGE_KEY);
                 sessionStorage.removeItem('gameMode');
                 sessionStorage.removeItem('countdownDuration');
+                sessionStorage.removeItem('isDailyChallenge');
                 document.body.classList.add('fade-out');
                 setTimeout(() => { window.location.href = '/home.html'; }, 300);
             }
