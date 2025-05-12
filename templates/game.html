@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
+        /* --- Base & Typography --- */
         :root { /* Light Theme (Default) */
             --bg-gradient-start: #f8f9fa; --bg-gradient-end: #ffffff;
             --container-bg: #ffffff; --text-primary: #343a40; --text-secondary: #6c757d;
@@ -25,6 +26,8 @@
             --button-warning-hover: linear-gradient(135deg, #e0a800 0%, #c69500 100%);
             --button-info-bg: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%);
             --button-info-hover: linear-gradient(135deg, #117a8b 0%, #0f6674 100%);
+            --button-shuffle-bg: linear-gradient(135deg, #fd7e14 0%, #e85a00 100%); /* Orange for Shuffle */
+            --button-shuffle-hover: linear-gradient(135deg, #e85a00 0%, #c54a00 100%);
             --button-success-bg: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
             --button-success-hover: linear-gradient(135deg, #1e7e34 0%, #155724 100%);
             --button-disabled-bg: #ced4da; --button-disabled-text: #6c757d;
@@ -62,6 +65,8 @@
             --incorrect-bg: #591C21; --incorrect-text: #f5c2c7; --incorrect-border: #8c222c;
             --hint-bg: #033C4A; --hint-text: #b6effb; --hint-border: #0f6674;
             --button-disabled-bg: #5a6268; --button-disabled-text: #adb5bd;
+            --button-shuffle-bg: linear-gradient(135deg, #c4630e 0%, #b04e00 100%);
+            --button-shuffle-hover: linear-gradient(135deg, #b04e00 0%, #934000 100%);
             --solved-color-0-bg: linear-gradient(135deg, #4d441e 0%, #443b19 100%);
             --solved-color-0-text: #fefae0; --solved-color-0-border: #8a6d3b;
             --solved-color-1-bg: linear-gradient(135deg, #004c75 0%, #003d5e 100%);
@@ -109,8 +114,7 @@
             transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
         }
         #theme-toggle-btn:hover { color: var(--theme-toggle-btn-hover-color); transform: scale(1.1); }
-        h1 { text-align: center; color: var(--text-primary); margin-bottom: 5px; font-weight: 700; transition: color var(--transition-speed) ease;} /* Reduced margin */
-
+        h1 { text-align: center; color: var(--text-primary); margin-bottom: 5px; font-weight: 700; transition: color var(--transition-speed) ease;}
         .daily-challenge-indicator {
             text-align: center; font-weight: bold; color: var(--daily-indicator-text);
             background-color: var(--daily-indicator-bg);
@@ -118,9 +122,7 @@
             font-size: 0.9em;
             transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
         }
-
-        h2 { text-align: center; color: var(--text-secondary); margin-bottom: 15px; font-weight: 600; transition: color var(--transition-speed) ease;} /* Reduced margin */
-
+        h2 { text-align: center; color: var(--text-secondary); margin-bottom: 15px; font-weight: 600; transition: color var(--transition-speed) ease;}
         .status-bar {
             display: flex; justify-content: space-around; align-items: center;
             padding: 15px 0; margin-bottom: 20px; border-bottom: 1px solid var(--word-item-base-border);
@@ -138,10 +140,7 @@
             font-size: 1.1em; margin-left: 5px;
             transition: color var(--transition-speed) ease;
         }
-        #timer {
-            min-width: 80px; color: var(--timer-default-color);
-            transition: color 0.3s ease;
-        }
+        #timer { min-width: 80px; color: var(--timer-default-color); transition: color 0.3s ease; }
         #timer.countdown-active { font-weight: bold; }
         #timer.countdown-warning { color: var(--timer-warning-color) !important; animation: pulseWarning 1s infinite alternate; }
         @keyframes pulseWarning { from { transform: scale(1); } to { transform: scale(1.05); } }
@@ -182,31 +181,39 @@
             100% { transform: scale(1); opacity: 1; }
         }
         .controls {
-            text-align: center; margin-bottom: 20px; display: flex;
-            justify-content: space-between; align-items: center; flex-wrap: wrap;
-            gap: 15px; padding: 15px; background-color: var(--controls-bg);
+            text-align: center; margin-bottom: 20px; display: grid; /* Changed to grid */
+            grid-template-columns: 1fr auto auto auto; /* Text takes space, buttons fit content */
+            align-items: center;
+            gap: 10px; padding: 15px; background-color: var(--controls-bg);
             border-radius: 8px; box-shadow: var(--shadow-sm);
             transition: background-color var(--transition-speed) ease;
         }
         .controls p {
             margin: 0; white-space: nowrap; font-size: 0.9em;
-            color: var(--text-secondary); flex-grow: 1; text-align: center;
+            color: var(--text-secondary); text-align: left; /* Align text left in its cell */
             transition: color var(--transition-speed) ease;
+            grid-column: 1 / 2; /* Make text span first "flexible" column */
         }
         .controls p span { font-weight: 700; color: var(--accent-primary); font-size: 1.1em; transition: color var(--transition-speed) ease;}
         .controls button, .post-game-actions button {
-            padding: 10px 20px; cursor: pointer; border-radius: 25px;
-            border: none; font-weight: 600; font-size: 0.9em; color: white;
+            padding: 10px 18px; /* Slightly less padding for more buttons */
+            cursor: pointer; border-radius: 25px;
+            border: none; font-weight: 600; font-size: 0.85em; /* Slightly smaller font */
+            color: white;
             transition: background var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
-            box-shadow: var(--shadow-sm); flex-shrink: 0;
+            box-shadow: var(--shadow-sm);
             display: inline-flex; align-items: center; justify-content: center; gap: 8px;
         }
         .controls button:hover:not(:disabled), .post-game-actions button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: var(--shadow-md); }
         .controls button:active:not(:disabled), .post-game-actions button:active:not(:disabled) { transform: translateY(0); box-shadow: var(--shadow-sm); }
+
         #clear-selection-btn { background: var(--button-warning-bg); }
         #clear-selection-btn:hover:not(:disabled) { background: var(--button-warning-hover); }
         #hint-btn { background: var(--button-info-bg); }
         #hint-btn:hover:not(:disabled) { background: var(--button-info-hover); }
+        #shuffle-btn { background: var(--button-shuffle-bg); } /* ** NEW ** */
+        #shuffle-btn:hover:not(:disabled) { background: var(--button-shuffle-hover); } /* ** NEW ** */
+
         .controls button:disabled, .post-game-actions button:disabled {
             background: var(--button-disabled-bg); color: var(--button-disabled-text);
             cursor: not-allowed; box-shadow: none; transform: none;
@@ -318,9 +325,10 @@
             h1 { font-size: 1.8em; }
             .status-bar { padding: 10px; } .status-bar div { font-size: 0.85em; } .status-bar span { font-size: 1em; }
             #word-grid { gap: 10px; } .word-item { font-size: 0.9em; min-height: 3.2em; padding: 12px 5px; }
-            .controls { flex-direction: column; gap: 10px; padding: 10px; }
-            .controls p { order: -1; margin-bottom: 10px; text-align: center; }
-            .controls button, .post-game-actions button { width: 70%; padding: 10px 15px; font-size: 0.9em;}
+            .controls { grid-template-columns: 1fr; justify-items: center; } /* Stack controls on smaller screens */
+            .controls p { text-align: center; margin-bottom: 10px; grid-column: 1 / -1; /* Span full width */ }
+            .controls button { width: 60%; } /* Adjust button width as needed */
+            .post-game-actions button { width: 70%;}
         }
         @media (max-width: 480px) {
             body { padding: 10px; } .container { padding: 15px; border-radius: 12px; }
@@ -329,7 +337,8 @@
             .status-bar div { text-align: left; padding: 0 10px; }
             #word-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 20px;}
             .word-item { font-size: 0.85em; min-height: 3.5em; font-weight: 600; }
-            .controls button, .post-game-actions button { width: 85%; }
+            .controls button { width: 85%; }
+            .post-game-actions button { width: 85%;}
             #feedback-area { padding: 10px 15px; font-size: 0.9em;}
             .solved-group { padding: 10px 15px; } .solved-group strong { font-size: 0.9em; } .solved-group p { font-size: 0.9em; }
         }
@@ -342,6 +351,9 @@
     <audio id="incorrect-sound" src="/static/sounds/incorrect.mp3" preload="auto"></audio>
     <audio id="win-sound" src="/static/sounds/win.mp3" preload="auto"></audio>
     <audio id="lose-sound" src="/static/sounds/lose.mp3" preload="auto"></audio>
+    <!-- ** NEW: Shuffle Sound (optional) ** -->
+    <audio id="shuffle-sound" src="/static/sounds/shuffle.mp3" preload="auto"></audio>
+
 
     <div class="container game-container">
         <button id="theme-toggle-btn" aria-label="Toggle dark mode">
@@ -368,11 +380,15 @@
         <div id="solved-groups-area"></div>
         <div id="word-grid" role="grid"></div>
 
+        <!-- ****** MODIFIED: Controls Area for Shuffle Button ****** -->
         <div class="controls">
              <p>Selected: <span id="selected-count">0</span> / 4</p>
+             <button id="shuffle-btn"><i class="fas fa-random"></i> Shuffle</button> <!-- ** NEW ** -->
              <button id="clear-selection-btn" disabled><i class="fas fa-times-circle"></i> Clear</button>
              <button id="hint-btn"><i class="fas fa-lightbulb"></i> Hint</button>
         </div>
+        <!-- ****** END: Controls Area ****** -->
+
 
         <div id="feedback-area" aria-live="polite" aria-atomic="true"></div>
 
@@ -403,6 +419,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Element References ---
             const wordGrid = document.getElementById('word-grid');
             const loadingMessage = document.getElementById('loading-message');
             const errorMessage = document.getElementById('error-message');
@@ -416,6 +433,7 @@
             const timerLabelSpan = document.getElementById('timer-label');
             const scoreSpan = document.getElementById('score');
             const hintBtn = document.getElementById('hint-btn');
+            const shuffleBtn = document.getElementById('shuffle-btn'); // ** NEW **
             const hintsUsedSpan = document.getElementById('hints-used');
             const hintsAllowedSpan = document.getElementById('hints-allowed');
             const showAnswerModal = document.getElementById('show-answer-modal');
@@ -433,7 +451,9 @@
             const incorrectSound = document.getElementById('incorrect-sound');
             const winSound = document.getElementById('win-sound');
             const loseSound = document.getElementById('lose-sound');
+            const shuffleSound = document.getElementById('shuffle-sound'); // ** NEW **
 
+            // --- Game Configuration ---
             const STARTING_LIVES = 4;
             const STARTING_SCORE = 1000;
             const INCORRECT_GUESS_PENALTY = 75;
@@ -442,6 +462,9 @@
             const PUZZLE_STORAGE_KEY = 'currentPuzzle';
             const STATS_STORAGE_KEY = 'wordLinksGameStats';
             const THEME_STORAGE_KEY = 'wordLinksTheme';
+            const SHUFFLE_PENALTY_SCORE = 25; // ** NEW: Optional score penalty for shuffle **
+            const MAX_SHUFFLES_ALLOWED = 3; // ** NEW: Optional limit on shuffles **
+
 
             const POINTS_PER_CORRECT_GROUP = 200;
             const TIME_BONUS_TARGET_SECONDS = 180;
@@ -452,6 +475,7 @@
             const COUNTDOWN_WIN_BONUS_PER_SECOND = 1;
 
 
+            // --- Game State Variables ---
             let currentPuzzle = null, selectedWords = [], lives = STARTING_LIVES, score = STARTING_SCORE;
             let hintsUsed = 0, revealedGroupsCount = 0, solvedGroupKeys = [], isSubmitting = false;
             let gameActive = false, timerInterval = null, startTime = null, feedbackTimeout = null;
@@ -464,6 +488,7 @@
             let countdownDuration = 0;
             let timeLeft = 0;
             let isDailyChallenge = false;
+            let shufflesUsed = 0; // ** NEW: Track shuffles **
 
 
             function playSound(soundElement) {
@@ -529,6 +554,7 @@
                     lives = STARTING_LIVES; hintsUsed = 0;
                     selectedWords = []; solvedGroupKeys = []; revealedGroupsCount = 0; isSubmitting = false;
                     currentGroupStreak = 0;
+                    shufflesUsed = 0; // ** NEW: Reset shuffles used **
 
                     clearFeedback(); solvedGroupsArea.innerHTML = '';
                     errorMessage.style.display = 'none'; errorMessage.textContent = '';
@@ -538,10 +564,10 @@
                          if(currentPuzzle.puzzle_id && !currentPuzzle.puzzle_id.startsWith("daily_")) infoText.push(`Puzzle #${currentPuzzle.puzzle_id}`);
                          if(currentPuzzle.difficulty) infoText.push(`Difficulty: ${currentPuzzle.difficulty}`);
                          infoP.textContent = infoText.join(' | ');
-                         puzzleInfoDiv.innerHTML = ''; // Clear previous before appending
+                         puzzleInfoDiv.innerHTML = '';
                          puzzleInfoDiv.appendChild(infoP);
                     } else if (puzzleInfoDiv) {
-                        puzzleInfoDiv.innerHTML = ''; // Clear for daily or if no info
+                        puzzleInfoDiv.innerHTML = '';
                     }
 
                     displayWords(currentPuzzle.words);
@@ -577,6 +603,10 @@
                 selectedCountSpan.textContent = selectedWords.length;
                 clearSelectionBtn.disabled = selectedWords.length === 0 || isSubmitting || !gameActive;
                 hintBtn.disabled = isSubmitting || !gameActive || hintsUsed >= MAX_HINTS || revealedGroupsCount === 4 || lives <= 0;
+                // ** NEW: Update Shuffle Button State **
+                if (shuffleBtn) {
+                    shuffleBtn.disabled = isSubmitting || !gameActive || revealedGroupsCount === 4 || lives <= 0 || shufflesUsed >= MAX_SHUFFLES_ALLOWED;
+                }
             }
             function updateLivesDisplay() {
                  livesRemainingSpan.textContent = lives; const livesDiv = livesRemainingSpan.closest('div');
@@ -704,7 +734,7 @@
                     console.error('Error getting hint:', error);
                     showFeedback(`Hint Failed: ${error.message}`, 'feedback-incorrect', 4000);
                     let baseScore = STARTING_SCORE;
-                    if (gameMode === "classic" && gameStats.currentStreak > 0 && !isDailyChallenge) { // Adjust base score for streak bonus
+                    if (gameMode === "classic" && gameStats.currentStreak > 0 && !isDailyChallenge) {
                         baseScore += gameStats.currentStreak * PUZZLE_STREAK_BONUS_PER_STREAK;
                     }
                     if(hintsUsed > 0 && score + HINT_PENALTY <= baseScore + (MAX_HINTS * HINT_PENALTY) ) {
@@ -867,12 +897,53 @@
                  });
             }
 
+            // ****** NEW: Shuffle Grid Function ******
+            function shuffleWordGrid() {
+                if (!gameActive || isSubmitting || shufflesUsed >= MAX_SHUFFLES_ALLOWED) {
+                    if (shufflesUsed >= MAX_SHUFFLES_ALLOWED) {
+                        showFeedback("No more shuffles allowed for this puzzle.", "", 2000);
+                    }
+                    return;
+                }
+
+                if (selectedWords.length > 0) {
+                    clearSelection(); // Clear selection before shuffling
+                }
+                clearFeedback();
+
+                const activeWordDivs = Array.from(wordGrid.querySelectorAll('.word-item:not(.solved)'));
+                const activeWordsData = activeWordDivs.map(div => div.dataset.word);
+
+                // Simple shuffle: Fisher-Yates on the data array
+                for (let i = activeWordsData.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [activeWordsData[i], activeWordsData[j]] = [activeWordsData[j], activeWordsData[i]];
+                }
+
+                // Re-assign words to existing (unsolved) divs
+                activeWordDivs.forEach((div, index) => {
+                    div.textContent = activeWordsData[index];
+                    div.dataset.word = activeWordsData[index];
+                });
+
+                shufflesUsed++;
+                score -= SHUFFLE_PENALTY_SCORE; // Apply penalty
+                updateScoreDisplay();
+                updateSelectionUI(); // This will update shuffle button state if max shuffles reached
+
+                playSound(shuffleSound);
+                showFeedback(`Words shuffled! (${MAX_SHUFFLES_ALLOWED - shufflesUsed} shuffles remaining)`, "", 2000);
+                setInitialFocus(); // Or focus the first active word item
+            }
+            // ****** END: Shuffle Grid Function ******
+
+
             function endGame(isWin) {
                  if (!gameActive) return; gameActive = false;
                  stopTimer(); disableAllInteraction(); closeShowAnswerModal();
 
                  if (isWin) {
-                    if (gameMode === "classic" && !isDailyChallenge) { // Time bonus only for classic non-daily
+                    if (gameMode === "classic" && !isDailyChallenge) {
                         const now = Date.now();
                         const elapsedSeconds = startTime ? Math.floor((now - startTime) / 1000) : Infinity;
                         let timeBonus = 0;
@@ -880,20 +951,17 @@
                             timeBonus = (TIME_BONUS_TARGET_SECONDS - elapsedSeconds) * TIME_BONUS_PER_SECOND_SAVED;
                             score += timeBonus;
                         }
-                    } else if (gameMode === "countdown" && !isDailyChallenge) { // Countdown bonus for non-daily
+                    } else if (gameMode === "countdown" && !isDailyChallenge) {
                         if (timeLeft > 0) {
                            score += timeLeft * COUNTDOWN_WIN_BONUS_PER_SECOND;
                         }
                     }
-                    // No specific time/countdown bonus for daily challenges, or define separately
                  }
                  score = Math.max(0, score); updateScoreDisplay();
 
                  const endTime = Date.now();
                  const solveTimeSeconds = startTime ? Math.floor((endTime - startTime) / 1000) : null;
 
-                 // Only update general game stats if it's NOT a daily challenge
-                 // Daily challenges might have separate leaderboards/tracking later
                  if (!isDailyChallenge) {
                     if (isWin) {
                         gameStats.wins++; gameStats.currentStreak++;
@@ -909,8 +977,6 @@
                     }
                     saveStats();
                  } else if (isWin) {
-                     // Could record daily challenge completion, e.g.
-                     // localStorage.setItem(`dailyChallenge_${currentPuzzle.puzzle_id}_completed`, 'true');
                      console.info("Daily challenge completed successfully!");
                  }
 
@@ -989,7 +1055,9 @@
                       }
                      el.setAttribute('aria-disabled', 'true'); el.removeAttribute('tabindex');
                  });
-                 clearSelectionBtn.disabled = true; hintBtn.disabled = true;
+                 clearSelectionBtn.disabled = true;
+                 hintBtn.disabled = true;
+                 if(shuffleBtn) shuffleBtn.disabled = true; // ** NEW: Disable shuffle btn **
             }
             function enableAllInteraction() {
                  document.querySelectorAll('.word-item:not(.solved)').forEach(el => {
@@ -997,7 +1065,8 @@
                      el.style.cursor = 'pointer'; el.classList.remove('disabled');
                      el.setAttribute('aria-disabled', 'false'); el.setAttribute('tabindex', '0');
                  });
-                 updateSelectionUI(); setupGridNavigation();
+                 updateSelectionUI(); // This will correctly set disabled state of shuffleBtn too
+                 setupGridNavigation();
             }
             function goToHome() {
                 sessionStorage.removeItem(PUZZLE_STORAGE_KEY);
@@ -1101,6 +1170,7 @@
 
             clearSelectionBtn.addEventListener('click', clearSelection);
             hintBtn.addEventListener('click', handleHintClick);
+            if(shuffleBtn) shuffleBtn.addEventListener('click', shuffleWordGrid); // ** NEW: Attach listener **
             confirmShowAnswerBtn.addEventListener('click', async () => { closeShowAnswerModal(); await revealAllGroups(); });
             cancelShowAnswerBtn.addEventListener('click', closeShowAnswerModal);
 
