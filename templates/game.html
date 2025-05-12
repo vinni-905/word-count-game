@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
+        /* --- Base & Typography --- */
         :root { /* Light Theme (Default) */
             --bg-gradient-start: #f8f9fa; --bg-gradient-end: #ffffff;
             --container-bg: #ffffff; --text-primary: #343a40; --text-secondary: #6c757d;
@@ -75,8 +76,8 @@
             --theme-toggle-btn-hover-color: var(--text-primary);
             --error-message-bg: var(--incorrect-bg); --error-message-text: var(--incorrect-text);
             --error-message-border: var(--incorrect-border);
-            --timer-default-color: var(--accent-primary); /* Or a lighter blue for dark mode */
-            --timer-warning-color: var(--incorrect-text); /* Should be light red for dark mode */
+            --timer-default-color: var(--accent-primary);
+            --timer-warning-color: var(--incorrect-text);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -128,26 +129,15 @@
             font-size: 1.1em; margin-left: 5px;
             transition: color var(--transition-speed) ease;
         }
-        #timer-container { /* For label and value */
-             /* Styles for flex alignment if needed for label and timer value */
-        }
+        #timer-container {}
         #timer {
             min-width: 80px;
-            color: var(--timer-default-color); /* Default color */
-            transition: color 0.3s ease; /* Smooth color transition */
+            color: var(--timer-default-color);
+            transition: color 0.3s ease;
         }
-        #timer.countdown-active { /* Applied when in countdown mode */
-            font-weight: bold;
-        }
-        #timer.countdown-warning { /* Applied when countdown is low */
-            color: var(--timer-warning-color) !important;
-            animation: pulseWarning 1s infinite alternate;
-        }
-        @keyframes pulseWarning {
-            from { transform: scale(1); }
-            to { transform: scale(1.05); }
-        }
-
+        #timer.countdown-active { font-weight: bold; }
+        #timer.countdown-warning { color: var(--timer-warning-color) !important; animation: pulseWarning 1s infinite alternate; }
+        @keyframes pulseWarning { from { transform: scale(1); } to { transform: scale(1.05); } }
 
         #word-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 25px; }
         .word-item {
@@ -161,13 +151,10 @@
             color: var(--text-primary);
         }
         .word-item:hover:not(.selected):not(.solved):not(.disabled) {
-             background-color: var(--accent-secondary);
-             color: var(--selected-text);
+             background-color: var(--accent-secondary); color: var(--selected-text);
              transform: translateY(-3px); box-shadow: var(--shadow-md);
         }
-        html.dark-theme .word-item:hover:not(.selected):not(.solved):not(.disabled) {
-            background-color: #5f67ee;
-        }
+        html.dark-theme .word-item:hover:not(.selected):not(.solved):not(.disabled) { background-color: #5f67ee; }
         .word-item:focus-visible, .solved-group.reviewable:focus-visible {
             outline: 3px solid var(--accent-primary); outline-offset: 2px; box-shadow: var(--shadow-md);
         }
@@ -492,11 +479,11 @@
                     if(timerLabelSpan) timerLabelSpan.textContent = "Time Left: ";
                     timerSpan.classList.add('countdown-active');
                     timerSpan.classList.remove('countdown-warning');
-                    timerSpan.style.color = ''; // Will be set by CSS var --timer-default-color
+                    timerSpan.style.color = '';
                 } else {
                     if(timerLabelSpan) timerLabelSpan.textContent = "Time: ";
                     timerSpan.classList.remove('countdown-active', 'countdown-warning');
-                    timerSpan.style.color = ''; // Will be set by CSS var --timer-default-color
+                    timerSpan.style.color = '';
                 }
 
                 score = STARTING_SCORE;
@@ -534,7 +521,7 @@
                     updateScoreDisplay(); updateLivesDisplay(); updateHintsDisplay(); updateSelectionUI();
                     if (postGameActionsDiv) postGameActionsDiv.style.display = 'none';
                     enableAllInteraction(); startTime = Date.now();
-                    startTimer(); // This will now handle both modes
+                    startTimer();
                     gameActive = true;
                     setInitialFocus();
                 } catch (error) {
@@ -567,7 +554,7 @@
             function updateLivesDisplay() {
                  livesRemainingSpan.textContent = lives; const livesDiv = livesRemainingSpan.closest('div');
                  if(livesDiv) {
-                    livesDiv.style.color = lives <= 1 ? 'var(--timer-warning-color)' : 'var(--text-secondary)'; // Use timer warning for consistency
+                    livesDiv.style.color = lives <= 1 ? 'var(--timer-warning-color)' : 'var(--text-secondary)';
                     livesRemainingSpan.style.color = lives <= 1 ? 'var(--timer-warning-color)' : 'var(--accent-primary)';
                  }
             }
@@ -582,28 +569,27 @@
                 if (gameMode === "countdown") {
                     timerSpan.classList.add('countdown-active');
                     timerSpan.classList.remove('countdown-warning');
-                    timerSpan.style.color = ''; // Reset to CSS var default
+                    timerSpan.style.color = '';
                     timeLeft = countdownDuration;
-                    updateTimerDisplay(); // Initial display
+                    updateTimerDisplay();
 
                     timerInterval = setInterval(() => {
-                        if (!gameActive) return; // No need for startTime check in pure countdown
+                        if (!gameActive) return;
                         timeLeft--;
                         updateTimerDisplay();
 
                         if (timeLeft <= 10 && timeLeft > 0) {
                             timerSpan.classList.add('countdown-warning');
                         } else if (timeLeft <= 0) {
-                            // timerSpan.classList.add('countdown-warning'); // Already red or becomes red
                             stopTimer();
                             showFeedback("Time's up! Puzzle failed.", 'feedback-incorrect', 0);
                             playSound(loseSound);
                             endGame(false);
                         }
                     }, 1000);
-                } else { // Classic stopwatch mode
+                } else {
                     timerSpan.classList.remove('countdown-active', 'countdown-warning');
-                    timerSpan.style.color = ''; // Reset to CSS var default
+                    timerSpan.style.color = '';
                     timerInterval = setInterval(() => {
                         if (!gameActive || !startTime) return;
                         const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
@@ -690,7 +676,12 @@
                 } catch (error) {
                     console.error('Error getting hint:', error);
                     showFeedback(`Hint Failed: ${error.message}`, 'feedback-incorrect', 4000);
-                    if(hintsUsed > 0 && score + HINT_PENALTY <= STARTING_SCORE + (gameStats.currentStreak * PUZZLE_STREAK_BONUS_PER_STREAK) ) { // Adjust for initial streak bonus
+                    // Adjust score correctly if a hint bonus was applied initially
+                    let baseScore = STARTING_SCORE;
+                    if (gameMode === "classic" && gameStats.currentStreak > 0) {
+                        baseScore += gameStats.currentStreak * PUZZLE_STREAK_BONUS_PER_STREAK;
+                    }
+                    if(hintsUsed > 0 && score + HINT_PENALTY <= baseScore + (MAX_HINTS * HINT_PENALTY) ) { // Max possible score before hint penalties
                          hintsUsed--; score += HINT_PENALTY;
                     }
                     updateScoreDisplay(); updateHintsDisplay(); isSubmitting = false; updateSelectionUI();
@@ -864,8 +855,7 @@
                             score += timeBonus;
                         }
                     } else if (gameMode === "countdown") {
-                        // Award bonus for remaining time only if player won (not if time ran out)
-                        if (timeLeft > 0) { // Check if time didn't run out
+                        if (timeLeft > 0) {
                            score += timeLeft * COUNTDOWN_WIN_BONUS_PER_SECOND;
                         }
                     }
@@ -972,7 +962,7 @@
             }
             function goToHome() {
                 sessionStorage.removeItem(PUZZLE_STORAGE_KEY);
-                sessionStorage.removeItem('gameMode'); // Clear game mode too
+                sessionStorage.removeItem('gameMode');
                 sessionStorage.removeItem('countdownDuration');
                 document.body.classList.add('fade-out');
                 setTimeout(() => { window.location.href = '/home.html'; }, 300);
@@ -980,7 +970,19 @@
 
             function loadStats() {
                 const storedStats = localStorage.getItem(STATS_STORAGE_KEY);
-                if (storedStats) { try { const ps = JSON.parse(storedStats); if (typeof ps.wins === 'number') gameStats = { wins: 0, losses: 0, currentStreak: 0, maxStreak: 0, fastestTime: null, perfectWins: 0, ...ps }; else localStorage.removeItem(STATS_STORAGE_KEY); } catch (e) { localStorage.removeItem(STATS_STORAGE_KEY); console.error("Error loading stats:", e); }}
+                let defaultStats = { wins: 0, losses: 0, currentStreak: 0, maxStreak: 0, fastestTime: null, perfectWins: 0 };
+                if (storedStats) {
+                    try {
+                        const parsedStats = JSON.parse(storedStats);
+                        gameStats = { ...defaultStats, ...parsedStats };
+                    } catch (e) {
+                        localStorage.removeItem(STATS_STORAGE_KEY);
+                        gameStats = { ...defaultStats };
+                        console.error("Error loading/parsing stats, resetting to default:", e);
+                    }
+                } else {
+                    gameStats = { ...defaultStats };
+                }
             }
             function saveStats() {
                 try { localStorage.setItem(STATS_STORAGE_KEY, JSON.stringify(gameStats)); } catch (e) { console.error('Error saving stats:', e); }
