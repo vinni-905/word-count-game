@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
-        /* --- Base & Typography --- */
         :root { /* Light Theme (Default) */
             --bg-gradient-start: #f8f9fa; --bg-gradient-end: #ffffff;
             --container-bg: #ffffff; --text-primary: #343a40; --text-secondary: #6c757d;
@@ -47,6 +46,8 @@
             --theme-toggle-btn-hover-color: var(--text-primary);
             --error-message-bg: var(--incorrect-bg); --error-message-text: var(--incorrect-text);
             --error-message-border: var(--incorrect-border);
+            --timer-default-color: var(--accent-primary);
+            --timer-warning-color: var(--incorrect-text);
         }
 
         html.dark-theme { /* Dark Theme Overrides */
@@ -74,6 +75,8 @@
             --theme-toggle-btn-hover-color: var(--text-primary);
             --error-message-bg: var(--incorrect-bg); --error-message-text: var(--incorrect-text);
             --error-message-border: var(--incorrect-border);
+            --timer-default-color: var(--accent-primary); /* Or a lighter blue for dark mode */
+            --timer-warning-color: var(--incorrect-text); /* Should be light red for dark mode */
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -83,7 +86,7 @@
             background: linear-gradient(to bottom, var(--bg-gradient-start), var(--bg-gradient-end));
             color: var(--text-primary); padding: 20px; min-height: 100vh;
             display: flex; align-items: center; justify-content: center;
-            opacity: 0; animation: fadeInPage 0.5s ease-out forwards; /* Page transition */
+            opacity: 0; animation: fadeInPage 0.5s ease-out forwards;
             transition: background var(--transition-speed) ease, color var(--transition-speed) ease;
         }
         @keyframes fadeInPage { to { opacity: 1; } }
@@ -94,7 +97,7 @@
             width: 100%; max-width: 700px; margin: 20px auto;
             background: var(--container-bg); padding: 30px;
             border-radius: 16px; box-shadow: var(--shadow-lg);
-            position: relative; /* For theme toggle button */
+            position: relative;
             transition: background-color var(--transition-speed) ease;
         }
         #theme-toggle-btn {
@@ -104,7 +107,6 @@
             transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
         }
         #theme-toggle-btn:hover { color: var(--theme-toggle-btn-hover-color); transform: scale(1.1); }
-
 
         h1 { text-align: center; color: var(--text-primary); margin-bottom: 10px; font-weight: 700; transition: color var(--transition-speed) ease;}
         h2 { text-align: center; color: var(--text-secondary); margin-bottom: 20px; font-weight: 600; transition: color var(--transition-speed) ease;}
@@ -126,7 +128,26 @@
             font-size: 1.1em; margin-left: 5px;
             transition: color var(--transition-speed) ease;
         }
-        #timer { min-width: 80px; }
+        #timer-container { /* For label and value */
+             /* Styles for flex alignment if needed for label and timer value */
+        }
+        #timer {
+            min-width: 80px;
+            color: var(--timer-default-color); /* Default color */
+            transition: color 0.3s ease; /* Smooth color transition */
+        }
+        #timer.countdown-active { /* Applied when in countdown mode */
+            font-weight: bold;
+        }
+        #timer.countdown-warning { /* Applied when countdown is low */
+            color: var(--timer-warning-color) !important;
+            animation: pulseWarning 1s infinite alternate;
+        }
+        @keyframes pulseWarning {
+            from { transform: scale(1); }
+            to { transform: scale(1.05); }
+        }
+
 
         #word-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 25px; }
         .word-item {
@@ -137,15 +158,15 @@
             user-select: none; min-height: 3.5em; display: flex;
             align-items: center; justify-content: center; line-height: 1.2;
             word-break: break-word; box-shadow: var(--shadow-sm); border: 1px solid var(--word-item-base-border);
-            color: var(--text-primary); /* Ensure text color adapts with theme */
+            color: var(--text-primary);
         }
         .word-item:hover:not(.selected):not(.solved):not(.disabled) {
-             background-color: var(--accent-secondary); /* Lighter hover for dark theme */
-             color: var(--selected-text); /* Ensure contrast on hover */
+             background-color: var(--accent-secondary);
+             color: var(--selected-text);
              transform: translateY(-3px); box-shadow: var(--shadow-md);
         }
         html.dark-theme .word-item:hover:not(.selected):not(.solved):not(.disabled) {
-            background-color: #5f67ee; /* Slightly different hover for dark */
+            background-color: #5f67ee;
         }
         .word-item:focus-visible, .solved-group.reviewable:focus-visible {
             outline: 3px solid var(--accent-primary); outline-offset: 2px; box-shadow: var(--shadow-md);
@@ -158,18 +179,14 @@
         .word-item.disabled {
             background-color: var(--solved-bg); color: var(--solved-text);
             cursor: default; opacity: var(--disabled-opacity); box-shadow: none;
-            border: 1px solid var(--solved-text); transform: none; /* Use solved-text for border for consistency */
+            border: 1px solid var(--solved-text); transform: none;
         }
-
-        /* Correct Match Animation */
         .word-item.correct-match-animation { animation: correctMatchPop 0.6s ease-out forwards; }
         @keyframes correctMatchPop {
             0% { transform: scale(1.05) translateY(-2px); opacity: 1; }
             50% { transform: scale(1.2) translateY(-5px) rotate(3deg); opacity: 0.9; background-color: var(--correct-bg); color: var(--correct-text); }
-            100% { transform: scale(1); opacity: 1; /* Settle into its final 'solved' look before moving */ }
+            100% { transform: scale(1); opacity: 1; }
         }
-
-
         .controls {
             text-align: center; margin-bottom: 20px; display: flex;
             justify-content: space-between; align-items: center; flex-wrap: wrap;
@@ -183,7 +200,7 @@
             transition: color var(--transition-speed) ease;
         }
         .controls p span { font-weight: 700; color: var(--accent-primary); font-size: 1.1em; transition: color var(--transition-speed) ease;}
-        .controls button, .post-game-actions button { /* Shared style for all action buttons */
+        .controls button, .post-game-actions button {
             padding: 10px 20px; cursor: pointer; border-radius: 25px;
             border: none; font-weight: 600; font-size: 0.9em; color: white;
             transition: background var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
@@ -192,7 +209,6 @@
         }
         .controls button:hover:not(:disabled), .post-game-actions button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: var(--shadow-md); }
         .controls button:active:not(:disabled), .post-game-actions button:active:not(:disabled) { transform: translateY(0); box-shadow: var(--shadow-sm); }
-
         #clear-selection-btn { background: var(--button-warning-bg); }
         #clear-selection-btn:hover:not(:disabled) { background: var(--button-warning-hover); }
         #hint-btn { background: var(--button-info-bg); }
@@ -201,7 +217,6 @@
             background: var(--button-disabled-bg); color: var(--button-disabled-text);
             cursor: not-allowed; box-shadow: none; transform: none;
         }
-
         #feedback-area {
             margin-top: 15px; margin-bottom: 20px; padding: 15px 20px;
             border-radius: 8px; min-height: 3em; text-align: center; font-weight: 600;
@@ -212,7 +227,6 @@
         .feedback-correct { background-color: var(--correct-bg); color: var(--correct-text); border-color: var(--correct-border); }
         .feedback-incorrect { background-color: var(--incorrect-bg); color: var(--incorrect-text); border-color: var(--incorrect-border); }
         .feedback-hint { background-color: var(--hint-bg); color: var(--hint-text); border-color: var(--hint-border); }
-
         #solved-groups-area { margin-bottom: 25px; display: grid; grid-template-columns: 1fr; gap: 15px; }
         .solved-group {
             border-radius: 12px; padding: 15px 20px; text-align: center;
@@ -229,7 +243,6 @@
         .solved-group-color-1 { background: var(--solved-color-1-bg); color: var(--solved-color-1-text); border-color: var(--solved-color-1-border); animation-delay: 0.1s; }
         .solved-group-color-2 { background: var(--solved-color-2-bg); color: var(--solved-color-2-text); border-color: var(--solved-color-2-border); animation-delay: 0.2s; }
         .solved-group-color-3 { background: var(--solved-color-3-bg); color: var(--solved-color-3-text); border-color: var(--solved-color-3-border); animation-delay: 0.3s; }
-
         .word-item.highlight-review {
             background-color: var(--hint-bg) !important; color: var(--hint-text) !important;
             border: 2px solid var(--hint-border) !important; opacity: 1 !important; transform: scale(1.03);
@@ -239,13 +252,11 @@
             outline: 3px dashed var(--accent-secondary); outline-offset: 2px;
             transition: outline 0.2s ease-out; position: relative; z-index: 5;
         }
-
-        .post-game-actions { margin-top: 25px; /* Other styles set by JS */ }
+        .post-game-actions { margin-top: 25px; }
         #new-game-btn { background: var(--button-success-bg); }
         #new-game-btn:hover:not(:disabled) { background: var(--button-success-hover); }
         #view-solution-btn { background: var(--button-info-bg); }
         #view-solution-btn:hover:not(:disabled) { background: var(--button-info-hover); }
-
         .error-message {
              text-align: center; color: var(--error-message-text); font-style: normal;
              background-color: var(--error-message-bg); border: 1px solid var(--error-message-border);
@@ -257,16 +268,13 @@
              font-style: italic; margin-bottom: 15px;
              transition: color var(--transition-speed) ease;
         }
-
-
-        @keyframes shake { /* Shake for incorrect selected words */
+        @keyframes shake {
             0%, 100% { transform: translateX(0) scale(1.05) translateY(-2px); }
             20% { transform: translateX(-7px) scale(1.05) translateY(-2px) rotate(-2deg); }
             40% { transform: translateX(7px) scale(1.05) translateY(-2px) rotate(2deg); }
             60% { transform: translateX(-5px) scale(1.05) translateY(-2px) rotate(-1deg); }
             80% { transform: translateX(5px) scale(1.05) translateY(-2px) rotate(1deg); }
         }
-
         .modal-overlay {
             position: fixed; inset: 0; background-color: var(--modal-overlay-bg);
             display: flex; align-items: center; justify-content: center;
@@ -301,8 +309,8 @@
         .modal-button:focus-visible { outline: 3px solid var(--accent-primary); outline-offset: 1px; }
         .modal-button-confirm { background: var(--button-success-bg); }
         .modal-button-confirm:hover:not(:disabled) { background: var(--button-success-hover); }
-        .modal-button-cancel { background: var(--button-warning-bg); color: var(--text-primary); } /* Text color for contrast on yellow */
-        html.dark-theme .modal-button-cancel { color: var(--text-primary); } /* Ensure contrast on dark theme if yellow stays light */
+        .modal-button-cancel { background: var(--button-warning-bg); color: var(--text-primary); }
+        html.dark-theme .modal-button-cancel { color: var(--text-primary); }
         .modal-button-cancel:hover:not(:disabled) { background: var(--button-warning-hover); }
         .modal-button i { font-size: 1.1em; }
 
@@ -343,12 +351,14 @@
 
     <div class="container game-container">
         <button id="theme-toggle-btn" aria-label="Toggle dark mode">
-            <i class="fas fa-moon"></i> <!-- Initial icon, JS will update -->
+            <i class="fas fa-moon"></i>
         </button>
 
         <h1>WordLinks</h1>
         <div class="status-bar">
-            <div>Time: <span id="timer">00:00</span></div>
+            <div id="timer-container">
+                <span id="timer-label">Time: </span><span id="timer">00:00</span>
+            </div>
             <div>Score: <span id="score">1000</span></div>
             <div>Hints: <span id="hints-used">0</span> / <span id="hints-allowed">3</span></div>
             <div>Mistakes: <span id="lives-remaining">4</span></div>
@@ -396,7 +406,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- DOM Element References ---
             const wordGrid = document.getElementById('word-grid');
             const loadingMessage = document.getElementById('loading-message');
             const errorMessage = document.getElementById('error-message');
@@ -407,6 +416,7 @@
             const livesRemainingSpan = document.getElementById('lives-remaining');
             const puzzleInfoDiv = document.getElementById('puzzle-info');
             const timerSpan = document.getElementById('timer');
+            const timerLabelSpan = document.getElementById('timer-label');
             const scoreSpan = document.getElementById('score');
             const hintBtn = document.getElementById('hint-btn');
             const hintsUsedSpan = document.getElementById('hints-used');
@@ -425,7 +435,6 @@
             const winSound = document.getElementById('win-sound');
             const loseSound = document.getElementById('lose-sound');
 
-            // --- Game Configuration ---
             const STARTING_LIVES = 4;
             const STARTING_SCORE = 1000;
             const INCORRECT_GUESS_PENALTY = 75;
@@ -441,9 +450,9 @@
             const GROUP_STREAK_THRESHOLD = 2;
             const GROUP_STREAK_BONUS_MULTIPLIER = 50;
             const PUZZLE_STREAK_BONUS_PER_STREAK = 100;
+            const COUNTDOWN_WIN_BONUS_PER_SECOND = 1;
 
 
-            // --- Game State Variables ---
             let currentPuzzle = null, selectedWords = [], lives = STARTING_LIVES, score = STARTING_SCORE;
             let hintsUsed = 0, revealedGroupsCount = 0, solvedGroupKeys = [], isSubmitting = false;
             let gameActive = false, timerInterval = null, startTime = null, feedbackTimeout = null;
@@ -452,6 +461,9 @@
             let modalFocusableElements = [], currentOpenModal = null;
             const sunIconClass = 'fa-sun', moonIconClass = 'fa-moon';
             let currentGroupStreak = 0;
+            let gameMode = "classic";
+            let countdownDuration = 0;
+            let timeLeft = 0;
 
 
             function playSound(soundElement) {
@@ -472,8 +484,23 @@
             function initGame() {
                 closeShowAnswerModal(); stopTimer(); gameActive = false;
                 loadStats();
+
+                gameMode = sessionStorage.getItem('gameMode') || "classic";
+                if (gameMode === "countdown") {
+                    countdownDuration = parseInt(sessionStorage.getItem('countdownDuration'), 10) || 180;
+                    timeLeft = countdownDuration;
+                    if(timerLabelSpan) timerLabelSpan.textContent = "Time Left: ";
+                    timerSpan.classList.add('countdown-active');
+                    timerSpan.classList.remove('countdown-warning');
+                    timerSpan.style.color = ''; // Will be set by CSS var --timer-default-color
+                } else {
+                    if(timerLabelSpan) timerLabelSpan.textContent = "Time: ";
+                    timerSpan.classList.remove('countdown-active', 'countdown-warning');
+                    timerSpan.style.color = ''; // Will be set by CSS var --timer-default-color
+                }
+
                 score = STARTING_SCORE;
-                if (gameStats.currentStreak > 0) {
+                if (gameStats.currentStreak > 0 && gameMode === "classic") {
                     const puzzleStreakBonus = gameStats.currentStreak * PUZZLE_STREAK_BONUS_PER_STREAK;
                     score += puzzleStreakBonus;
                 }
@@ -506,7 +533,9 @@
                     displayWords(currentPuzzle.words);
                     updateScoreDisplay(); updateLivesDisplay(); updateHintsDisplay(); updateSelectionUI();
                     if (postGameActionsDiv) postGameActionsDiv.style.display = 'none';
-                    enableAllInteraction(); startTime = Date.now(); startTimer(); gameActive = true;
+                    enableAllInteraction(); startTime = Date.now();
+                    startTimer(); // This will now handle both modes
+                    gameActive = true;
                     setInitialFocus();
                 } catch (error) {
                     console.error("Error initializing game:", error);
@@ -538,8 +567,8 @@
             function updateLivesDisplay() {
                  livesRemainingSpan.textContent = lives; const livesDiv = livesRemainingSpan.closest('div');
                  if(livesDiv) {
-                    livesDiv.style.color = lives <= 1 ? 'var(--incorrect-text)' : 'var(--text-secondary)';
-                    livesRemainingSpan.style.color = lives <= 1 ? 'var(--incorrect-text)' : 'var(--accent-primary)';
+                    livesDiv.style.color = lives <= 1 ? 'var(--timer-warning-color)' : 'var(--text-secondary)'; // Use timer warning for consistency
+                    livesRemainingSpan.style.color = lives <= 1 ? 'var(--timer-warning-color)' : 'var(--accent-primary)';
                  }
             }
             function updateScoreDisplay() { scoreSpan.textContent = Math.max(0, score); }
@@ -547,15 +576,49 @@
                  hintsUsedSpan.textContent = hintsUsed; hintsAllowedSpan.textContent = MAX_HINTS;
                  hintBtn.disabled = isSubmitting || !gameActive || hintsUsed >= MAX_HINTS || revealedGroupsCount === 4 || lives <= 0;
             }
+
             function startTimer() {
                 stopTimer();
-                timerInterval = setInterval(() => {
-                    if (!gameActive || !startTime) return;
-                    const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
-                    const minutes = Math.floor(elapsedSeconds / 60);
-                    const seconds = elapsedSeconds % 60;
+                if (gameMode === "countdown") {
+                    timerSpan.classList.add('countdown-active');
+                    timerSpan.classList.remove('countdown-warning');
+                    timerSpan.style.color = ''; // Reset to CSS var default
+                    timeLeft = countdownDuration;
+                    updateTimerDisplay(); // Initial display
+
+                    timerInterval = setInterval(() => {
+                        if (!gameActive) return; // No need for startTime check in pure countdown
+                        timeLeft--;
+                        updateTimerDisplay();
+
+                        if (timeLeft <= 10 && timeLeft > 0) {
+                            timerSpan.classList.add('countdown-warning');
+                        } else if (timeLeft <= 0) {
+                            // timerSpan.classList.add('countdown-warning'); // Already red or becomes red
+                            stopTimer();
+                            showFeedback("Time's up! Puzzle failed.", 'feedback-incorrect', 0);
+                            playSound(loseSound);
+                            endGame(false);
+                        }
+                    }, 1000);
+                } else { // Classic stopwatch mode
+                    timerSpan.classList.remove('countdown-active', 'countdown-warning');
+                    timerSpan.style.color = ''; // Reset to CSS var default
+                    timerInterval = setInterval(() => {
+                        if (!gameActive || !startTime) return;
+                        const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+                        const minutes = Math.floor(elapsedSeconds / 60);
+                        const seconds = elapsedSeconds % 60;
+                        timerSpan.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                    }, 1000);
+                }
+            }
+            function updateTimerDisplay() {
+                if (gameMode === "countdown") {
+                    const minutes = Math.floor(Math.max(0, timeLeft) / 60);
+                    const seconds = Math.max(0, timeLeft) % 60;
                     timerSpan.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-                }, 1000);
+                }
             }
             function stopTimer() { clearInterval(timerInterval); timerInterval = null; }
 
@@ -627,7 +690,9 @@
                 } catch (error) {
                     console.error('Error getting hint:', error);
                     showFeedback(`Hint Failed: ${error.message}`, 'feedback-incorrect', 4000);
-                    if(hintsUsed > 0 && score + HINT_PENALTY <= STARTING_SCORE) { hintsUsed--; score += HINT_PENALTY; }
+                    if(hintsUsed > 0 && score + HINT_PENALTY <= STARTING_SCORE + (gameStats.currentStreak * PUZZLE_STREAK_BONUS_PER_STREAK) ) { // Adjust for initial streak bonus
+                         hintsUsed--; score += HINT_PENALTY;
+                    }
                     updateScoreDisplay(); updateHintsDisplay(); isSubmitting = false; updateSelectionUI();
                 }
             }
@@ -790,14 +855,19 @@
                  stopTimer(); disableAllInteraction(); closeShowAnswerModal();
 
                  if (isWin) {
-                    const now = Date.now();
-                    const elapsedSeconds = startTime ? Math.floor((now - startTime) / 1000) : Infinity;
-                    let timeBonus = 0;
-                    if (elapsedSeconds < TIME_BONUS_TARGET_SECONDS) {
-                        timeBonus = (TIME_BONUS_TARGET_SECONDS - elapsedSeconds) * TIME_BONUS_PER_SECOND_SAVED;
-                        score += timeBonus;
-                        // Optional: show time bonus message explicitly
-                        // setTimeout(() => showFeedback(`Time Bonus: +${timeBonus}!`, 'feedback-correct', 3000), 700);
+                    if (gameMode === "classic") {
+                        const now = Date.now();
+                        const elapsedSeconds = startTime ? Math.floor((now - startTime) / 1000) : Infinity;
+                        let timeBonus = 0;
+                        if (elapsedSeconds < TIME_BONUS_TARGET_SECONDS) {
+                            timeBonus = (TIME_BONUS_TARGET_SECONDS - elapsedSeconds) * TIME_BONUS_PER_SECOND_SAVED;
+                            score += timeBonus;
+                        }
+                    } else if (gameMode === "countdown") {
+                        // Award bonus for remaining time only if player won (not if time ran out)
+                        if (timeLeft > 0) { // Check if time didn't run out
+                           score += timeLeft * COUNTDOWN_WIN_BONUS_PER_SECOND;
+                        }
                     }
                  }
                  score = Math.max(0, score); updateScoreDisplay();
@@ -807,7 +877,7 @@
                  if (isWin) {
                      gameStats.wins++; gameStats.currentStreak++;
                      gameStats.maxStreak = Math.max(gameStats.maxStreak, gameStats.currentStreak);
-                     if (solveTimeSeconds !== null && (gameStats.fastestTime === null || solveTimeSeconds < gameStats.fastestTime)) {
+                     if (gameMode === "classic" && solveTimeSeconds !== null && (gameStats.fastestTime === null || solveTimeSeconds < gameStats.fastestTime)) {
                          gameStats.fastestTime = solveTimeSeconds;
                      }
                      if (hintsUsed === 0 && lives === STARTING_LIVES) {
@@ -902,6 +972,8 @@
             }
             function goToHome() {
                 sessionStorage.removeItem(PUZZLE_STORAGE_KEY);
+                sessionStorage.removeItem('gameMode'); // Clear game mode too
+                sessionStorage.removeItem('countdownDuration');
                 document.body.classList.add('fade-out');
                 setTimeout(() => { window.location.href = '/home.html'; }, 300);
             }
@@ -964,7 +1036,6 @@
                 if (!currentOpenModal || !currentOpenModal.classList.contains('modal-open')) return; if (event.key === 'Tab') { if (modalFocusableElements.length === 0) { event.preventDefault(); return; } const firstElement = modalFocusableElements[0]; const lastElement = modalFocusableElements[modalFocusableElements.length - 1]; if (event.shiftKey) { if (document.activeElement === firstElement) { lastElement.focus(); event.preventDefault(); } } else { if (document.activeElement === lastElement) { firstElement.focus(); event.preventDefault(); } } } else if (event.key === 'Escape') { if (currentOpenModal === showAnswerModal) closeShowAnswerModal(); }
             }
 
-            // Theme Toggle Logic
             function applyTheme(theme) {
                 if (theme === 'dark') {
                     document.documentElement.classList.add('dark-theme');
@@ -986,11 +1057,11 @@
             const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
             if (savedTheme) applyTheme(savedTheme); else if (prefersDark) applyTheme('dark'); else applyTheme('light');
 
-            // Event Listeners & Init
             clearSelectionBtn.addEventListener('click', clearSelection);
             hintBtn.addEventListener('click', handleHintClick);
             confirmShowAnswerBtn.addEventListener('click', async () => { closeShowAnswerModal(); await revealAllGroups(); });
             cancelShowAnswerBtn.addEventListener('click', closeShowAnswerModal);
+
             initGame();
         });
     </script>

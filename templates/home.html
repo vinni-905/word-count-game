@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"> <!-- Add class for theme here via JS -->
+<html lang="en"> <!-- Theme class added by JS -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -40,6 +40,10 @@
             --error-border: #f5c2c7;
             --spinner-light: #f3f3f3;
             --spinner-dark: var(--accent-primary);
+            --input-bg: #fff;
+            --input-border: #ced4da;
+            --input-focus-border: var(--accent-primary);
+            --label-color: var(--text-secondary);
         }
 
         html.dark-theme { /* Dark Theme Overrides */
@@ -48,7 +52,7 @@
             --container-bg: #495057;
             --text-primary: #f8f9fa;
             --text-secondary: #adb5bd;
-            --accent-primary: #0d6efd; /* Or a brighter blue for dark mode */
+            --accent-primary: #0d6efd;
             --button-easy-bg: linear-gradient(135deg, #1a6130 0%, #144b24 100%);
             --button-easy-hover: linear-gradient(135deg, #144b24 0%, #0e3619 100%);
             --button-medium-bg: linear-gradient(135deg, #b38600 0%, #997100 100%);
@@ -68,6 +72,10 @@
             --error-border: #c87079;
             --spinner-light: #495057;
             --spinner-dark: var(--accent-primary);
+            --input-bg: #343a40;
+            --input-border: #6c757d;
+            --input-focus-border: var(--accent-primary);
+            --label-color: var(--text-secondary);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -124,11 +132,67 @@
             transition: color var(--transition-speed) ease;
         }
         h2 {
-            color: var(--text-secondary); margin-bottom: 30px; font-weight: 400; font-size: 1.1em;
+            color: var(--text-secondary); margin-bottom: 20px; font-weight: 400; font-size: 1.1em;
             transition: color var(--transition-speed) ease;
         }
 
-        .difficulty-buttons { display: flex; flex-direction: column; gap: 20px; margin-bottom: 30px; }
+        .game-options {
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: var(--stat-item-bg);
+            border-radius: 8px;
+            box-shadow: var(--shadow-sm);
+            transition: background-color var(--transition-speed) ease;
+        }
+        .game-options h3 {
+            font-size: 1.1em;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+            text-align: left;
+            transition: color var(--transition-speed) ease;
+        }
+        .mode-selection, .duration-selection {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .mode-selection label, .duration-selection label {
+            color: var(--label-color);
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color var(--transition-speed) ease;
+        }
+        .mode-selection input[type="radio"] {
+            margin-right: 5px;
+            accent-color: var(--accent-primary);
+        }
+        #countdown-duration-input {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--input-border);
+            background-color: var(--input-bg);
+            color: var(--text-primary);
+            width: 80px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9em;
+            transition: border-color var(--transition-speed) ease, background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+        }
+        #countdown-duration-input:focus {
+            outline: none;
+            border-color: var(--input-focus-border);
+            box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--input-focus-border) 25%, transparent);
+        }
+        #countdown-settings {
+            margin-left: 25px;
+            display: none;
+        }
+
+        .difficulty-buttons { display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px; }
         .difficulty-buttons button, .utility-button {
             padding: 15px 25px; cursor: pointer; border-radius: 30px; border: none;
             font-weight: 600; font-size: 1.1em; color: white;
@@ -215,9 +279,12 @@
         }
 
         @media (max-width: 480px) {
-            .container { padding: 25px 15px; } /* Less horizontal padding on small screens */
+            .container { padding: 25px 15px; }
             #theme-toggle-btn { top: 10px; right: 10px; font-size: 1.2em; }
-            h1 { font-size: 2em; } h2 { font-size: 1em; }
+            h1 { font-size: 2em; }
+            h2 { font-size: 1em; margin-bottom: 15px;}
+            .game-options h3 { font-size: 1em; }
+            .mode-selection, .duration-selection { gap: 10px; }
             .difficulty-buttons button, .utility-button { font-size: 1em; padding: 12px 20px; }
             .modal-content { padding: 20px 25px; } .modal-title { font-size: 1.3em; }
             .stats-grid { grid-template-columns: 1fr; } .stat-item p { font-size: 1.3em;}
@@ -231,7 +298,25 @@
         </button>
 
         <h1>WordLinks</h1>
-        <h2>Select a difficulty to start a new game.</h2>
+        <h2>Select a difficulty and game mode.</h2>
+
+        <div class="game-options">
+            <h3>Game Mode</h3>
+            <div class="mode-selection">
+                <label for="mode-classic">
+                    <input type="radio" id="mode-classic" name="gameMode" value="classic" checked>
+                    <i class="fas fa-stopwatch"></i> Classic
+                </label>
+                <label for="mode-countdown">
+                    <input type="radio" id="mode-countdown" name="gameMode" value="countdown">
+                    <i class="fas fa-hourglass-half"></i> Countdown
+                </label>
+            </div>
+            <div id="countdown-settings">
+                <label for="countdown-duration-input">Duration (minutes): </label>
+                <input type="number" id="countdown-duration-input" value="3" min="1" max="10">
+            </div>
+        </div>
 
         <div class="difficulty-buttons">
             <button id="easy-btn" data-difficulty="easy"><i class="fas fa-seedling"></i> Easy</button>
@@ -280,6 +365,11 @@
             const sunIconClass = 'fa-sun';
             const moonIconClass = 'fa-moon';
 
+            const gameModeRadios = document.querySelectorAll('input[name="gameMode"]');
+            const countdownSettingsDiv = document.getElementById('countdown-settings');
+            const countdownDurationInput = document.getElementById('countdown-duration-input');
+
+
             function showLoading(show = true) {
                 loadingSpinner.style.display = show ? 'block' : 'none';
                 difficultyButtons.forEach(btn => btn.disabled = show);
@@ -290,11 +380,33 @@
             function showError(message) {
                 errorMessageHome.textContent = message;
                 errorMessageHome.style.display = 'block';
-                showLoading(false);
+                // Ensure loading is hidden on error, even if called separately
+                if (loadingSpinner.style.display === 'block') {
+                    showLoading(false);
+                }
             }
 
             async function startGame(difficulty) {
-                showLoading();
+                showLoading(true); // Explicitly show loading
+
+                let selectedGameMode = 'classic';
+                document.querySelectorAll('input[name="gameMode"]').forEach(radio => {
+                    if (radio.checked) {
+                        selectedGameMode = radio.value;
+                    }
+                });
+
+                let countdownDurationSeconds = 0;
+                if (selectedGameMode === 'countdown') {
+                    const minutes = parseInt(countdownDurationInput.value, 10);
+                    if (isNaN(minutes) || minutes < 1 || minutes > 10) {
+                        showError("Please enter a valid countdown duration (1-10 minutes).");
+                        // No need to call showLoading(false) here, showError does it.
+                        return;
+                    }
+                    countdownDurationSeconds = minutes * 60;
+                }
+
                 try {
                     const response = await fetch('/api/generate_puzzle', {
                         method: 'POST',
@@ -308,6 +420,12 @@
                     const puzzleData = await response.json();
                     if (puzzleData && puzzleData.puzzle_id && puzzleData.words) {
                         sessionStorage.setItem(PUZZLE_STORAGE_KEY, JSON.stringify(puzzleData));
+                        sessionStorage.setItem('gameMode', selectedGameMode);
+                        if (selectedGameMode === 'countdown') {
+                            sessionStorage.setItem('countdownDuration', countdownDurationSeconds.toString());
+                        } else {
+                            sessionStorage.removeItem('countdownDuration');
+                        }
                         document.body.classList.add('fade-out');
                         setTimeout(() => { window.location.href = '/game'; }, 300);
                     } else {
@@ -316,12 +434,30 @@
                 } catch (error) {
                     console.error("Failed to start game:", error);
                     showError(`Failed to start game: ${error.message}. Please try again.`);
+                    // showError already calls showLoading(false)
                 }
             }
 
             difficultyButtons.forEach(button => {
                 button.addEventListener('click', () => startGame(button.dataset.difficulty));
             });
+
+            gameModeRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'countdown' && this.checked) {
+                        countdownSettingsDiv.style.display = 'block';
+                    } else {
+                        countdownSettingsDiv.style.display = 'none';
+                    }
+                });
+            });
+            // Initial check
+            if (document.getElementById('mode-countdown').checked) {
+                 countdownSettingsDiv.style.display = 'block';
+            } else {
+                 countdownSettingsDiv.style.display = 'none';
+            }
+
 
             function displayStats() {
                 const storedStats = localStorage.getItem(STATS_STORAGE_KEY);
@@ -345,7 +481,6 @@
                     document.getElementById('stats-fastest-time').textContent = 'N/A';
                 }
             }
-
             function openStatsModal() {
                 displayStats();
                 statsModal.style.display = 'flex';
@@ -360,7 +495,6 @@
             statsModal.addEventListener('click', (event) => { if (event.target === statsModal) closeStatsModal(); });
             document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && statsModal.classList.contains('modal-open')) closeStatsModal(); });
 
-            // Theme Toggle Logic
             function applyTheme(theme) {
                 if (theme === 'dark') {
                     document.documentElement.classList.add('dark-theme');
@@ -372,7 +506,6 @@
                     localStorage.setItem(THEME_STORAGE_KEY, 'light');
                 }
             }
-
             if (themeToggleBtn) {
                 themeToggleBtn.addEventListener('click', () => {
                     if (document.documentElement.classList.contains('dark-theme')) {
@@ -382,12 +515,11 @@
                     }
                 });
             }
-
             const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
             const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
             if (savedTheme) { applyTheme(savedTheme); }
             else if (prefersDark) { applyTheme('dark'); }
-            else { applyTheme('light'); } // Default to light if no preference/save
+            else { applyTheme('light'); }
         });
     </script>
 </body>
