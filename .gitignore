@@ -1,0 +1,44 @@
+@"
+# Python specific
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment folders (common names)
+venv/
+.venv/
+env/
+ENV/
+*.env
+
+# IDE / Editor specific
+.vscode/
+.idea/
+*.suo
+*.user
+*.sln.docstates
+
+# OS-specific
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Log files
+*.log
+logs/
+
+# Build artifacts / Distribution
+build/
+dist/
+*.egg-info/
+
+# Model files you typically don't want in version control
+model/*.bin
+model/*.kv
+model/*.model 
+# model/*.pkl # Uncomment if your .pkl files are also large or regenerated
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+"@ | Set-Content -Path .\.gitignore -Encoding UTF8
