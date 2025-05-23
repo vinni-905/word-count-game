@@ -25,7 +25,7 @@
             --button-hard-hover: linear-gradient(135deg, #b02a37 0%, #8c222c 100%);
             --button-stats-bg: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%);
             --button-stats-hover: linear-gradient(135deg, #117a8b 0%, #0f6674 100%);
-            --button-daily-bg: linear-gradient(135deg, #6f42c1 0%, #4a2490 100%); /* Purple example */
+            --button-daily-bg: linear-gradient(135deg, #6f42c1 0%, #4a2490 100%); 
             --button-daily-hover: linear-gradient(135deg, #4a2490 0%, #321861 100%);
             --button-disabled-bg: #ced4da;
             --button-disabled-text: #6c757d;
@@ -148,8 +148,8 @@
             box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--input-focus-border) 25%, transparent);
         }
         #countdown-settings { margin-left: 25px; display: none; }
-        .difficulty-buttons { display: flex; flex-direction: column; gap: 15px; margin-bottom: 15px; } /* Reduced margin */
-        .difficulty-buttons button, .utility-button, #daily-challenge-btn { /* Apply shared style */
+        .difficulty-buttons { display: flex; flex-direction: column; gap: 15px; margin-bottom: 15px; }
+        .difficulty-buttons button, .utility-button, #daily-challenge-btn {
             padding: 15px 25px; cursor: pointer; border-radius: 30px; border: none;
             font-weight: 600; font-size: 1.1em; color: white;
             transition: background var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
@@ -171,7 +171,7 @@
         #hard-btn:hover:not(:disabled) { background: var(--button-hard-hover); }
         #stats-btn { background: var(--button-stats-bg); }
         #stats-btn:hover:not(:disabled) { background: var(--button-stats-hover); }
-        #daily-challenge-btn { background: var(--button-daily-bg); margin-top: 0; margin-bottom: 25px; } /* Adjusted margin */
+        #daily-challenge-btn { background: var(--button-daily-bg); margin-top: 0; margin-bottom: 25px; }
         #daily-challenge-btn:hover:not(:disabled) { background: var(--button-daily-hover); }
 
 
@@ -300,7 +300,7 @@
         <div class="modal-content">
             <div class="modal-title">
                 <span>Game Statistics</span>
-                <button id="close-stats-modal-btn" class="close-modal-btn" aria-label="Close statistics modal">&times;</button>
+                <button id="close-stats-modal-btn" class="close-modal-btn" aria-label="Close statistics modal">×</button>
             </div>
             <div class="stats-grid">
                 <div class="stat-item"><h4>Wins</h4><p id="stats-wins">0</p></div>
@@ -348,17 +348,19 @@
 
 
             function showLoading(show = true) {
-                loadingSpinner.style.display = show ? 'block' : 'none';
+                if (loadingSpinner) loadingSpinner.style.display = show ? 'block' : 'none';
                 difficultyButtons.forEach(btn => btn.disabled = show);
                 if (dailyChallengeBtn) dailyChallengeBtn.disabled = show;
                 if (statsBtn) statsBtn.disabled = show;
-                errorMessageHome.style.display = 'none';
+                if (errorMessageHome) errorMessageHome.style.display = 'none';
             }
 
             function showError(message) {
-                errorMessageHome.textContent = message;
-                errorMessageHome.style.display = 'block';
-                if (loadingSpinner.style.display === 'block') {
+                if (errorMessageHome) {
+                    errorMessageHome.textContent = message;
+                    errorMessageHome.style.display = 'block';
+                }
+                if (loadingSpinner && loadingSpinner.style.display === 'block') {
                     showLoading(false);
                 }
             }
@@ -377,23 +379,48 @@
                         const minutes = parseInt(countdownDurationInput.value, 10);
                         if (isNaN(minutes) || minutes < 1 || minutes > 10) {
                             showError("Please enter a valid countdown duration (1-10 minutes).");
-                            return; // Important to return here to stop execution
+                            showLoading(false); 
+                            return;
                         }
                         countdownDurationSeconds = minutes * 60;
                     }
                 }
 
+                let performanceDataForBackend = null;
+                if (!isDaily && difficulty) {
+                    const storedStats = localStorage.getItem(STATS_STORAGE_KEY);
+                    if (storedStats) {
+                        try {
+                            const parsedStats = JSON.parse(storedStats);
+                            if (parsedStats.performance && parsedStats.performance[difficulty.toLowerCase()]) { // Ensure difficulty key matches
+                                const perf = parsedStats.performance[difficulty.toLowerCase()];
+                                if (perf.plays > 0) {
+                                    performanceDataForBackend = {
+                                        avg_hints: perf.totalHints / perf.plays,
+                                        avg_mistakes: perf.totalMistakes / perf.plays,
+                                        win_rate: perf.wins / perf.plays,
+                                        avg_solve_time: perf.totalTime / perf.plays,
+                                        plays: perf.plays
+                                    };
+                                }
+                            }
+                        } catch (e) { console.error("Error reading stats for backend:", e); }
+                    }
+                }
+
                 try {
                     let response;
-                    if (isDaily) {
-                        response = await fetch('/api/daily_challenge');
-                    } else {
-                        response = await fetch('/api/generate_puzzle', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ difficulty: difficulty })
-                        });
+                    let endpoint = isDaily ? '/api/daily_challenge' : '/api/generate_puzzle';
+                    let fetchOptions = { method: isDaily ? 'GET' : 'POST' };
+                    if (!isDaily) {
+                        fetchOptions.headers = { 'Content-Type': 'application/json' };
+                        const payload = { difficulty: difficulty };
+                        if (performanceDataForBackend) {
+                            payload.user_performance_summary = performanceDataForBackend;
+                        }
+                        fetchOptions.body = JSON.stringify(payload);
                     }
+                    response = await fetch(endpoint, fetchOptions);
 
                     if (!response.ok) {
                         const errorData = await response.json().catch(() => ({ detail: `HTTP error ${response.status}` }));
@@ -418,7 +445,6 @@
                 } catch (error) {
                     console.error("Failed to start game:", error);
                     showError(`Failed to start game: ${error.message}. Please try again.`);
-                    // No need to call showLoading(false) as showError handles it
                 }
             }
 
@@ -433,16 +459,19 @@
             gameModeRadios.forEach(radio => {
                 radio.addEventListener('change', function() {
                     if (this.value === 'countdown' && this.checked) {
-                        countdownSettingsDiv.style.display = 'block';
+                        if(countdownSettingsDiv) countdownSettingsDiv.style.display = 'block';
                     } else {
-                        countdownSettingsDiv.style.display = 'none';
+                        if(countdownSettingsDiv) countdownSettingsDiv.style.display = 'none';
                     }
                 });
             });
-            if (document.getElementById('mode-countdown').checked) {
-                 countdownSettingsDiv.style.display = 'block';
-            } else {
-                 countdownSettingsDiv.style.display = 'none';
+            const modeCountdownRadio = document.getElementById('mode-countdown');
+            if (modeCountdownRadio && countdownSettingsDiv) {
+                if (modeCountdownRadio.checked) {
+                     countdownSettingsDiv.style.display = 'block';
+                } else {
+                     countdownSettingsDiv.style.display = 'none';
+                }
             }
 
             function displayStats() {
@@ -451,8 +480,21 @@
                 if (storedStats) {
                     try {
                         const parsed = JSON.parse(storedStats);
-                        if (typeof parsed.wins === 'number') stats = { ...stats, ...parsed };
-                    } catch(e) { console.error("Error parsing stats", e); }
+                        // Ensure performance object and its sub-keys exist if parsedStats.performance is undefined
+                        let defaultPerformance = { plays: 0, wins: 0, totalHints: 0, totalMistakes: 0, totalTime: 0 };
+                        let tempStats = { ...stats, ...parsed }; // Merge top-level
+                        if (parsed.performance) { // If performance exists in parsed, merge it carefully
+                            tempStats.performance = {
+                                easy: { ...defaultPerformance, ...(parsed.performance.easy || {}) },
+                                medium: { ...defaultPerformance, ...(parsed.performance.medium || {}) },
+                                hard: { ...defaultPerformance, ...(parsed.performance.hard || {}) }
+                            };
+                        } else { // If no performance in parsed, ensure it's there from default
+                            tempStats.performance = { ...stats.performance };
+                        }
+                        stats = tempStats;
+
+                    } catch(e) { console.error("Error parsing stats, using defaults.", e); }
                 }
 
                 document.getElementById('stats-wins').textContent = stats.wins;
@@ -460,30 +502,35 @@
 
                 const currentStreakEl = document.getElementById('stats-current-streak');
                 const currentStreakStarsEl = document.getElementById('current-streak-stars');
-                currentStreakEl.textContent = stats.currentStreak;
-                currentStreakStarsEl.innerHTML = getStreakStarsHTML(stats.currentStreak);
+                if(currentStreakEl) currentStreakEl.textContent = stats.currentStreak;
+                if(currentStreakStarsEl) currentStreakStarsEl.innerHTML = getStreakStarsHTML(stats.currentStreak);
 
                 const maxStreakEl = document.getElementById('stats-max-streak');
                 const maxStreakStarsEl = document.getElementById('max-streak-stars');
-                maxStreakEl.textContent = stats.maxStreak;
-                maxStreakStarsEl.innerHTML = getStreakStarsHTML(stats.maxStreak);
+                if(maxStreakEl) maxStreakEl.textContent = stats.maxStreak;
+                if(maxStreakStarsEl) maxStreakStarsEl.innerHTML = getStreakStarsHTML(stats.maxStreak);
 
                 const perfectWinsEl = document.getElementById('stats-perfect-wins');
                 const perfectWinsBadgeEl = document.getElementById('perfect-wins-badge');
-                perfectWinsEl.textContent = stats.perfectWins || 0;
-                if ((stats.perfectWins || 0) > 0) {
-                    perfectWinsBadgeEl.innerHTML = `<span class="badge badge-perfect">Perfect!</span>`;
-                } else {
-                    perfectWinsBadgeEl.innerHTML = '';
+                if(perfectWinsEl) perfectWinsEl.textContent = stats.perfectWins || 0;
+                if(perfectWinsBadgeEl) {
+                    if ((stats.perfectWins || 0) > 0) {
+                        perfectWinsBadgeEl.innerHTML = `<span class="badge badge-perfect">Perfect!</span>`;
+                    } else {
+                        perfectWinsBadgeEl.innerHTML = '';
+                    }
                 }
 
-                if (stats.fastestTime !== null && stats.fastestTime !== undefined) {
-                    const minutes = Math.floor(stats.fastestTime / 60);
-                    const seconds = stats.fastestTime % 60;
-                    document.getElementById('stats-fastest-time').textContent =
-                        `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-                } else {
-                    document.getElementById('stats-fastest-time').textContent = 'N/A';
+                const fastestTimeEl = document.getElementById('stats-fastest-time');
+                if(fastestTimeEl) {
+                    if (stats.fastestTime !== null && stats.fastestTime !== undefined) {
+                        const minutes = Math.floor(stats.fastestTime / 60);
+                        const seconds = stats.fastestTime % 60;
+                        fastestTimeEl.textContent =
+                            `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                    } else {
+                        fastestTimeEl.textContent = 'N/A';
+                    }
                 }
             }
 
@@ -500,18 +547,27 @@
             }
 
             function openStatsModal() {
+                if(!statsModal) return;
                 displayStats();
                 statsModal.style.display = 'flex';
                 setTimeout(() => statsModal.classList.add('modal-open'), 10);
             }
             function closeStatsModal() {
+                if(!statsModal) return;
                 statsModal.classList.remove('modal-open');
                 setTimeout(() => { if(!statsModal.classList.contains('modal-open')) statsModal.style.display = 'none'; }, 300);
             }
+
             if (statsBtn) statsBtn.addEventListener('click', openStatsModal);
             if (closeStatsModalBtn) closeStatsModalBtn.addEventListener('click', closeStatsModal);
-            statsModal.addEventListener('click', (event) => { if (event.target === statsModal) closeStatsModal(); });
-            document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && statsModal.classList.contains('modal-open')) closeStatsModal(); });
+            if (statsModal) {
+                statsModal.addEventListener('click', (event) => { if (event.target === statsModal) closeStatsModal(); });
+            }
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && statsModal && statsModal.classList.contains('modal-open')) {
+                    closeStatsModal();
+                }
+            });
 
             function applyTheme(theme) {
                 if (theme === 'dark') {
