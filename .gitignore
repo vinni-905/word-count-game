@@ -1,25 +1,33 @@
-@"
-# Python specific
+# Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+*.egg-info/
+*.egg
+*.sqlite3
+*.db
 
-# Virtual environment folders (common names)
+# Virtual environments
 venv/
 .venv/
 env/
 ENV/
-*.env
+pip-selfcheck.json
 
-# IDE / Editor specific
+# Environment variables
+.env
+.env.*
+!.env.example # Keep example env files if you have them
+
+# IDE / Editor specific files
 .vscode/
 .idea/
 *.suo
 *.user
 *.sln.docstates
+*.sublime-project
+*.sublime-workspace
 
-# OS-specific
+# OS-specific files
 .DS_Store
 Thumbs.db
 Desktop.ini
@@ -27,18 +35,42 @@ Desktop.ini
 # Log files
 *.log
 logs/
+*.log.*
 
 # Build artifacts / Distribution
 build/
 dist/
-*.egg-info/
+*.tar.gz
+*.zip
+*.whl
 
-# Model files you typically don't want in version control
-model/*.bin
+# Model files (especially large pre-trained ones or frequently changing ones)
+# This will ignore your converted GloVe model and any .bin files (like Google News)
 model/*.kv
+model/*.bin
 model/*.model 
-# model/*.pkl # Uncomment if your .pkl files are also large or regenerated
+
+# PKL files for models/preprocessors/feature lists:
+# Decide if you want to version control these.
+# If they are small and essential for others to run the project without re-training,
+# you might comment out the next line or be more specific.
+# If they are large or frequently regenerated, keep this line.
+model/*.pkl
 
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints/
-"@ | Set-Content -Path .\.gitignore -Encoding UTF8
+
+# Coverage reports
+.coverage
+coverage.xml
+htmlcov/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+
+# If you have other specific large data files or output directories
+# analysis_outputs/ # Example, uncomment if you don't want to track these
+# large_dataset.csv
