@@ -1,33 +1,21 @@
-# Python
+# Python specific
 __pycache__/
-*.py[cod]
-*.egg-info/
-*.egg
-*.sqlite3
-*.db
+*.pyc
+*.pyo
+*.pyd
 
-# Virtual environments
+# Virtual environment folders
 venv/
 .venv/
 env/
 ENV/
-pip-selfcheck.json
+*.env
 
-# Environment variables
-.env
-.env.*
-!.env.example # Keep example env files if you have them
-
-# IDE / Editor specific files
+# IDE / Editor specific
 .vscode/
 .idea/
-*.suo
-*.user
-*.sln.docstates
-*.sublime-project
-*.sublime-workspace
 
-# OS-specific files
+# OS-specific
 .DS_Store
 Thumbs.db
 Desktop.ini
@@ -35,42 +23,15 @@ Desktop.ini
 # Log files
 *.log
 logs/
-*.log.*
 
 # Build artifacts / Distribution
 build/
 dist/
-*.tar.gz
-*.zip
-*.whl
+*.egg-info/
 
-# Model files (especially large pre-trained ones or frequently changing ones)
-# This will ignore your converted GloVe model and any .bin files (like Google News)
-model/*.kv
+# Model files you typically don't want in version control
 model/*.bin
+model/*.kv       # Ignores the main .kv file (e.g., glove.6B.100d.kv)
+model/*.kv.*     # Ignores auxiliary files like .kv.vectors.npy
 model/*.model 
-
-# PKL files for models/preprocessors/feature lists:
-# Decide if you want to version control these.
-# If they are small and essential for others to run the project without re-training,
-# you might comment out the next line or be more specific.
-# If they are large or frequently regenerated, keep this line.
-model/*.pkl
-
-# Jupyter Notebook checkpoints
-.ipynb_checkpoints/
-
-# Coverage reports
-.coverage
-coverage.xml
-htmlcov/
-
-# Temporary files
-*.tmp
-*.bak
-*.swp
-*~
-
-# If you have other specific large data files or output directories
-# analysis_outputs/ # Example, uncomment if you don't want to track these
-# large_dataset.csv
+# model/*.pkl    # Uncomment if you want to ignore .pkl model files too
