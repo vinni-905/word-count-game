@@ -3,19 +3,31 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+*.egg-info/
+*.egg
 
 # Virtual environment folders
 venv/
 .venv/
 env/
 ENV/
-*.env
+pip-selfcheck.json
 
-# IDE / Editor specific
+# Environment variable files
+.env
+.env.*
+!.env.example
+
+# IDE / Editor specific files
 .vscode/
 .idea/
+*.suo
+*.user
+*.sln.docstates
+*.sublime-project
+*.sublime-workspace
 
-# OS-specific
+# OS-specific files
 .DS_Store
 Thumbs.db
 Desktop.ini
@@ -23,15 +35,47 @@ Desktop.ini
 # Log files
 *.log
 logs/
+*.log.*
 
 # Build artifacts / Distribution
 build/
 dist/
-*.egg-info/
+*.tar.gz
+*.zip
+*.whl
 
-# Model files you typically don't want in version control
+# Model files
+# This will ignore your converted GloVe model parts and any .bin files (like Google News)
+# It will also ignore .model files (like full gensim models if you save them that way)
 model/*.bin
-model/*.kv       # Ignores the main .kv file (e.g., glove.6B.100d.kv)
-model/*.kv.*     # Ignores auxiliary files like .kv.vectors.npy
-model/*.model 
-# model/*.pkl    # Uncomment if you want to ignore .pkl model files too
+model/*.kv
+model/*.kv.*
+model/*.model
+
+# PKL files for models/preprocessors/feature lists:
+# By default, these are often small enough to commit if they are essential
+# for others to run the project without re-training.
+# If YOUR .pkl files are very large (e.g., > 20-50MB), uncomment the next line.
+# model/*.pkl
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Coverage reports
+.coverage
+coverage.xml
+htmlcov/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+
+# If you have other specific large data files or output directories:
+# analysis_outputs/
+# large_dataset.csv
+
+# Utility scripts you might not want to commit (optional, add if needed)
+# convert_glove_to_w2v.py
+# inspect_model.py
