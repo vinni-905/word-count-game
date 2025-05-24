@@ -1,0 +1,530 @@
+{
+    "aardvark": {
+        "category": "animals",
+        "complexity_score": 3,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "ant": {
+        "category": "animals",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "apple": {
+        "category": "fruits",
+        "complexity_score": 2,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "apricot": {
+        "category": "fruits",
+        "complexity_score": 3,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "banana": {
+        "category": "fruits",
+        "complexity_score": 2,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "bat": {
+        "category": "animals",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "bear": {
+        "category": "animals",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "bee": {
+        "category": "animals",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "beige": {
+        "category": "colors",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "black": {
+        "category": "colors",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "blender": {
+        "category": "kitchen_items",
+        "complexity_score": 2,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "blue": {
+        "category": "colors",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "blueberry": {
+        "category": "fruits",
+        "complexity_score": 4,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "bowl": {
+        "category": "kitchen_items",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "bronze": {
+        "category": "colors",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "brown": {
+        "category": "colors",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "capybara": {
+        "category": "animals",
+        "complexity_score": 3,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "cat": {
+        "category": "animals",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "cherry": {
+        "category": "fruits",
+        "complexity_score": 2,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "colander": {
+        "category": "kitchen_items",
+        "complexity_score": 3,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "cup": {
+        "category": "kitchen_items",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "cyan": {
+        "category": "colors",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "date": {
+        "category": "fruits",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "deer": {
+        "category": "animals",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "dog": {
+        "category": "animals",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "dolphin": {
+        "category": "animals",
+        "complexity_score": 3,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "eagle": {
+        "category": "animals",
+        "complexity_score": 2,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "elephant": {
+        "category": "animals",
+        "complexity_score": 3,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "fig": {
+        "category": "fruits",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "fork": {
+        "category": "kitchen_items",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "fox": {
+        "category": "animals",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "giraffe": {
+        "category": "animals",
+        "complexity_score": 3,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "gold": {
+        "category": "colors",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "grape": {
+        "category": "fruits",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "grater": {
+        "category": "kitchen_items",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "gray": {
+        "category": "colors",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "green": {
+        "category": "colors",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "guava": {
+        "category": "fruits",
+        "complexity_score": 2,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "indigo": {
+        "category": "colors",
+        "complexity_score": 3,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "ivory": {
+        "category": "colors",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "kettle": {
+        "category": "kitchen_items",
+        "complexity_score": 2,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "kiwi": {
+        "category": "fruits",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "knife": {
+        "category": "kitchen_items",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "ladle": {
+        "category": "kitchen_items",
+        "complexity_score": 2,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "lemon": {
+        "category": "fruits",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "lime": {
+        "category": "colors",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "lion": {
+        "category": "animals",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "magenta": {
+        "category": "colors",
+        "complexity_score": 4,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "mango": {
+        "category": "fruits",
+        "complexity_score": 2,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "maroon": {
+        "category": "colors",
+        "complexity_score": 2,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "microwave": {
+        "category": "kitchen_items",
+        "complexity_score": 3,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "monkey": {
+        "category": "animals",
+        "complexity_score": 2,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "olive": {
+        "category": "colors",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "orange": {
+        "category": "colors",
+        "complexity_score": 2,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "oven": {
+        "category": "kitchen_items",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "owl": {
+        "category": "animals",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "pan": {
+        "category": "kitchen_items",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "peach": {
+        "category": "fruits",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "pear": {
+        "category": "fruits",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "penguin": {
+        "category": "animals",
+        "complexity_score": 3,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "pineapple": {
+        "category": "fruits",
+        "complexity_score": 3,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "pink": {
+        "category": "colors",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "plate": {
+        "category": "kitchen_items",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "plum": {
+        "category": "fruits",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "pot": {
+        "category": "kitchen_items",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "purple": {
+        "category": "colors",
+        "complexity_score": 2,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "rabbit": {
+        "category": "animals",
+        "complexity_score": 2,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "raspberry": {
+        "category": "fruits",
+        "complexity_score": 4,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "red": {
+        "category": "colors",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "serendipity": {
+        "category": "colors",
+        "complexity_score": 5,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "shark": {
+        "category": "animals",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "silver": {
+        "category": "colors",
+        "complexity_score": 2,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "snake": {
+        "category": "animals",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "spatula": {
+        "category": "kitchen_items",
+        "complexity_score": 4,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "spoon": {
+        "category": "kitchen_items",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "strawberry": {
+        "category": "fruits",
+        "complexity_score": 5,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "teal": {
+        "category": "colors",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "tiger": {
+        "category": "animals",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "toaster": {
+        "category": "kitchen_items",
+        "complexity_score": 3,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "ubiquitous": {
+        "category": "colors",
+        "complexity_score": 5,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "violet": {
+        "category": "colors",
+        "complexity_score": 3,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "watermelon": {
+        "category": "fruits",
+        "complexity_score": 7,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "whale": {
+        "category": "animals",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "whisk": {
+        "category": "kitchen_items",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "white": {
+        "category": "colors",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "wolf": {
+        "category": "animals",
+        "complexity_score": 1,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "yellow": {
+        "category": "colors",
+        "complexity_score": 2,
+        "definition": "",
+        "example_sentence": ""
+    },
+    "zebra": {
+        "category": "animals",
+        "complexity_score": 2,
+        "definition": "",
+        "example_sentence": ""
+    }
+}
