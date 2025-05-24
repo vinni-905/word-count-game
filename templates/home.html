@@ -202,13 +202,15 @@
         .modal-overlay.modal-open { opacity: 1; visibility: visible; display:flex; transition: opacity 0.3s ease; }
         .modal-content {
             background: var(--container-bg); padding: 30px 40px; border-radius: 15px;
-            box-shadow: var(--shadow-lg); max-width: 400px; width: 90%;
+            box-shadow: var(--shadow-lg); max-width: 450px;
+            width: 90%;
             text-align: left; color: var(--text-primary); transform: scale(0.9);
             transition: transform 0.3s ease, background-color var(--transition-speed) ease, color var(--transition-speed) ease;
         }
         .modal-overlay.modal-open .modal-content { transform: scale(1); }
         .modal-title {
-            font-size: 1.5em; font-weight: 700; margin-bottom: 20px;
+            font-size: 1.4em; 
+            font-weight: 700; margin-bottom: 20px;
             display: flex; align-items: center; justify-content: space-between;
             color: var(--accent-primary); transition: color var(--transition-speed) ease;
         }
@@ -217,31 +219,82 @@
             color: var(--text-secondary); transition: color var(--transition-speed) ease;
         }
         .modal-title .close-modal-btn:hover { color: var(--text-primary); }
-        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 25px; }
+        .stats-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
+            gap: 15px; 
+            margin-bottom: 20px; 
+        }
         .stat-item {
-            background-color: var(--stat-item-bg); padding: 15px; border-radius: 8px;
+            background-color: var(--stat-item-bg); padding: 12px; border-radius: 8px;
             text-align: center; box-shadow: var(--shadow-sm);
             transition: background-color var(--transition-speed) ease;
         }
         .stat-item h4 {
-            margin-bottom: 8px; font-size: 0.9em; color: var(--text-secondary);
+            margin-bottom: 6px; font-size: 0.8em; 
+            color: var(--text-secondary);
             font-weight: 600; text-transform: uppercase;
+            line-height: 1.2;
             transition: color var(--transition-speed) ease;
         }
         .stat-item p {
-            font-size: 1.5em; font-weight: 700; color: var(--accent-primary); margin:0;
+            font-size: 1.3em; 
+            font-weight: 700; color: var(--accent-primary); margin:0;
             display: flex; align-items: center; justify-content: center;
             transition: color var(--transition-speed) ease;
         }
-        .stat-item .stars { margin-left: 8px; color: var(--star-color); font-size: 0.8em; }
+        .stat-item .stars { margin-left: 8px; color: var(--star-color); font-size: 0.75em; }
         .stat-item .stars .fa-star { margin-right: 2px; }
         .badge {
-            display: inline-block; padding: 0.25em 0.6em; font-size: 75%;
+            display: inline-block; padding: 0.25em 0.6em; font-size: 0.7em; 
             font-weight: 700; line-height: 1; text-align: center;
             white-space: nowrap; vertical-align: baseline; border-radius: 0.375rem;
             margin-left: 8px;
         }
         .badge-perfect { color: #fff; background: var(--badge-perfect-bg); }
+
+        .difficulty-stats-container {
+            grid-column: 1 / -1; 
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--input-border);
+            transition: border-color var(--transition-speed) ease;
+        }
+        .difficulty-stats-container h5 {
+            font-size: 1em;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            text-align: center;
+            transition: color var(--transition-speed) ease;
+        }
+        .difficulty-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); 
+            gap: 10px;
+        }
+        .difficulty-stat-item {
+            background-color: color-mix(in srgb, var(--stat-item-bg) 90%, transparent);
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.9em; 
+            text-align: center;
+            transition: background-color var(--transition-speed) ease;
+        }
+        .difficulty-stat-item strong { 
+            display: block;
+            color: var(--text-primary); 
+            font-size: 0.95em; 
+            font-weight: 700;
+            margin-bottom: 5px;
+            transition: color var(--transition-speed) ease;
+        }
+        .difficulty-stat-item span { 
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            display: block; 
+            line-height: 1.3;
+            transition: color var(--transition-speed) ease;
+        }
 
         @media (max-width: 480px) {
             .container { padding: 25px 15px; }
@@ -251,7 +304,11 @@
             .mode-selection, .duration-selection { gap: 10px; }
             .difficulty-buttons button, .utility-button, #daily-challenge-btn { font-size: 1em; padding: 12px 20px; }
             .modal-content { padding: 20px 25px; } .modal-title { font-size: 1.3em; }
-            .stats-grid { grid-template-columns: 1fr; } .stat-item p { font-size: 1.3em;}
+            .stats-grid { grid-template-columns: 1fr; } 
+            .difficulty-stats-container { grid-column: span 1; }
+            .difficulty-stats-grid { grid-template-columns: 1fr; } 
+            .stat-item p { font-size: 1.3em;}
+            .stat-item h4 { font-size: 0.8em;}
         }
     </style>
 </head>
@@ -299,12 +356,25 @@
     <div id="stats-modal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-title">
-                <span>Game Statistics</span>
+                <span>Performance Dashboard</span>
                 <button id="close-stats-modal-btn" class="close-modal-btn" aria-label="Close statistics modal">×</button>
             </div>
             <div class="stats-grid">
                 <div class="stat-item"><h4>Wins</h4><p id="stats-wins">0</p></div>
                 <div class="stat-item"><h4>Losses</h4><p id="stats-losses">0</p></div>
+                <div class="stat-item">
+                    <h4>Win Rate</h4><p id="stats-win-rate">0%</p>
+                </div>
+                <div class="stat-item">
+                    <h4>Avg. Hints / Game</h4><p><span id="stats-avg-hints">0.0</span></p>
+                </div>
+                <div class="stat-item">
+                    <h4>Avg. Mistakes / Game</h4><p><span id="stats-avg-mistakes">0.0</span></p>
+                </div>
+                <div class="stat-item">
+                    <h4>Perfect Wins</h4>
+                    <p><span id="stats-perfect-wins">0</span><span id="perfect-wins-badge"></span></p>
+                </div>
                 <div class="stat-item">
                     <h4>Current Streak</h4>
                     <p><span id="stats-current-streak">0</span><span id="current-streak-stars" class="stars"></span></p>
@@ -313,13 +383,30 @@
                     <h4>Max Streak</h4>
                     <p><span id="stats-max-streak">0</span><span id="max-streak-stars" class="stars"></span></p>
                 </div>
-                <div class="stat-item">
-                    <h4>Perfect Wins</h4>
-                    <p><span id="stats-perfect-wins">0</span><span id="perfect-wins-badge"></span></p>
-                </div>
                 <div class="stat-item" style="grid-column: span 2;">
                     <h4>Fastest Solve Time (Classic)</h4>
                     <p id="stats-fastest-time">N/A</p>
+                </div>
+
+                <div class="difficulty-stats-container">
+                    <h5>Performance by Difficulty</h5>
+                    <div class="difficulty-stats-grid">
+                        <div class="difficulty-stat-item">
+                            <strong>Easy</strong>
+                            <span id="stats-easy-winrate">WR: N/A</span>
+                            <span id="stats-easy-avghints">Hints: N/A</span>
+                        </div>
+                        <div class="difficulty-stat-item">
+                            <strong>Medium</strong>
+                            <span id="stats-medium-winrate">WR: N/A</span>
+                            <span id="stats-medium-avghints">Hints: N/A</span>
+                        </div>
+                        <div class="difficulty-stat-item">
+                            <strong>Hard</strong>
+                            <span id="stats-hard-winrate">WR: N/A</span>
+                            <span id="stats-hard-avghints">Hints: N/A</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -387,24 +474,26 @@
                 }
 
                 let performanceDataForBackend = null;
-                if (!isDaily && difficulty) {
+                if (!isDaily && difficulty) { // Only send for non-daily, difficulty-based games
                     const storedStats = localStorage.getItem(STATS_STORAGE_KEY);
                     if (storedStats) {
                         try {
                             const parsedStats = JSON.parse(storedStats);
-                            if (parsedStats.performance && parsedStats.performance[difficulty.toLowerCase()]) { // Ensure difficulty key matches
-                                const perf = parsedStats.performance[difficulty.toLowerCase()];
-                                if (perf.plays > 0) {
+                            // Ensure difficulty key is lowercase to match object keys
+                            const difficultyKey = difficulty.toLowerCase(); 
+                            if (parsedStats.performance && parsedStats.performance[difficultyKey]) {
+                                const perf = parsedStats.performance[difficultyKey];
+                                if (perf.plays > 0) { // Only send if there's data
                                     performanceDataForBackend = {
                                         avg_hints: perf.totalHints / perf.plays,
                                         avg_mistakes: perf.totalMistakes / perf.plays,
                                         win_rate: perf.wins / perf.plays,
-                                        avg_solve_time: perf.totalTime / perf.plays,
+                                        avg_solve_time: perf.totalTime / perf.plays, // Optional, might not be used by backend initially
                                         plays: perf.plays
                                     };
                                 }
                             }
-                        } catch (e) { console.error("Error reading stats for backend:", e); }
+                        } catch (e) { console.error("Error reading stats for backend preparation:", e); }
                     }
                 }
 
@@ -412,6 +501,7 @@
                     let response;
                     let endpoint = isDaily ? '/api/daily_challenge' : '/api/generate_puzzle';
                     let fetchOptions = { method: isDaily ? 'GET' : 'POST' };
+
                     if (!isDaily) {
                         fetchOptions.headers = { 'Content-Type': 'application/json' };
                         const payload = { difficulty: difficulty };
@@ -445,6 +535,7 @@
                 } catch (error) {
                     console.error("Failed to start game:", error);
                     showError(`Failed to start game: ${error.message}. Please try again.`);
+                    // showError calls showLoading(false) if spinner was visible
                 }
             }
 
@@ -466,7 +557,7 @@
                 });
             });
             const modeCountdownRadio = document.getElementById('mode-countdown');
-            if (modeCountdownRadio && countdownSettingsDiv) {
+            if (modeCountdownRadio && countdownSettingsDiv) { // Check if elements exist
                 if (modeCountdownRadio.checked) {
                      countdownSettingsDiv.style.display = 'block';
                 } else {
@@ -474,31 +565,55 @@
                 }
             }
 
+
             function displayStats() {
                 const storedStats = localStorage.getItem(STATS_STORAGE_KEY);
-                let stats = { wins: 0, losses: 0, currentStreak: 0, maxStreak: 0, fastestTime: null, perfectWins: 0 };
+                let defaultPerformanceSub = { plays: 0, wins: 0, totalHints: 0, totalMistakes: 0, totalTime: 0 };
+                let stats = { 
+                    wins: 0, losses: 0, currentStreak: 0, maxStreak: 0, fastestTime: null, perfectWins: 0,
+                    performance: {
+                        easy: { ...defaultPerformanceSub },
+                        medium: { ...defaultPerformanceSub },
+                        hard: { ...defaultPerformanceSub }
+                    }
+                };
+
                 if (storedStats) {
                     try {
                         const parsed = JSON.parse(storedStats);
-                        // Ensure performance object and its sub-keys exist if parsedStats.performance is undefined
-                        let defaultPerformance = { plays: 0, wins: 0, totalHints: 0, totalMistakes: 0, totalTime: 0 };
-                        let tempStats = { ...stats, ...parsed }; // Merge top-level
-                        if (parsed.performance) { // If performance exists in parsed, merge it carefully
-                            tempStats.performance = {
-                                easy: { ...defaultPerformance, ...(parsed.performance.easy || {}) },
-                                medium: { ...defaultPerformance, ...(parsed.performance.medium || {}) },
-                                hard: { ...defaultPerformance, ...(parsed.performance.hard || {}) }
-                            };
-                        } else { // If no performance in parsed, ensure it's there from default
-                            tempStats.performance = { ...stats.performance };
-                        }
-                        stats = tempStats;
-
+                        stats = { 
+                            ...stats, 
+                            ...parsed, 
+                            performance: { 
+                                easy: { ...defaultPerformanceSub, ...(parsed.performance?.easy || {}) },
+                                medium: { ...defaultPerformanceSub, ...(parsed.performance?.medium || {}) },
+                                hard: { ...defaultPerformanceSub, ...(parsed.performance?.hard || {}) }
+                            }
+                        };
                     } catch(e) { console.error("Error parsing stats, using defaults.", e); }
                 }
 
                 document.getElementById('stats-wins').textContent = stats.wins;
                 document.getElementById('stats-losses').textContent = stats.losses;
+
+                const totalPlaysOverall = stats.wins + stats.losses;
+                const winRateOverall = totalPlaysOverall > 0 ? ((stats.wins / totalPlaysOverall) * 100).toFixed(0) : 0;
+                document.getElementById('stats-win-rate').textContent = `${winRateOverall}%`;
+
+                let totalHintsAll = 0;
+                let totalMistakesAll = 0;
+                let playsWithPerfData = 0; 
+                for (const diff in stats.performance) {
+                    if (stats.performance.hasOwnProperty(diff) && stats.performance[diff].plays > 0) {
+                        totalHintsAll += stats.performance[diff].totalHints;
+                        totalMistakesAll += stats.performance[diff].totalMistakes;
+                        playsWithPerfData += stats.performance[diff].plays;
+                    }
+                }
+                const avgHintsOverall = playsWithPerfData > 0 ? (totalHintsAll / playsWithPerfData).toFixed(1) : "0.0";
+                const avgMistakesOverall = playsWithPerfData > 0 ? (totalMistakesAll / playsWithPerfData).toFixed(1) : "0.0";
+                document.getElementById('stats-avg-hints').textContent = avgHintsOverall;
+                document.getElementById('stats-avg-mistakes').textContent = avgMistakesOverall;
 
                 const currentStreakEl = document.getElementById('stats-current-streak');
                 const currentStreakStarsEl = document.getElementById('current-streak-stars');
@@ -532,6 +647,18 @@
                         fastestTimeEl.textContent = 'N/A';
                     }
                 }
+                
+                ['easy', 'medium', 'hard'].forEach(diff => {
+                    const perf = stats.performance[diff]; 
+                    const winRateDiff = perf.plays > 0 ? ((perf.wins / perf.plays) * 100).toFixed(0) + "%" : "N/A";
+                    const avgHintsDiff = perf.plays > 0 ? (perf.totalHints / perf.plays).toFixed(1) : "N/A";
+                    
+                    const winRateEl = document.getElementById(`stats-${diff}-winrate`);
+                    const avgHintsEl = document.getElementById(`stats-${diff}-avghints`);
+
+                    if(winRateEl) winRateEl.textContent = `WR: ${winRateDiff}`;
+                    if(avgHintsEl) avgHintsEl.textContent = `Hints: ${avgHintsDiff}`;
+                });
             }
 
             function getStreakStarsHTML(streak) {
