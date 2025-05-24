@@ -202,7 +202,7 @@
         .modal-overlay.modal-open { opacity: 1; visibility: visible; display:flex; transition: opacity 0.3s ease; }
         .modal-content {
             background: var(--container-bg); padding: 30px 40px; border-radius: 15px;
-            box-shadow: var(--shadow-lg); max-width: 450px;
+            box-shadow: var(--shadow-lg); max-width: 450px; 
             width: 90%;
             text-align: left; color: var(--text-primary); transform: scale(0.9);
             transition: transform 0.3s ease, background-color var(--transition-speed) ease, color var(--transition-speed) ease;
@@ -474,21 +474,20 @@
                 }
 
                 let performanceDataForBackend = null;
-                if (!isDaily && difficulty) { // Only send for non-daily, difficulty-based games
+                if (!isDaily && difficulty) { 
                     const storedStats = localStorage.getItem(STATS_STORAGE_KEY);
                     if (storedStats) {
                         try {
                             const parsedStats = JSON.parse(storedStats);
-                            // Ensure difficulty key is lowercase to match object keys
                             const difficultyKey = difficulty.toLowerCase(); 
                             if (parsedStats.performance && parsedStats.performance[difficultyKey]) {
                                 const perf = parsedStats.performance[difficultyKey];
-                                if (perf.plays > 0) { // Only send if there's data
+                                if (perf.plays > 0) { 
                                     performanceDataForBackend = {
                                         avg_hints: perf.totalHints / perf.plays,
                                         avg_mistakes: perf.totalMistakes / perf.plays,
                                         win_rate: perf.wins / perf.plays,
-                                        avg_solve_time: perf.totalTime / perf.plays, // Optional, might not be used by backend initially
+                                        avg_solve_time: perf.totalTime / perf.plays, 
                                         plays: perf.plays
                                     };
                                 }
@@ -501,7 +500,6 @@
                     let response;
                     let endpoint = isDaily ? '/api/daily_challenge' : '/api/generate_puzzle';
                     let fetchOptions = { method: isDaily ? 'GET' : 'POST' };
-
                     if (!isDaily) {
                         fetchOptions.headers = { 'Content-Type': 'application/json' };
                         const payload = { difficulty: difficulty };
@@ -535,7 +533,6 @@
                 } catch (error) {
                     console.error("Failed to start game:", error);
                     showError(`Failed to start game: ${error.message}. Please try again.`);
-                    // showError calls showLoading(false) if spinner was visible
                 }
             }
 
@@ -557,7 +554,7 @@
                 });
             });
             const modeCountdownRadio = document.getElementById('mode-countdown');
-            if (modeCountdownRadio && countdownSettingsDiv) { // Check if elements exist
+            if (modeCountdownRadio && countdownSettingsDiv) { 
                 if (modeCountdownRadio.checked) {
                      countdownSettingsDiv.style.display = 'block';
                 } else {
