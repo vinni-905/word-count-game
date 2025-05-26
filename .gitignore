@@ -12,11 +12,7 @@ venv/
 env/
 ENV/
 pip-selfcheck.json
-
-# Environment variable files
-.env
-.env.*
-!.env.example
+*.env
 
 # IDE / Editor specific files
 .vscode/
@@ -32,10 +28,11 @@ pip-selfcheck.json
 Thumbs.db
 Desktop.ini
 
-# Log files
-*.log
-logs/
-*.log.*
+# Log files (if you decide to log to files within the project)
+# Ensure these are outside Uvicorn's watch path or explicitly ignored
+# *.log
+# logs/
+# *.log.*
 
 # Build artifacts / Distribution
 build/
@@ -45,18 +42,16 @@ dist/
 *.whl
 
 # Model files
-# This will ignore your converted GloVe model parts and any .bin files (like Google News)
-# It will also ignore .model files (like full gensim models if you save them that way)
 model/*.bin
 model/*.kv
 model/*.kv.*
-model/*.model
+model/*.model 
+# model/*.pkl # Uncomment to ignore your difficulty prediction .pkl files
 
-# PKL files for models/preprocessors/feature lists:
-# By default, these are often small enough to commit if they are essential
-# for others to run the project without re-training.
-# If YOUR .pkl files are very large (e.g., > 20-50MB), uncomment the next line.
-# model/*.pkl
+# Generated Data Files
+model/enriched_word_data.json # If you commit it once and it's stable
+leaderboard.db # SQLite database file
+leaderboard.db-journal # SQLite journal file
 
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints/
@@ -69,13 +64,6 @@ htmlcov/
 # Temporary files
 *.tmp
 *.bak
+*.db
 *.swp
 *~
-
-# If you have other specific large data files or output directories:
-# analysis_outputs/
-# large_dataset.csv
-
-# Utility scripts you might not want to commit (optional, add if needed)
-# convert_glove_to_w2v.py
-# inspect_model.py
