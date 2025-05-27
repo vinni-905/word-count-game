@@ -29,6 +29,8 @@
             --button-daily-hover: linear-gradient(135deg, #4a2490 0%, #321861 100%);
             --button-challenge-bg: linear-gradient(135deg, #fd7e14 0%, #e85a00 100%);
             --button-challenge-hover: linear-gradient(135deg, #e85a00 0%, #c54a00 100%);
+            --button-submit-puzzle-bg: var(--button-info-bg); /* Using info for submit puzzle button */
+            --button-submit-puzzle-hover: var(--button-info-hover);
             --button-disabled-bg: #ced4da;
             --button-disabled-text: #6c757d;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
@@ -53,9 +55,9 @@
             --leaderboard-filter-bg: var(--input-bg);
             --leaderboard-filter-border: var(--input-border);
             --leaderboard-table-border: var(--input-border);
-            --leaderboard-header-bg: var(--accent-primary); /* Added for stats modal too */
-            --leaderboard-header-text: white; /* Added for stats modal too */
-            --leaderboard-row-even-bg: #f2f2f2; /* Added for stats modal too */
+            --leaderboard-header-bg: var(--accent-primary);
+            --leaderboard-header-text: white;
+            --leaderboard-row-even-bg: #f2f2f2;
         }
 
         html.dark-theme { /* Dark Theme Overrides */
@@ -77,6 +79,8 @@
             --button-daily-hover: linear-gradient(135deg, #3c1e72 0%, #2c1553 100%);
             --button-challenge-bg: linear-gradient(135deg, #c4630e 0%, #b04e00 100%);
             --button-challenge-hover: linear-gradient(135deg, #b04e00 0%, #934000 100%);
+            --button-submit-puzzle-bg: var(--button-info-bg);
+            --button-submit-puzzle-hover: var(--button-info-hover);
             --button-disabled-bg: #5a6268;
             --button-disabled-text: #adb5bd;
             --modal-overlay-bg: rgba(0, 0, 0, 0.8);
@@ -161,7 +165,7 @@
             margin-bottom: 10px;
         }
         #countdown-duration-input { width: 80px; }
-        #challenge-code-input { flex-grow: 1; margin-right: 10px; } /* Let it grow */
+        #challenge-code-input { flex-grow: 1; margin-right: 10px; }
 
         #countdown-duration-input:focus, #challenge-code-input:focus {
             outline: none; border-color: var(--input-focus-border);
@@ -170,21 +174,24 @@
         #countdown-settings { margin-left: 25px; display: none; }
         .difficulty-buttons { display: flex; flex-direction: column; gap: 15px; margin-bottom: 15px; }
 
-        .difficulty-buttons button, .utility-button, #daily-challenge-btn, #start-challenge-btn {
+        .difficulty-buttons button, .utility-button, #daily-challenge-btn, #start-challenge-btn, #go-to-submit-puzzle-btn {
             padding: 15px 25px; cursor: pointer; border-radius: 30px; border: none;
-            font-weight: 600; font-size: 1.1em; color: white;
+            font-weight: 600; font-size: 1.1em; color: rgb(65, 12, 12);
             transition: background var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
             box-shadow: var(--shadow-md); display: flex; align-items: center; justify-content: center; gap: 10px;
+            text-decoration: none; /* For <a> styled as button */
         }
         .difficulty-buttons button:hover:not(:disabled),
         .utility-button:hover:not(:disabled),
         #daily-challenge-btn:hover:not(:disabled),
-        #start-challenge-btn:hover:not(:disabled) { transform: translateY(-3px) scale(1.02); box-shadow: var(--shadow-lg); }
+        #start-challenge-btn:hover:not(:disabled),
+        #go-to-submit-puzzle-btn:hover:not(:disabled) { transform: translateY(-3px) scale(1.02); box-shadow: var(--shadow-lg); }
 
         .difficulty-buttons button:active:not(:disabled),
         .utility-button:active:not(:disabled),
         #daily-challenge-btn:active:not(:disabled),
-        #start-challenge-btn:active:not(:disabled) { transform: translateY(0) scale(1); box-shadow: var(--shadow-md); }
+        #start-challenge-btn:active:not(:disabled),
+        #go-to-submit-puzzle-btn:active:not(:disabled) { transform: translateY(0) scale(1); box-shadow: var(--shadow-md); }
 
         #easy-btn    { background: var(--button-easy-bg); }
         #easy-btn:hover:not(:disabled) { background: var(--button-easy-hover); }
@@ -197,13 +204,15 @@
         #daily-challenge-btn { background: var(--button-daily-bg); margin-top: 0; margin-bottom: 25px; }
         #daily-challenge-btn:hover:not(:disabled) { background: var(--button-daily-hover); }
         #start-challenge-btn { background: var(--button-challenge-bg); font-size: 1em; padding: 10px 15px; width: auto; flex-shrink:0; }
+        #go-to-submit-puzzle-btn { background: var(--button-submit-puzzle-bg); } /* NEW */
+        #go-to-submit-puzzle-btn:hover:not(:disabled) { background: var(--button-submit-puzzle-hover); }
 
 
-        .difficulty-buttons button:disabled, .utility-button:disabled, #daily-challenge-btn:disabled, #start-challenge-btn:disabled {
+        .difficulty-buttons button:disabled, .utility-button:disabled, #daily-challenge-btn:disabled, #start-challenge-btn:disabled, #go-to-submit-puzzle-btn:disabled {
             background: var(--button-disabled-bg); color: var(--button-disabled-text);
             cursor: not-allowed; box-shadow: none; transform: none;
         }
-        .difficulty-buttons button i, .utility-button i, #daily-challenge-btn i, #start-challenge-btn i { font-size: 1.2em; }
+        .difficulty-buttons button i, .utility-button i, #daily-challenge-btn i, #start-challenge-btn i, #go-to-submit-puzzle-btn i { font-size: 1.2em; }
 
         #loading-spinner {
             display: none; margin: 20px auto; width: 40px; height: 40px;
@@ -222,12 +231,12 @@
             display: none; align-items: center; justify-content: center;
             z-index: 1000; opacity: 0; visibility: hidden;
             transition: opacity 0.3s ease, visibility 0s linear 0.3s, background-color var(--transition-speed) ease;
-            padding: 20px; /* Ensure padding for overlay */
-            overflow-y: auto; /* Allow overlay to scroll if modal content is too tall */
+            padding: 20px;
+            overflow-y: auto;
         }
         .modal-overlay.modal-open { opacity: 1; visibility: visible; display:flex; }
 
-        .modal-content { /* General for all modals unless overridden */
+        .modal-content {
             background: var(--container-bg); padding: 20px 30px;
             border-radius: 15px; box-shadow: var(--shadow-lg);
             width: 90%; text-align: left;
@@ -236,12 +245,11 @@
         }
         .modal-overlay.modal-open .modal-content { transform: scale(1); }
 
-        /* Specifically for stats-modal */
         #stats-modal .modal-content {
-            max-width: 700px;   /* Wider for stats dashboard layout */
-            max-height: 85vh;   /* Limit height */
-            overflow-y: auto;   /* Enable vertical scrolling for the modal content itself */
-            display: flex;        /* Use flex for internal layout */
+            max-width: 700px;
+            max-height: 85vh;
+            overflow-y: auto;
+            display: flex;
             flex-direction: column;
         }
 
@@ -250,7 +258,7 @@
             font-weight: 700; margin-bottom: 20px;
             display: flex; align-items: center; justify-content: space-between;
             color: var(--accent-primary); transition: color var(--transition-speed) ease;
-            flex-shrink: 0; /* Keep title visible when scrolling */
+            flex-shrink: 0;
         }
         .modal-title .close-modal-btn {
             background: none; border: none; font-size: 1.5em; cursor: pointer;
@@ -264,7 +272,6 @@
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 15px;
             margin-bottom: 20px;
-            /* Removed flex-grow: 1; as the parent .modal-content will scroll */
         }
         .stat-item {
             background-color: var(--stat-item-bg); padding: 12px; border-radius: 8px;
@@ -329,17 +336,12 @@
             font-size: 0.9em;
         }
 
-
         .leaderboard-container {
             grid-column: 1 / -1;
             margin-top: 20px;
             padding-top: 15px;
             border-top: 1px solid var(--input-border);
             transition: border-color var(--transition-speed) ease;
-            /* If .modal-content scrolls, this doesn't need its own scroll typically,
-               UNLESS it's within another non-scrolling flex item.
-               Let's assume it will expand as needed and .modal-content handles scroll.
-            */
         }
         .leaderboard-container h5 {
             font-size: 1.1em;
@@ -387,13 +389,13 @@
             color: var(--text-secondary);
             font-weight: 600;
             background-color: var(--container-bg); /* Match modal bg for sticky header */
-            position: sticky; /* Make table headers sticky inside scrollable .modal-content */
-            top: 0;           /* Stick to the top of the .modal-content scrolling area */
-            z-index: 1;       /* Ensure header is above table content */
+            position: sticky;
+            top: 0;
+            z-index: 1;
         }
         html.dark-theme #leaderboard-table th {
              color: var(--text-secondary);
-             background-color: var(--container-bg); /* Match modal bg for sticky header */
+             background-color: var(--container-bg);
         }
         #leaderboard-table td:nth-child(1) { width: 10%; text-align: right; padding-right:10px;} /* Rank */
         #leaderboard-table td:nth-child(3) { text-align: right; padding-right: 5px; } /* Score */
@@ -420,13 +422,13 @@
             h1 { font-size: 2em; } h2 { font-size: 1em; margin-bottom: 15px;}
             .game-options-group h3 { font-size: 1em; }
             .mode-selection, .duration-selection { gap: 10px; }
-            .difficulty-buttons button, .utility-button, #daily-challenge-btn, #start-challenge-btn { font-size: 1em; padding: 12px 20px; }
-            #challenge-code-input { width: calc(100% - 100px); } /* Adjusted width for slightly larger button */
+            .difficulty-buttons button, .utility-button, #daily-challenge-btn, #start-challenge-btn, #go-to-submit-puzzle-btn { font-size: 1em; padding: 12px 20px; }
+            #challenge-code-input { width: calc(100% - 100px); }
             #start-challenge-btn { width: auto; padding: 10px 15px; font-size: 0.9em;}
 
 
             .modal-content { padding: 20px; max-width: 95%; }
-            #stats-modal .modal-content { padding: 15px; } /* Specific padding for stats modal on small screens */
+            #stats-modal .modal-content { padding: 15px; }
             .modal-title { font-size: 1.2em; }
             .stats-grid { grid-template-columns: 1fr; }
             .difficulty-stats-container { grid-column: span 1; }
@@ -476,7 +478,7 @@
 
         <button id="daily-challenge-btn"><i class="fas fa-calendar-day"></i> Daily Challenge</button>
 
-        <!-- Challenge a Friend Section -->
+        <!-- Challenge a Friend Section - Integrated -->
         <div class="game-options-group challenge-section">
             <h3><i class="fas fa-user-friends"></i> Play a Challenge!</h3>
             <div class="challenge-input-area">
@@ -486,6 +488,12 @@
         </div>
 
         <button id="stats-btn" class="utility-button" style="margin-top: 25px;"><i class="fas fa-chart-bar"></i> View Stats & Leaderboard</button>
+
+        <!-- Link to Submit Puzzle Page - NEW -->
+        <a href="/submit-puzzle" id="go-to-submit-puzzle-btn" class="utility-button" style="margin-top: 15px; display: block;">
+            <i class="fas fa-plus-circle"></i> Create & Submit Your Puzzle
+        </a>
+
 
         <div id="loading-spinner"></div>
         <p id="error-message-home"></p>
@@ -521,7 +529,7 @@
                     <h4>Max Streak</h4>
                     <p><span id="stats-max-streak">0</span><span id="max-streak-stars" class="stars"></span></p>
                 </div>
-                <div class="stat-item" style="grid-column: span 2;"> <!-- Make it span more columns if stats-grid is wide -->
+                <div class="stat-item" style="grid-column: span 2;">
                     <h4>Fastest Solve Time (Classic)</h4>
                     <p id="stats-fastest-time">N/A</p>
                 </div>
@@ -589,30 +597,27 @@
             const dailyChallengeBtn = document.getElementById('daily-challenge-btn');
             const loadingSpinner = document.getElementById('loading-spinner');
             const errorMessageHome = document.getElementById('error-message-home');
-            const PUZZLE_STORAGE_KEY = 'currentPuzzle';
-            const STATS_STORAGE_KEY = 'wordLinksGameStats';
-            const THEME_STORAGE_KEY = 'wordLinksTheme';
-
             const statsBtn = document.getElementById('stats-btn');
             const statsModal = document.getElementById('stats-modal');
             const closeStatsModalBtn = document.getElementById('close-stats-modal-btn');
             const themeToggleBtn = document.getElementById('theme-toggle-btn');
-            const sunIconClass = 'fa-sun';
-            const moonIconClass = 'fa-moon';
-
             const gameModeRadios = document.querySelectorAll('input[name="gameMode"]');
             const countdownSettingsDiv = document.getElementById('countdown-settings');
             const countdownDurationInput = document.getElementById('countdown-duration-input');
-
             const leaderboardBody = document.getElementById('leaderboard-body');
             const leaderboardLoading = document.getElementById('leaderboard-loading');
             const noLeaderboardDataMsg = document.getElementById('no-leaderboard-data');
             const leaderboardDifficultyFilter = document.getElementById('leaderboard-difficulty-filter');
             const leaderboardModeFilter = document.getElementById('leaderboard-mode-filter');
-
             const challengeCodeInput = document.getElementById('challenge-code-input');
             const startChallengeBtn = document.getElementById('start-challenge-btn');
+            const goToSubmitPuzzleBtn = document.getElementById('go-to-submit-puzzle-btn'); // Get the new button/link
 
+            const PUZZLE_STORAGE_KEY = 'currentPuzzle';
+            const STATS_STORAGE_KEY = 'wordLinksGameStats';
+            const THEME_STORAGE_KEY = 'wordLinksTheme';
+            const sunIconClass = 'fa-sun';
+            const moonIconClass = 'fa-moon';
 
             function showLoading(show = true) {
                 if (loadingSpinner) loadingSpinner.style.display = show ? 'block' : 'none';
@@ -620,6 +625,7 @@
                 if (dailyChallengeBtn) dailyChallengeBtn.disabled = show;
                 if (statsBtn) statsBtn.disabled = show;
                 if (startChallengeBtn) startChallengeBtn.disabled = show;
+                if (goToSubmitPuzzleBtn) goToSubmitPuzzleBtn.style.pointerEvents = show ? 'none' : 'auto'; // Disable link clicks
                 if (errorMessageHome) errorMessageHome.style.display = 'none';
             }
 
@@ -654,7 +660,6 @@
                     selectedGameMode = 'daily';
                 }
 
-
                 let performanceDataForBackend = null;
                 if (!isDaily && !isChallenge && difficulty) {
                     const storedStats = localStorage.getItem(STATS_STORAGE_KEY);
@@ -684,8 +689,9 @@
                         sessionStorage.removeItem(PUZZLE_STORAGE_KEY);
                         sessionStorage.setItem('isChallengeGame', 'true');
                         sessionStorage.removeItem('isDailyChallenge');
-                        sessionStorage.setItem('gameMode', 'challenge');
-                        window.location.href = `/game?challenge=${encodeURIComponent(challengeId)}`;
+                        sessionStorage.setItem('gameMode', 'challenge'); // Ensure gameMode is set for challenge
+                        document.body.classList.add('fade-out'); // Add fade for navigation
+                        setTimeout(() => {window.location.href = `/game?challenge=${encodeURIComponent(challengeId)}`;},300);
                         return;
                     } else if (isDaily) {
                         endpoint = '/api/daily_challenge';
@@ -735,7 +741,6 @@
                 }
             }
 
-
             difficultyButtons.forEach(button => {
                 button.addEventListener('click', () => fetchAndStartGame(button.dataset.difficulty, false));
             });
@@ -778,18 +783,14 @@
                         hard: { ...defaultPerformanceSub }
                     }
                 };
-
                 if (storedStats) {
                     try {
                         const parsed = JSON.parse(storedStats);
-                        stats = {
-                            ...stats, ...parsed,
-                            performance: {
-                                easy: { ...defaultPerformanceSub, ...(parsed.performance?.easy || {}) },
-                                medium: { ...defaultPerformanceSub, ...(parsed.performance?.medium || {}) },
-                                hard: { ...defaultPerformanceSub, ...(parsed.performance?.hard || {}) }
-                            }
-                        };
+                        stats = { ...stats, ...parsed, performance: { ...stats.performance, ...parsed.performance }};
+                         // Ensure nested performance objects are also merged correctly
+                        for (const diff of ['easy', 'medium', 'hard']) {
+                            stats.performance[diff] = { ...defaultPerformanceSub, ...(parsed.performance?.[diff] || {}) };
+                        }
                     } catch(e) { console.error("Error parsing stats, using defaults.", e); }
                 }
 
@@ -828,7 +829,7 @@
 
             function getStreakStarsHTML(streak) {
                 let starsHTML = '';
-                const starCount = Math.min(Math.floor(streak / 2), 3); // Example: 1 star for 2-3, 2 for 4-5, 3 for 6+ (max 3)
+                const starCount = Math.min(Math.floor(streak / 2), 3);
                 for (let i = 0; i < starCount; i++) starsHTML += '<i class="fas fa-star"></i>';
                 return starsHTML;
             }
@@ -879,14 +880,14 @@
             function openStatsModal() {
                 if(!statsModal) return;
                 displayStats();
-                fetchAndDisplayLeaderboard(); // Fetch with default filters
+                fetchAndDisplayLeaderboard();
                 statsModal.style.display = 'flex';
                 setTimeout(() => statsModal.classList.add('modal-open'), 10);
             }
             function closeStatsModal() {
                 if(!statsModal) return;
                 statsModal.classList.remove('modal-open');
-                setTimeout(() => { if(!statsModal.classList.contains('modal-open')) statsModal.style.display = 'none'; }, 300);
+                setTimeout(() => { if(statsModal && !statsModal.classList.contains('modal-open')) statsModal.style.display = 'none'; }, 300);
             }
 
             if (statsBtn) statsBtn.addEventListener('click', openStatsModal);
@@ -906,10 +907,10 @@
             function applyTheme(theme) {
                 if (theme === 'dark') {
                     document.documentElement.classList.add('dark-theme');
-                    if (themeToggleBtn) themeToggleBtn.innerHTML = `<i class="fas fa-sun"></i>`;
+                    if (themeToggleBtn) themeToggleBtn.innerHTML = `<i class="fas ${sunIconClass}"></i>`;
                 } else {
                     document.documentElement.classList.remove('dark-theme');
-                    if (themeToggleBtn) themeToggleBtn.innerHTML = `<i class="fas fa-moon"></i>`;
+                    if (themeToggleBtn) themeToggleBtn.innerHTML = `<i class="fas ${moonIconClass}"></i>`;
                 }
                 localStorage.setItem(THEME_STORAGE_KEY, theme);
             }

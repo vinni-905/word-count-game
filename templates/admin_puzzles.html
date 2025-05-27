@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WordLinks - Admin - Review Puzzles</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { font-family: 'Poppins', sans-serif; margin: 0; padding: 20px; background-color: #e9ecef; color: #343a40; }
+        .container { max-width: 1200px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #0056b3; margin-bottom: 30px; }
+        .puzzle-item { border: 1px solid #ced4da; border-radius: 8px; margin-bottom: 25px; padding: 20px; background-color: #f8f9fa; }
+        .puzzle-item h3 { margin-top: 0; color: #0056b3; border-bottom: 1px solid #dee2e6; padding-bottom: 10px; margin-bottom: 15px; }
+        .puzzle-item p { margin: 8px 0; line-height: 1.5; }
+        .puzzle-item strong { color: #495057; }
+        .puzzle-groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top:15px; }
+        .puzzle-group { border: 1px solid #dee2e6; padding: 15px; border-radius: 6px; background-color: #ffffff; }
+        .puzzle-group h4 { margin-top:0; font-size: 1.1em; color: #007bff; margin-bottom: 10px; }
+        .puzzle-group ul { list-style-type: none; padding-left: 0; margin-bottom: 0; }
+        .puzzle-group ul li { padding: 3px 0; border-bottom: 1px dashed #e9ecef; }
+        .puzzle-group ul li:last-child { border-bottom: none; }
+        .actions { margin-top: 20px; text-align: right; }
+        .actions button {
+            padding: 10px 18px; margin-left: 10px; border: none; border-radius: 25px; cursor: pointer;
+            font-weight: 600; font-size: 0.9em; color: white;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            display: inline-flex; align-items: center; gap: 5px;
+        }
+        .actions button:hover { transform: translateY(-2px); }
+        .approve-btn { background-color: #28a745; }
+        .approve-btn:hover { background-color: #218838; }
+        .reject-btn { background-color: #dc3545; }
+        .reject-btn:hover { background-color: #c82333; }
+        .message { padding: 12px 18px; margin-bottom: 20px; border-radius: 6px; text-align: center; font-weight: 600; display: none; }
+        .message.success { background-color: #d1e7dd; color: #0f5132; border: 1px solid #badbcc; }
+        .message.error { background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7; }
+        #loading { text-align: center; font-style: italic; margin: 25px; color: #6c757d; font-size: 1.1em; }
+        .no-pending { text-align: center; color: #6c757d; font-style: italic; padding: 20px; font-size: 1.1em;}
+        .home-link-admin { display: block; text-align: center; margin-top: 30px; padding: 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 25px; width: fit-content; margin-left: auto; margin-right: auto;}
+        .home-link-admin:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-user-shield"></i> Admin - Review Submitted Puzzles</h1>
+        <div id="message-area" class="message"></div>
+        <div id="pending-puzzles-list">
+            <p id="loading">Loading pending puzzles...</p>
+            <p id="no-pending" style="display:none;">No pending puzzles to review at this time.</p>
+        </div>
+         <a href="/home.html" class="home-link-admin">Back to Home</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const pendingPuzzlesList = document.getElementById('pending-puzzles-list');
+            const loadingMessage = document.getElementById('loading');
+            const noPendingMessage = document.getElementById('no-pending');
+            const messageArea = document.getElementById('message-area');
+
+            async function fetchPendingPuzzles() {
+                if(loadingMessage) loadingMessage.style.display = 'block';
+                if(noPendingMessage) noPendingMessage.style.display = 'none';
+                const currentPuzzleItems = pendingPuzzlesList.querySelectorAll('.puzzle-item');
+                currentPuzzleItems.forEach(item => item.remove());
+                if(loadingMessage && !pendingPuzzlesList.contains(loadingMessage)) {
+                    pendingPuzzlesList.appendChild(loadingMessage);
+                }
+
+                try {
+                    const response = await fetch('/api/admin/pending_puzzles');
+                    if (!response.ok) {
+                        const errData = await response.json().catch(() => ({detail: "Failed to load puzzles."}));
+                        throw new Error(errData.detail);
+                    }
+                    const data = await response.json();
+                    displayPuzzles(data.pending_puzzles);
+                } catch (error) {
+                    console.error("Error fetching pending puzzles:", error);
+                    const errorP = document.createElement('p');
+                    errorP.style.color = 'red';
+                    errorP.style.textAlign = 'center';
+                    errorP.textContent = `Error loading puzzles: ${error.message}`;
+                    pendingPuzzlesList.innerHTML = ''; // Clear before showing error
+                    pendingPuzzlesList.appendChild(errorP);
+                } finally {
+                    if(loadingMessage) loadingMessage.style.display = 'none';
+                }
+            }
+
+            function displayPuzzles(puzzles) {
+                if(loadingMessage && pendingPuzzlesList.contains(loadingMessage)) {
+                    loadingMessage.remove();
+                }
+                const currentPuzzleItems = pendingPuzzlesList.querySelectorAll('.puzzle-item');
+                currentPuzzleItems.forEach(item => item.remove());
+
+                if (!puzzles || puzzles.length === 0) {
+                    if(noPendingMessage) noPendingMessage.style.display = 'block';
+                    return;
+                }
+                 if(noPendingMessage) noPendingMessage.style.display = 'none';
+
+                puzzles.forEach(puzzle => {
+                    const puzzleDiv = document.createElement('div');
+                    puzzleDiv.className = 'puzzle-item';
+                    puzzleDiv.dataset.submissionId = puzzle.id;
+
+                    let groupsHTML = '';
+                    for (let i = 1; i <= 4; i++) {
+                        const wordsArray = puzzle[`group${i}_words`] || [];
+                        const description = puzzle[`group${i}_description`] || 'N/A';
+                        groupsHTML += `
+                            <div class="puzzle-group">
+                                <h4>Group ${i}: ${escapeHTML(description)}</h4>
+                                <ul>${wordsArray.map(word => `<li>${escapeHTML(String(word))}</li>`).join('')}</ul>
+                            </div>
+                        `;
+                    }
+
+                    puzzleDiv.innerHTML = `
+                        <h3>Submission ID: ${puzzle.id} (Status: ${escapeHTML(puzzle.status)})</h3>
+                        <p><strong>Submitter:</strong> ${escapeHTML(puzzle.submitter_name) || 'Anonymous'}</p>
+                        <p><strong>Submitted:</strong> ${new Date(puzzle.submission_date).toLocaleString()}</p>
+                        <div class="puzzle-groups">
+                            ${groupsHTML}
+                        </div>
+                        <div class="actions" style="margin-top:15px;">
+                            <button class="approve-btn" data-id="${puzzle.id}"><i class="fas fa-check-circle"></i> Approve</button>
+                            <button class="reject-btn" data-id="${puzzle.id}"><i class="fas fa-times-circle"></i> Reject</button>
+                        </div>
+                    `;
+                    pendingPuzzlesList.appendChild(puzzleDiv);
+                });
+
+                attachActionListeners();
+            }
+
+            function attachActionListeners() {
+                document.querySelectorAll('.approve-btn').forEach(button => {
+                    const newButton = button.cloneNode(true);
+                    button.parentNode.replaceChild(newButton, button);
+                    newButton.addEventListener('click', () => updateStatus(newButton.dataset.id, 'approved', newButton));
+                });
+                 document.querySelectorAll('.reject-btn').forEach(button => {
+                    const newButton = button.cloneNode(true);
+                    button.parentNode.replaceChild(newButton, button);
+                    newButton.addEventListener('click', () => updateStatus(newButton.dataset.id, 'rejected', newButton));
+                });
+            }
+
+            async function updateStatus(id, newStatus, clickedButton) {
+                showMessage('', '');
+                if(clickedButton) clickedButton.disabled = true;
+
+                try {
+                    const response = await fetch(`/api/admin/update_puzzle_status/${id}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ new_status: newStatus })
+                    });
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        const successMessage = result.message ? String(result.message) : `Puzzle ${id} status updated to ${newStatus}.`;
+                        showMessage(successMessage, 'success');
+                        
+                        const itemToRemove = pendingPuzzlesList.querySelector(`.puzzle-item[data-submission-id="${id}"]`);
+                        if (itemToRemove) {
+                            itemToRemove.style.transition = 'opacity 0.5s ease';
+                            itemToRemove.style.opacity = '0';
+                            setTimeout(() => {
+                                itemToRemove.remove();
+                                if (pendingPuzzlesList.querySelectorAll('.puzzle-item').length === 0 && loadingMessage.style.display === 'none') {
+                                   if(noPendingMessage) noPendingMessage.style.display = 'block';
+                                }
+                            }, 500);
+                        } else {
+                             fetchPendingPuzzles();
+                        }
+                    } else {
+                        const errorMessageText = result.detail ? String(result.detail) : (result.message ? String(result.message) : `Failed to update status for puzzle ${id}.`);
+                        throw new Error(errorMessageText);
+                    }
+                } catch (error) {
+                    console.error("Error updating status:", error);
+                    // THIS IS THE CORRECTED BLOCK
+                    let displayErrorMessage = "An unexpected error occurred while updating status.";
+                    if (error && typeof error.message === 'string') {
+                        displayErrorMessage = "Error: " + error.message;
+                    } else if (typeof error === 'string') {
+                        displayErrorMessage = "Error: " + error;
+                    }
+                    showMessage(displayErrorMessage, 'error');
+                    // END CORRECTION
+                    if(clickedButton) clickedButton.disabled = false;
+                }
+            }
+
+            function showMessage(text, type) {
+                messageArea.textContent = text;
+                messageArea.className = `message ${type}`;
+                messageArea.style.display = 'block';
+                setTimeout(() => {
+                    messageArea.style.display = 'none';
+                    messageArea.textContent = '';
+                    messageArea.className = 'message';
+                }, 5000);
+            }
+
+            function escapeHTML(str) {
+                if (str === null || str === undefined) return '';
+                return str.toString()
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#39;");
+            }
+
+            fetchPendingPuzzles();
+        });
+    </script>
+</body>
+</html>

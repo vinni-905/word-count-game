@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WordLinks - Submit Puzzle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Basic styles - copy from home.html or game.html and adapt */
+        :root { /* Light Theme (Default) */
+            --bg-gradient-start: #f8f9fa; --bg-gradient-end: #ffffff;
+            --container-bg: #ffffff; --text-primary: #343a40; --text-secondary: #6c757d;
+            --accent-primary: #007bff;
+            --button-primary-bg: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            --button-primary-hover: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+            --input-bg: #fff; --input-border: #ced4da; --input-focus-border: var(--accent-primary);
+            --shadow-lg: 0 10px 20px rgba(0,0,0,0.1);--transition-speed: 0.25s;
+            --error-bg: #f8d7da; --error-text: #842029; --error-border: #f5c2c7;
+            --success-bg: #d1e7dd; --success-text: #0f5132; --success-border: #badbcc;
+        }
+        html.dark-theme {
+            --bg-gradient-start: #212529; --bg-gradient-end: #343a40;
+            --container-bg: #495057; --text-primary: #f8f9fa; --text-secondary: #adb5bd;
+            --accent-primary: #0d6efd; --input-bg: #343a40; --input-border: #6c757d;
+            --error-bg: #591C21; --error-text: #f5c2c7; --error-border: #c87079;
+            --success-bg: #14452F; --success-text: #a3d4b8; --success-border: #2f6f4f;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Poppins', sans-serif; line-height: 1.6;
+            background: linear-gradient(to bottom, var(--bg-gradient-start), var(--bg-gradient-end));
+            color: var(--text-primary); padding: 20px; min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .container {
+            background: var(--container-bg); padding: 30px; border-radius: 16px;
+            box-shadow: var(--shadow-lg); width: 100%; max-width: 800px;
+        }
+        h1 { text-align: center; color: var(--accent-primary); margin-bottom: 25px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; color: var(--text-secondary); }
+        input[type="text"], textarea {
+            width: 100%; padding: 10px; border-radius: 6px;
+            border: 1px solid var(--input-border); font-size: 1em;
+            background-color: var(--input-bg); color: var(--text-primary);
+        }
+        textarea { min-height: 60px; resize: vertical; }
+        input[type="text"]:focus, textarea:focus {
+            outline: none; border-color: var(--input-focus-border);
+            box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--input-focus-border) 25%, transparent);
+        }
+        .word-inputs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 5px; }
+        .group-container { padding: 15px; border: 1px solid var(--input-border); border-radius: 8px; margin-bottom: 20px; }
+        .group-container h3 { margin-top: 0; margin-bottom: 10px; color: var(--accent-primary); }
+        .submit-btn {
+            display: block; width: 100%; padding: 12px; border: none; border-radius: 25px;
+            background: var(--button-primary-bg); color: white;
+            font-size: 1.1em; font-weight: 600; cursor: pointer;
+            transition: background var(--transition-speed) ease; margin-top: 20px;
+        }
+        .submit-btn:hover:not(:disabled) { background: var(--button-primary-hover); }
+        .submit-btn:disabled { background: #ccc; cursor: not-allowed; }
+        .message-area {
+            margin-top: 15px; padding: 10px; border-radius: 6px; text-align: center;
+            font-weight: 600; display: none;
+        }
+        .message-area.success { background-color: var(--success-bg); color: var(--success-text); border: 1px solid var(--success-border); }
+        .message-area.error { background-color: var(--error-bg); color: var(--error-text); border: 1px solid var(--error-border); }
+        .home-link { display: block; text-align: center; margin-top: 20px; color: var(--accent-primary); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-plus-circle"></i> Submit Your Own Puzzle</h1>
+        <p style="text-align: center; margin-bottom: 20px; color: var(--text-secondary);">
+            Create 4 groups of 4 unique words each. Provide a clear description for the connection in each group.
+        </p>
+        <form id="submit-puzzle-form">
+            <div class="form-group">
+                <label for="submitter-name">Your Name/Alias (Optional):</label>
+                <input type="text" id="submitter-name" name="submitter_name" maxlength="50">
+            </div>
+
+            <!-- Group 1 -->
+            <div class="group-container">
+                <h3>Group 1</h3>
+                <div class="form-group">
+                    <label for="group1-desc">Description for Group 1:</label>
+                    <input type="text" id="group1-desc" name="group1_description" required maxlength="100">
+                </div>
+                <label>Words for Group 1 (4 unique words):</label>
+                <div class="word-inputs">
+                    <input type="text" name="group1_words[]" required maxlength="25">
+                    <input type="text" name="group1_words[]" required maxlength="25">
+                    <input type="text" name="group1_words[]" required maxlength="25">
+                    <input type="text" name="group1_words[]" required maxlength="25">
+                </div>
+            </div>
+
+            <!-- Group 2 -->
+            <div class="group-container">
+                <h3>Group 2</h3>
+                <div class="form-group">
+                    <label for="group2-desc">Description for Group 2:</label>
+                    <input type="text" id="group2-desc" name="group2_description" required maxlength="100">
+                </div>
+                <label>Words for Group 2 (4 unique words):</label>
+                <div class="word-inputs">
+                    <input type="text" name="group2_words[]" required maxlength="25">
+                    <input type="text" name="group2_words[]" required maxlength="25">
+                    <input type="text" name="group2_words[]" required maxlength="25">
+                    <input type="text" name="group2_words[]" required maxlength="25">
+                </div>
+            </div>
+
+            <!-- Group 3 -->
+            <div class="group-container">
+                <h3>Group 3</h3>
+                <div class="form-group">
+                    <label for="group3-desc">Description for Group 3:</label>
+                    <input type="text" id="group3-desc" name="group3_description" required maxlength="100">
+                </div>
+                <label>Words for Group 3 (4 unique words):</label>
+                <div class="word-inputs">
+                    <input type="text" name="group3_words[]" required maxlength="25">
+                    <input type="text" name="group3_words[]" required maxlength="25">
+                    <input type="text" name="group3_words[]" required maxlength="25">
+                    <input type="text" name="group3_words[]" required maxlength="25">
+                </div>
+            </div>
+
+            <!-- Group 4 -->
+            <div class="group-container">
+                <h3>Group 4</h3>
+                <div class="form-group">
+                    <label for="group4-desc">Description for Group 4:</label>
+                    <input type="text" id="group4-desc" name="group4_description" required maxlength="100">
+                </div>
+                <label>Words for Group 4 (4 unique words):</label>
+                <div class="word-inputs">
+                    <input type="text" name="group4_words[]" required maxlength="25">
+                    <input type="text" name="group4_words[]" required maxlength="25">
+                    <input type="text" name="group4_words[]" required maxlength="25">
+                    <input type="text" name="group4_words[]" required maxlength="25">
+                </div>
+            </div>
+
+            <button type="submit" id="submit-puzzle-btn" class="submit-btn">
+                <i class="fas fa-paper-plane"></i> Submit Puzzle for Review
+            </button>
+        </form>
+        <div id="submission-message" class="message-area"></div>
+        <a href="/home.html" class="home-link">Back to Home</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('submit-puzzle-form');
+            const submitBtn = document.getElementById('submit-puzzle-btn');
+            const messageArea = document.getElementById('submission-message');
+
+            form.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+                messageArea.style.display = 'none';
+                messageArea.textContent = '';
+                messageArea.className = 'message-area'; // Reset class
+
+                const formData = new FormData(form);
+                const payload = {
+                    submitter_name: formData.get('submitter_name') || null,
+                    group1: {
+                        words: formData.getAll('group1_words[]').map(w => w.trim()).filter(w => w),
+                        description: formData.get('group1_description').trim()
+                    },
+                    group2: {
+                        words: formData.getAll('group2_words[]').map(w => w.trim()).filter(w => w),
+                        description: formData.get('group2_description').trim()
+                    },
+                    group3: {
+                        words: formData.getAll('group3_words[]').map(w => w.trim()).filter(w => w),
+                        description: formData.get('group3_description').trim()
+                    },
+                    group4: {
+                        words: formData.getAll('group4_words[]').map(w => w.trim()).filter(w => w),
+                        description: formData.get('group4_description').trim()
+                    }
+                };
+
+                // Basic client-side validation (Pydantic on backend is primary)
+                let valid = true;
+                for (let i = 1; i <= 4; i++) {
+                    if (payload[`group${i}`].words.length !== 4) {
+                        showMessage(`Group ${i} must have exactly 4 words.`, 'error');
+                        valid = false; break;
+                    }
+                    if (!payload[`group${i}`].description) {
+                        showMessage(`Description for Group ${i} is required.`, 'error');
+                        valid = false; break;
+                    }
+                     // Check for unique words within a group
+                    if (new Set(payload[`group${i}`].words.map(w => w.toLowerCase())).size !== 4) {
+                        showMessage(`Words within Group ${i} must be unique.`, 'error');
+                        valid = false; break;
+                    }
+                }
+                // Check for unique words across all groups
+                if (valid) {
+                    const allWords = [
+                        ...payload.group1.words, ...payload.group2.words,
+                        ...payload.group3.words, ...payload.group4.words
+                    ].map(w => w.toLowerCase());
+                    if (new Set(allWords).size !== 16) {
+                        showMessage('All 16 words across all groups must be unique.', 'error');
+                        valid = false;
+                    }
+                }
+
+
+                if (!valid) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Puzzle for Review';
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/api/submit_user_puzzle', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        showMessage(result.message || 'Puzzle submitted successfully!', 'success');
+                        form.reset();
+                    } else {
+                        throw new Error(result.detail || 'Failed to submit puzzle.');
+                    }
+                } catch (error) {
+                    console.error('Submission error:', error);
+                    showMessage(`Error: ${error.message}`, 'error');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Puzzle for Review';
+                }
+            });
+
+            function showMessage(text, type) {
+                messageArea.textContent = text;
+                messageArea.className = `message-area ${type}`; // 'success' or 'error'
+                messageArea.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
