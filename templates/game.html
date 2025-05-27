@@ -292,6 +292,41 @@
         #challenge-friend-btn:hover:not(:disabled) { background: var(--button-warning-hover); }
         html.dark-theme #challenge-friend-btn { color: var(--text-primary); }
 
+        .share-buttons-container {
+            display: none;
+            flex-basis: 100%;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid var(--word-item-base-border);
+            text-align: center;
+        }
+        .share-buttons-container h4 {
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+        .social-share-button {
+            padding: 8px 15px !important;
+            font-size: 0.8em !important;
+            margin: 5px !important;
+            min-width: auto !important;
+            flex-grow: 0 !important;
+        }
+        #share-twitter-btn { background: #1DA1F2; }
+        #share-twitter-btn:hover { background: #0c85d0; }
+        #share-linkedin-btn { background: #0A66C2; }
+        #share-linkedin-btn:hover { background: #004182; }
+        #share-whatsapp-btn { background: #25D366; }
+        #share-whatsapp-btn:hover { background: #1DA851; }
+        #share-instagram-info-btn {
+            background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+        }
+        #share-instagram-info-btn:hover {
+            background: linear-gradient(45deg, #d17c22 0%,#c7562b 25%,#ba1e35 50%,#ae1f58 75%,#a21575 100%);
+        }
+        #copy-summary-btn { background: var(--button-info-bg); }
+        #copy-summary-btn:hover { background: var(--button-info-hover); }
+
 
         .error-message {
              text-align: center; color: var(--error-message-text); font-style: normal;
@@ -316,6 +351,7 @@
             display: flex; align-items: center; justify-content: center;
             z-index: 1000; opacity: 0; visibility: hidden;
             transition: opacity 0.3s ease, visibility 0s linear 0.3s, background-color var(--transition-speed) ease;
+            overflow-y: auto; /* MODIFIED: Allow overlay to scroll if modal is too tall */
         }
         .modal-overlay.modal-open { opacity: 1; visibility: visible; }
         .modal-content {
@@ -325,6 +361,7 @@
             max-width: 450px; width: 90%; text-align: center; color: var(--text-primary);
             transform: scale(0.9);
             transition: transform 0.3s ease, background-color var(--transition-speed) ease, color var(--transition-speed) ease, border-color var(--transition-speed) ease;
+            /* Removed overflow-y: auto from general modal content, will be handled by specific inner containers */
         }
         .modal-overlay.modal-open .modal-content { transform: scale(1); }
         .modal-title {
@@ -359,8 +396,18 @@
         }
         html.dark-theme #player-name-input { border: 1px solid #555; }
 
-        #leaderboard-modal .modal-content { max-width: 650px; }
+        /* Leaderboard Modal Specific Styles - UPDATED for scrolling */
+        #leaderboard-modal .modal-content {
+            max-width: 650px;
+            display: flex; /* Use flexbox for internal layout */
+            flex-direction: column; /* Stack children vertically */
+            max-height: 85vh; /* Limit height to 85% of viewport height */
+        }
+        #leaderboard-modal .modal-title {
+            flex-shrink: 0; /* Prevent title from shrinking */
+        }
         #leaderboard-modal .filters {
+            flex-shrink: 0; /* Prevent filters from shrinking */
             margin-bottom: 15px; text-align: center; display: flex;
             flex-wrap: wrap; gap: 10px; justify-content: center; align-items: center;
         }
@@ -371,7 +418,13 @@
         }
         #leaderboard-modal #lb-filter-btn { background: var(--button-info-bg); color: white; }
         #leaderboard-modal #lb-filter-btn:hover:not(:disabled) { background: var(--button-info-hover); }
-        #leaderboard-modal table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+
+        #leaderboard-modal .table-container { /* NEW WRAPPER FOR TABLE */
+            flex-grow: 1; /* Allow this to take remaining space */
+            overflow-y: auto; /* Make THIS container scrollable */
+            margin-bottom: 15px;
+        }
+        #leaderboard-modal table { width: 100%; border-collapse: collapse; /* Removed margin-top */ }
         #leaderboard-modal th, #leaderboard-modal td {
             border: 1px solid var(--leaderboard-border-color); padding: 8px 10px;
             text-align: left; font-size: 0.9em;
@@ -381,7 +434,15 @@
             font-weight: 600;
         }
         #leaderboard-modal tr:nth-child(even) { background-color: var(--leaderboard-row-even-bg); }
-        #lb-no-scores-message { text-align: center; color: var(--text-secondary); margin-top: 15px;}
+        #lb-no-scores-message {
+            flex-shrink: 0;
+            text-align: center; color: var(--text-secondary); margin-top: 15px;
+        }
+         #leaderboard-modal .modal-actions {
+            flex-shrink: 0; /* Prevent actions from shrinking */
+            margin-top: auto; /* Push to bottom if content is short, or use explicit margin if preferred */
+            padding-top: 15px; /* Add some space above the close button if table is short */
+        }
 
 
         @media (max-width: 480px) {
@@ -478,7 +539,26 @@
             <button id="new-game-btn">
                 <i class="fas fa-redo"></i> Play Again?
             </button>
+            <div class="share-buttons-container" style="display: none;">
+                <h4>Share Your Success!</h4>
+                <button id="share-twitter-btn" class="social-share-button" title="Share on X (Twitter)">
+                    <i class="fab fa-twitter"></i> Share on X
+                </button>
+                <button id="share-linkedin-btn" class="social-share-button" title="Share on LinkedIn">
+                    <i class="fab fa-linkedin-in"></i> Share on LinkedIn
+                </button>
+                <button id="share-whatsapp-btn" class="social-share-button" title="Share on WhatsApp">
+                    <i class="fab fa-whatsapp"></i> Share on WhatsApp
+                </button>
+                <button id="share-instagram-info-btn" class="social-share-button" title="How to share on Instagram">
+                    <i class="fab fa-instagram"></i> Share on Instagram
+                </button>
+                <button id="copy-summary-btn" class="social-share-button" title="Copy game summary to clipboard">
+                    <i class="fas fa-copy"></i> Copy Summary
+                </button>
+            </div>
         </div>
+
 
         <!-- Show Answer Modal (Hints Exhausted) -->
         <div id="show-answer-modal" class="modal-overlay" style="display: none;" role="dialog" aria-labelledby="show-answer-modal-title" aria-modal="true">
@@ -514,7 +594,7 @@
             </div>
         </div>
 
-        <!-- Leaderboard Modal -->
+        <!-- Leaderboard Modal (MODIFIED HTML STRUCTURE FOR SCROLLING) -->
         <div id="leaderboard-modal" class="modal-overlay" style="display: none;" role="dialog" aria-labelledby="leaderboard-modal-title" aria-modal="true">
             <div class="modal-content">
                 <h3 id="leaderboard-modal-title" class="modal-title"><i class="fas fa-list-ol"></i> Leaderboard</h3>
@@ -537,7 +617,7 @@
                         <i class="fas fa-filter"></i> Filter
                     </button>
                 </div>
-                <div style="max-height: 300px; overflow-y: auto;">
+                <div class="table-container"> <!-- NEW WRAPPER FOR SCROLLABLE TABLE -->
                     <table>
                         <thead>
                             <tr>
@@ -554,7 +634,7 @@
                     </table>
                 </div>
                 <p id="lb-no-scores-message" style="display: none;">No scores found for the selected filters.</p>
-                <div class="modal-actions" style="margin-top: 20px;">
+                <div class="modal-actions" style="margin-top: auto; padding-top: 15px;"> <!-- Adjusted for flex layout -->
                     <button id="close-leaderboard-btn" class="modal-button modal-button-cancel">
                         <i class="fas fa-times"></i> Close
                     </button>
@@ -564,7 +644,6 @@
     </div>
 
     <script>
-        // Wrap entire script in a try-catch for easier debugging of top-level errors
         try {
         document.addEventListener('DOMContentLoaded', () => {
             // --- DOM Element Selectors (Grouped for clarity) ---
@@ -574,35 +653,29 @@
             const feedbackArea = document.getElementById('feedback-area');
             const solvedGroupsArea = document.getElementById('solved-groups-area');
             const puzzleInfoDiv = document.getElementById('puzzle-info');
-            // Status Bar
             const timerSpan = document.getElementById('timer');
             const timerLabelSpan = document.getElementById('timer-label');
             const scoreSpan = document.getElementById('score');
             const hintsUsedSpan = document.getElementById('hints-used');
             const hintsAllowedSpan = document.getElementById('hints-allowed');
             const livesRemainingSpan = document.getElementById('lives-remaining');
-            // Controls
             const selectedCountSpan = document.getElementById('selected-count');
             const shuffleBtn = document.getElementById('shuffle-btn');
-            const clearSelectionBtn = document.getElementById('clear-selection-btn'); // THIS IS KEY
+            const clearSelectionBtn = document.getElementById('clear-selection-btn');
             const hintBtn = document.getElementById('hint-btn');
-            // Post-Game
             const postGameActionsDiv = document.querySelector('.post-game-actions');
             const challengeFriendBtn = document.getElementById('challenge-friend-btn');
             const viewLeaderboardBtn = document.getElementById('view-leaderboard-btn');
             const viewSolutionBtn = document.getElementById('view-solution-btn');
             const newGameBtn = document.getElementById('new-game-btn');
-            // Modals - Show Answer
             const showAnswerModal = document.getElementById('show-answer-modal');
             const confirmShowAnswerBtn = document.getElementById('confirm-show-answer-btn');
             const cancelShowAnswerBtn = document.getElementById('cancel-show-answer-btn');
-            // Modals - Submit Score
             const scoreSubmitModal = document.getElementById('score-submit-modal');
             const confirmSubmitScoreBtn = document.getElementById('confirm-submit-score-btn');
             const cancelSubmitScoreBtn = document.getElementById('cancel-submit-score-btn');
             const modalFinalScoreSpan = document.getElementById('modal-final-score');
             const playerNameInput = document.getElementById('player-name-input');
-            // Modals - Leaderboard
             const leaderboardModal = document.getElementById('leaderboard-modal');
             const leaderboardModalBody = document.getElementById('leaderboard-modal-body');
             const closeLeaderboardBtn = document.getElementById('close-leaderboard-btn');
@@ -610,10 +683,14 @@
             const lbModeFilter = document.getElementById('lb-mode-filter');
             const lbFilterBtn = document.getElementById('lb-filter-btn');
             const lbNoScoresMessage = document.getElementById('lb-no-scores-message');
-            // General UI
             const themeToggleBtn = document.getElementById('theme-toggle-btn');
             const dailyChallengeIndicator = document.getElementById('daily-challenge-indicator');
-            // Audio Elements
+            const shareButtonsContainer = document.querySelector('.share-buttons-container');
+            const shareTwitterBtn = document.getElementById('share-twitter-btn');
+            const shareLinkedinBtn = document.getElementById('share-linkedin-btn');
+            const shareWhatsappBtn = document.getElementById('share-whatsapp-btn');
+            const shareInstagramInfoBtn = document.getElementById('share-instagram-info-btn');
+            const copySummaryBtn = document.getElementById('copy-summary-btn');
             const selectSound = document.getElementById('select-sound');
             const correctSound = document.getElementById('correct-sound');
             const incorrectSound = document.getElementById('incorrect-sound');
@@ -621,7 +698,6 @@
             const loseSound = document.getElementById('lose-sound');
             const shuffleSound = document.getElementById('shuffle-sound');
 
-            // --- Game Constants & State Variables ---
             const STARTING_LIVES = 4;
             const STARTING_SCORE = 1000;
             const INCORRECT_GUESS_PENALTY = 75;
@@ -632,7 +708,6 @@
             const THEME_STORAGE_KEY = 'wordLinksTheme';
             const SHUFFLE_PENALTY_SCORE = 25;
             const MAX_SHUFFLES_ALLOWED = 3;
-
             const POINTS_PER_CORRECT_GROUP = 200;
             const TIME_BONUS_TARGET_SECONDS = 180;
             const TIME_BONUS_PER_SECOND_SAVED = 2;
@@ -663,7 +738,6 @@
                 debug: (message, ...optionalParams) => console.debug(`[DEBUG] ${message}`, ...optionalParams),
             };
 
-            // --- Core Game Functions ---
             function playSound(soundElement) {
                 if (soundElement && typeof soundElement.play === 'function') {
                     soundElement.currentTime = 0;
@@ -678,6 +752,7 @@
                 closeModal(showAnswerModal);
                 closeModal(scoreSubmitModal);
                 closeModal(leaderboardModal);
+                if (shareButtonsContainer) shareButtonsContainer.style.display = 'none';
                 stopTimer(); gameActive = false;
                 loadStats();
 
@@ -726,7 +801,6 @@
                     if (dailyChallengeIndicator) dailyChallengeIndicator.style.display = 'none';
                     gameMode = sessionStorage.getItem('gameMode') || "classic";
                 }
-
 
                 if (gameMode === "countdown" && !isDailyChallenge && !isChallengeGame) {
                     countdownDuration = parseInt(sessionStorage.getItem('countdownDuration'), 10) || 180;
@@ -808,7 +882,6 @@
             function displayWords(words) {
                 if(!wordGrid) return;
                 wordGrid.innerHTML = '';
-                // Ensure words is an array before trying to spread it
                 const wordsArray = Array.isArray(words) ? words : [];
                 const shuffledWords = [...wordsArray].sort(() => Math.random() - 0.5);
                 shuffledWords.forEach((word) => {
@@ -818,7 +891,7 @@
                     wordDiv.dataset.word = word;
                     wordDiv.setAttribute('role', 'gridcell');
                     wordDiv.setAttribute('aria-selected', 'false');
-                    wordDiv.tabIndex = 0; // Make focusable
+                    wordDiv.tabIndex = 0;
                     wordDiv.addEventListener('click', handleWordClick);
                     wordDiv.addEventListener('keydown', handleWordKeyDown);
                     wordGrid.appendChild(wordDiv);
@@ -862,7 +935,6 @@
                     }
                     timeLeft = countdownDuration;
                     updateTimerDisplay();
-
                     timerInterval = setInterval(() => {
                         if (!gameActive) return;
                         timeLeft--;
@@ -905,7 +977,6 @@
                  if (!gameActive || isSubmitting || wordDiv.classList.contains('solved') || wordDiv.classList.contains('disabled')) return;
                  toggleWordSelection(wordDiv);
             }
-
             function handleWordKeyDown(event) {
                 if (event.key === 'Enter' || event.key === ' ') {
                     event.preventDefault(); const wordDiv = event.currentTarget;
@@ -913,9 +984,9 @@
                     toggleWordSelection(wordDiv);
                 }
             }
-
             function toggleWordSelection(wordDiv) {
-                 const word = wordDiv.dataset.word; const isSelected = wordDiv.classList.contains('selected');
+                 const word = wordDiv.dataset.word;
+                 const isSelected = wordDiv.classList.contains('selected');
                  clearFeedback();
                  if (isSelected) {
                       selectedWords = selectedWords.filter(w => w !== word);
@@ -933,9 +1004,11 @@
 
             function clearSelection() {
                  clearFeedback(); selectedWords = [];
-                 document.querySelectorAll('.word-item.selected').forEach(el => {
-                    el.classList.remove('selected'); el.setAttribute('aria-selected', 'false');
-                 });
+                 if (wordGrid) {
+                    wordGrid.querySelectorAll('.word-item.selected').forEach(el => {
+                        el.classList.remove('selected'); el.setAttribute('aria-selected', 'false');
+                    });
+                 }
                  updateSelectionUI();
             }
 
@@ -965,24 +1038,22 @@
                          else { isSubmitting = false; updateSelectionUI(); }
                     } else {
                         showFeedback(result.message || "No hint available.", '', 3000);
-                        if (hintsUsed > 0) { hintsUsed--; score += HINT_PENALTY; updateScoreDisplay(); updateHintsDisplay(); } // Revert if no hint given
+                        if (hintsUsed > 0) { hintsUsed--; score += HINT_PENALTY; updateScoreDisplay(); updateHintsDisplay(); }
                         isSubmitting = false; updateSelectionUI();
                     }
                 } catch (error) {
                     logger.error('Error getting hint:', error);
                     showFeedback(`Hint Failed: ${error.message}`, 'feedback-incorrect', 4000);
-                    // Revert penalty if fetch failed
                     if (hintsUsed > 0) { hintsUsed--; score += HINT_PENALTY; }
                     updateScoreDisplay(); updateHintsDisplay(); isSubmitting = false; updateSelectionUI();
                 }
             }
-
             function highlightHintWords(wordsArray) {
                 if (hintHighlightTimeout) clearTimeout(hintHighlightTimeout);
                 document.querySelectorAll('.word-item.highlight-hint').forEach(el => el.classList.remove('highlight-hint'));
                 if (!wordsArray || wordsArray.length === 0 || !wordGrid) return;
                 wordsArray.forEach(word => {
-                    const wordDiv = wordGrid.querySelector(`.word-item[data-word="${word.toUpperCase()}"]:not(.solved)`); // Ensure comparison with UPPERCASE dataset.word
+                    const wordDiv = wordGrid.querySelector(`.word-item[data-word="${word.toUpperCase()}"]:not(.solved)`);
                     if (wordDiv) wordDiv.classList.add('highlight-hint');
                 });
                 hintHighlightTimeout = setTimeout(() => {
@@ -994,11 +1065,9 @@
             function clearFeedback() {
                 if (feedbackTimeout) clearTimeout(feedbackTimeout); feedbackTimeout = null;
                 if (feedbackArea) {
-                    feedbackArea.textContent = ''; feedbackArea.className = '';
-                    feedbackArea.classList.add('feedback-area'); // Ensure base class is always present
+                    feedbackArea.textContent = ''; feedbackArea.className = 'feedback-area';
                 }
             }
-
             function showFeedback(message, className = '', duration = 3000) {
                  if (!feedbackArea) return; clearFeedback();
                  feedbackArea.textContent = message;
@@ -1014,23 +1083,23 @@
             async function submitGroupAttempt() {
                 if (!gameActive || isSubmitting || selectedWords.length !== 4 || lives <= 0) return;
                 isSubmitting = true; updateSelectionUI(); clearFeedback(); showFeedback('Checking...', '', 0);
-                const attemptPayload = { puzzle_id: currentPuzzle.puzzle_id, groups: { 'attempt': selectedWords } }; // selectedWords are already uppercase
-                await new Promise(resolve => setTimeout(resolve, 300)); // Artificial delay
+                const attemptPayload = { puzzle_id: currentPuzzle.puzzle_id, groups: { 'attempt': selectedWords } };
+                await new Promise(resolve => setTimeout(resolve, 300));
                 try {
                     const response = await fetch('/api/check_answer', {
                         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(attemptPayload)
                     });
                     if (!response.ok) {
                         let errorText = `Check Error: ${response.status}`;
-                        try { const errorData = await response.json(); errorText = errorData.detail || errorText; } catch (e) { /* ignore if parsing errorData fails */ }
+                        try { const errorData = await response.json(); errorText = errorData.detail || errorText; } catch (e) {}
                         throw new Error(errorText);
                     }
                     const result = await response.json(); handleAttemptResult(result);
                 } catch (error) {
                      logger.error('Error submitting answer:', error);
                      showFeedback(`Failed to check answer: ${error.message}. Try again.`, 'feedback-incorrect', 4000);
-                     clearSelection(); // Clear selection on error
-                } finally { isSubmitting = false; updateSelectionUI(); /* Update UI regardless of outcome */ }
+                     clearSelection();
+                } finally { isSubmitting = false; updateSelectionUI(); }
             }
 
             function handleAttemptResult(result) {
@@ -1045,7 +1114,7 @@
                       if (typeof solvedGroupData === 'object' && solvedGroupData !== null) {
                          correctGroupDescription = solvedGroupData.description || "Group Found";
                          difficultyIndex = solvedGroupData.difficulty_index !== undefined ? solvedGroupData.difficulty_index : revealedGroupsCount;
-                      } else if (typeof solvedGroupData === 'string') { correctGroupDescription = solvedGroupData; } // Should not happen with new API
+                      } else if (typeof solvedGroupData === 'string') { correctGroupDescription = solvedGroupData; }
                      if (!solvedGroupKeys.includes(newlySolvedKey)) solvedGroupKeys.push(newlySolvedKey);
                  }
 
@@ -1067,9 +1136,7 @@
                            const wordDiv = wordGrid.querySelector(`.word-item[data-word="${word}"]`);
                            if (wordDiv) {
                                wordDiv.classList.add('correct-match-animation');
-                               wordDiv.addEventListener('animationend', () => {
-                                   wordDiv.classList.remove('correct-match-animation');
-                               }, { once: true });
+                               wordDiv.addEventListener('animationend', () => wordDiv.classList.remove('correct-match-animation'), { once: true });
                            }
                        });
                        setTimeout(() => {
@@ -1081,7 +1148,7 @@
                                     playSound(winSound); endGame(true);
                                 }, 300);
                            }
-                       }, 600); // Duration of correctMatchPop animation
+                       }, 600);
                   } else {
                        playSound(incorrectSound);
                        currentGroupStreak = 0;
@@ -1094,18 +1161,18 @@
                             setTimeout(() => {
                                 showFeedback("Game Over! You're out of mistakes.", 'feedback-incorrect', 0);
                                 playSound(loseSound); endGame(false);
-                            }, 600); // Delay after shake
-                       } else { setTimeout(clearSelection, 800); } // Clear selection after shake
+                            }, 600);
+                       } else { setTimeout(clearSelection, 800); }
                   }
             }
 
             function displaySolvedGroup(description, wordsInGroup, colorIndex) {
                  if(!solvedGroupsArea || !wordGrid) return;
                  const groupDiv = document.createElement('div'); groupDiv.classList.add('solved-group');
-                 const actualColorIndex = Math.min(Math.max(colorIndex, 0), 3); // Ensure colorIndex is valid
+                 const actualColorIndex = Math.min(Math.max(colorIndex, 0), 3);
                  groupDiv.classList.add(`solved-group-color-${actualColorIndex}`);
-                 groupDiv.dataset.words = JSON.stringify(wordsInGroup.map(w => w.toUpperCase())); // Store as upper for consistency
-                 groupDiv.setAttribute('tabindex', '0'); // Make it focusable for review
+                 groupDiv.dataset.words = JSON.stringify(wordsInGroup.map(w => w.toUpperCase()));
+                 groupDiv.setAttribute('tabindex', '0');
 
                  const descStrong = document.createElement('strong'); descStrong.textContent = description; groupDiv.appendChild(descStrong);
                  const wordsP = document.createElement('p'); wordsP.textContent = wordsInGroup.sort().join(', '); groupDiv.appendChild(wordsP);
@@ -1113,7 +1180,7 @@
                  if (solvedGroupsArea.firstChild) solvedGroupsArea.insertBefore(groupDiv, solvedGroupsArea.firstChild);
                  else solvedGroupsArea.appendChild(groupDiv);
 
-                 wordsInGroup.forEach(word => { // word is already uppercase from selectedWords
+                 wordsInGroup.forEach(word => {
                        const wordDiv = wordGrid.querySelector(`.word-item[data-word="${word}"]`);
                        if (wordDiv) {
                             wordDiv.classList.add('solved');
@@ -1127,22 +1194,20 @@
                        }
                   });
                  reorderGrid();
-                 if (revealedGroupsCount < 4) setInitialFocus(); // Focus back to grid if game not over
+                 if (revealedGroupsCount < 4) setInitialFocus();
             }
 
             function reorderGrid() {
                 if(!wordGrid) return;
                 const solvedItems = Array.from(wordGrid.querySelectorAll('.word-item.solved'));
                 const activeItems = Array.from(wordGrid.querySelectorAll('.word-item:not(.solved)'));
-                wordGrid.innerHTML = ''; // Clear grid
-                activeItems.forEach(item => wordGrid.appendChild(item)); // Add active items first
-                solvedItems.forEach(item => wordGrid.appendChild(item)); // Then solved items
+                wordGrid.innerHTML = '';
+                activeItems.forEach(item => wordGrid.appendChild(item));
+                solvedItems.forEach(item => wordGrid.appendChild(item));
             }
-
             function shakeWords() {
                  document.querySelectorAll('.word-item.selected').forEach(div => {
-                      div.style.animation = 'none'; // Reset animation
-                      void div.offsetWidth; // Trigger reflow
+                      div.style.animation = 'none'; void div.offsetWidth;
                       div.style.animation = 'shake 0.5s ease-in-out';
                  });
             }
@@ -1158,10 +1223,9 @@
                 clearFeedback();
 
                 const activeWordDivs = Array.from(wordGrid.querySelectorAll('.word-item:not(.solved)'));
-                const activeWordsData = activeWordDivs.map(div => div.dataset.word); // These are already uppercase
-                activeWordsData.sort(() => Math.random() - 0.5); // Shuffle the array of words
+                const activeWordsData = activeWordDivs.map(div => div.dataset.word);
+                activeWordsData.sort(() => Math.random() - 0.5);
 
-                // Re-populate the active word divs with the shuffled words
                 activeWordDivs.forEach((div, index) => {
                     div.textContent = activeWordsData[index];
                     div.dataset.word = activeWordsData[index];
@@ -1174,10 +1238,10 @@
 
                 playSound(shuffleSound);
                 showFeedback(`Words shuffled! (${MAX_SHUFFLES_ALLOWED - shufflesUsed} shuffles left)`, "", 2000);
-                setInitialFocus(); // Focus back to the grid
+                setInitialFocus();
             }
 
-             function endGame(isWin) {
+            function endGame(isWin) {
                  if (!gameActive) return; gameActive = false;
                  stopTimer(); disableAllInteraction();
                  closeModal(showAnswerModal);
@@ -1224,7 +1288,7 @@
                         gameStats.losses++; gameStats.currentStreak = 0;
                     }
                     saveStats();
-                 } else if (isWin && isDailyChallenge) { // Simplified conditions
+                 } else if (isWin && isDailyChallenge) {
                      logger.info(`Daily challenge ${currentPuzzle?.puzzle_id} completed successfully!`);
                  } else if (!isWin && !isDailyChallenge && !isChallengeGame) {
                     gameStats.losses++; gameStats.currentStreak = 0;
@@ -1237,6 +1301,9 @@
                 if (viewLeaderboardBtn) viewLeaderboardBtn.style.display = 'inline-flex';
                 if (challengeFriendBtn) {
                     challengeFriendBtn.style.display = (!isDailyChallenge && !isChallengeGame && currentPuzzle) ? 'inline-flex' : 'none';
+                }
+                if (shareButtonsContainer) {
+                    shareButtonsContainer.style.display = (isWin && score > 0 && !isDailyChallenge && !isChallengeGame) ? 'block' : 'none';
                 }
 
                 if (isWin && !isDailyChallenge && !isChallengeGame && score > 0) {
@@ -1286,20 +1353,202 @@
                 }
             }
 
-            async function revealAllGroups() { /* ... same as before ... */ }
-            function disableAllInteraction() { /* ... same as before ... */ }
-            function enableAllInteraction() { /* ... same as before ... */ }
-            function goToHome() { /* ... same as before ... */ }
-            function loadStats() { /* ... same as before ... */ }
-            function saveStats() { /* ... same as before ... */ }
-            function setInitialFocus() { /* ... same as before ... */ }
-            const actualGridNavigationHandler = (event) => { /* ... same as before ... */ };
-            function setupGridNavigation() { /* ... same as before ... */ }
-            function addPostGameReviewListeners() { /* ... same as before ... */ }
-            function handleReviewGroupClick(event) { /* ... same as before ... */ }
+            async function revealAllGroups() {
+                if (!currentPuzzle?.puzzle_id) return;
+                if (gameActive) { gameActive = false; stopTimer(); }
+                clearFeedback(); showFeedback('Revealing solution...', '', 0);
+                try {
+                     await new Promise(resolve => setTimeout(resolve, 400));
+                     const response = await fetch(`/api/get_solution/${currentPuzzle.puzzle_id}`);
+                     if (!response.ok) throw new Error('Could not fetch solution from server.');
+                     const solution = await response.json();
+                     if (!solution || !solution.groups || typeof solution.groups !== 'object') {
+                        throw new Error("Invalid solution format received from server.");
+                     }
+                     if(solvedGroupsArea) solvedGroupsArea.innerHTML = '';
+                     if(wordGrid) wordGrid.querySelectorAll('.word-item').forEach(el => {
+                          el.classList.remove('solved', 'disabled', 'selected', 'highlight-hint', 'highlight-review', 'correct-match-animation');
+                          el.style.animation = '';
+                     });
+                     let colorIdx = 0;
+                     if (typeof solution.groups === 'object' && solution.groups !== null) {
+                        for (const groupKey in solution.groups) {
+                            if (Object.hasOwnProperty.call(solution.groups, groupKey)) {
+                                const groupData = solution.groups[groupKey];
+                                const groupDesc = groupData.description || "Group " + (colorIdx + 1);
+                                const groupWords = groupData.words || [];
+                                const groupColor = groupData.difficulty_index ?? colorIdx;
+                                displaySolvedGroup(groupDesc, groupWords, groupColor);
+                                colorIdx++;
+                            }
+                        }
+                     } else {
+                        logger.error("Solution.groups is not an object:", solution.groups);
+                        throw new Error("Malformed solution data from server.");
+                     }
+                     reorderGrid(); clearFeedback(); showFeedback('Solution Revealed.', '', 3000);
+                } catch (error) {
+                    logger.error("Failed to reveal solution:", error);
+                    showFeedback(`Could not load the full solution: ${error.message}`, 'feedback-incorrect', 3000);
+                } finally {
+                    disableAllInteraction();
+                    if (viewSolutionBtn && viewSolutionBtn.innerHTML.includes('Revealing...')) {
+                         viewSolutionBtn.innerHTML = '<i class="fas fa-check"></i> Solution Shown';
+                         viewSolutionBtn.disabled = true;
+                    }
+                    addPostGameReviewListeners();
+                }
+            }
+            function disableAllInteraction() {
+                 if(wordGrid) wordGrid.removeEventListener('keydown', actualGridNavigationHandler);
+                 document.querySelectorAll('.word-item').forEach(el => {
+                      el.removeEventListener('click', handleWordClick); el.removeEventListener('keydown', handleWordKeyDown);
+                      el.style.cursor = 'default'; el.style.animation = '';
+                      if (!el.classList.contains('solved')) {
+                          el.classList.add('disabled'); el.classList.remove('selected');
+                          el.setAttribute('aria-selected', 'false');
+                      }
+                     el.setAttribute('aria-disabled', 'true'); el.removeAttribute('tabindex');
+                 });
+                 if(clearSelectionBtn) clearSelectionBtn.disabled = true;
+                 if(hintBtn) hintBtn.disabled = true;
+                 if(shuffleBtn) shuffleBtn.disabled = true;
+            }
+            function enableAllInteraction() {
+                 document.querySelectorAll('.word-item:not(.solved)').forEach(el => {
+                     el.addEventListener('click', handleWordClick); el.addEventListener('keydown', handleWordKeyDown);
+                     el.style.cursor = 'pointer'; el.classList.remove('disabled');
+                     el.setAttribute('aria-disabled', 'false'); el.setAttribute('tabindex', '0');
+                 });
+                 updateSelectionUI(); setupGridNavigation();
+            }
+            function goToHome() {
+                sessionStorage.removeItem(PUZZLE_STORAGE_KEY);
+                sessionStorage.removeItem('gameMode');
+                sessionStorage.removeItem('countdownDuration');
+                sessionStorage.removeItem('isDailyChallenge');
+                sessionStorage.removeItem('isChallengeGame');
+                document.body.classList.add('fade-out');
+                setTimeout(() => { window.location.href = '/home.html'; }, 300);
+            }
+            function loadStats() {
+                const storedStats = localStorage.getItem(STATS_STORAGE_KEY);
+                let defaultPerformanceSub = { plays: 0, wins: 0, totalHints: 0, totalMistakes: 0, totalTime: 0 };
+                let defaultStatsVal = {
+                    wins: 0, losses: 0, currentStreak: 0, maxStreak: 0, fastestTime: null, perfectWins: 0,
+                    performance: {
+                        easy: { ...defaultPerformanceSub },
+                        medium: { ...defaultPerformanceSub },
+                        hard: { ...defaultPerformanceSub }
+                    }
+                }; // Renamed to avoid conflict with gameStats global
+                if (storedStats) {
+                    try {
+                        const parsedStats = JSON.parse(storedStats);
+                        gameStats = { // Assign to global gameStats
+                            ...defaultStatsVal,
+                            ...parsedStats,
+                            performance: {
+                                easy: { ...defaultPerformanceSub, ...(parsedStats.performance?.easy || {}) },
+                                medium: { ...defaultPerformanceSub, ...(parsedStats.performance?.medium || {}) },
+                                hard: { ...defaultPerformanceSub, ...(parsedStats.performance?.hard || {}) }
+                            }
+                        };
+                    } catch (e) {
+                        localStorage.removeItem(STATS_STORAGE_KEY);
+                        gameStats = { ...defaultStatsVal };
+                        logger.error("Error loading/parsing stats, resetting to default:", e);
+                    }
+                } else {
+                    gameStats = { ...defaultStatsVal };
+                }
+            }
+            function saveStats() {
+                try { localStorage.setItem(STATS_STORAGE_KEY, JSON.stringify(gameStats)); } catch (e) { logger.error('Error saving stats:', e); }
+            }
+            function setInitialFocus() {
+                const firstFocusableWord = wordGrid ? wordGrid.querySelector('.word-item:not(.solved):not(.disabled)') : null;
+                if (firstFocusableWord) { try {firstFocusableWord.focus({preventScroll:true});} catch(e){} }
+                else if (newGameBtn && newGameBtn.style.display !== 'none') { try {newGameBtn.focus();} catch(e){} }
+                else if (hintBtn && !hintBtn.disabled) { try {hintBtn.focus();} catch(e){} }
+            }
+            const actualGridNavigationHandler = (event) => {
+                const { key } = event; const activeElement = document.activeElement;
+                if (!activeElement || !activeElement.classList.contains('word-item') || !wordGrid || !wordGrid.contains(activeElement) || activeElement.classList.contains('solved') || activeElement.classList.contains('disabled')) return;
+                if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) return;
+                event.preventDefault();
+                const focusableItems = Array.from(wordGrid.querySelectorAll('.word-item:not(.solved):not(.disabled)'));
+                if (focusableItems.length === 0) return;
+                let currentIndex = focusableItems.indexOf(activeElement);
+                if (currentIndex === -1 && focusableItems.length > 0) { focusableItems[0].focus(); return; }
+                const numCols = window.innerWidth <= 480 ? 2 : 4; let targetIndex = -1;
+                switch (key) {
+                    case 'ArrowUp':   targetIndex = currentIndex - numCols; break;
+                    case 'ArrowDown': targetIndex = currentIndex + numCols; break;
+                    case 'ArrowLeft': if (currentIndex % numCols !== 0) targetIndex = currentIndex - 1; break;
+                    case 'ArrowRight': if ((currentIndex % numCols < numCols - 1) && currentIndex < focusableItems.length - 1) targetIndex = currentIndex + 1; break;
+                }
+                if (targetIndex >= 0 && targetIndex < focusableItems.length) { try {focusableItems[targetIndex].focus();} catch(e){} }
+            };
+            function setupGridNavigation() {
+                if(wordGrid) {
+                    wordGrid.removeEventListener('keydown', actualGridNavigationHandler);
+                    wordGrid.addEventListener('keydown', actualGridNavigationHandler);
+                }
+            }
+            function addPostGameReviewListeners() {
+                if(!solvedGroupsArea) return;
+                solvedGroupsArea.querySelectorAll('.solved-group').forEach(groupDiv => {
+                    if (!groupDiv.classList.contains('reviewable')) { // Add only if not already added
+                        groupDiv.classList.add('reviewable');
+                        groupDiv.setAttribute('tabindex', '0');
+                        groupDiv.addEventListener('click', handleReviewGroupClick);
+                        groupDiv.addEventListener('keydown', (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); handleReviewGroupClick(event); }});
+                    }
+                });
+            }
+            function handleReviewGroupClick(event) {
+                if(!wordGrid) return;
+                const groupDiv = event.currentTarget;
+                const wordsToHighlight = JSON.parse(groupDiv.dataset.words || '[]');
+                wordGrid.querySelectorAll('.word-item.highlight-review').forEach(el => el.classList.remove('highlight-review'));
+                wordsToHighlight.forEach(word => {
+                    const wordItem = wordGrid.querySelector(`.word-item.solved[data-word="${word.toUpperCase()}"]`);
+                    if (wordItem) wordItem.classList.add('highlight-review');
+                });
+            }
 
-            function openModal(modalElement, focusElement = null) { /* ... same as before ... */ }
-            function closeModal(modalElement) { /* ... same as before ... */ }
+            function openModal(modalElement, focusElement = null) {
+                if (modalElement) {
+                    elementToFocusOnModalClose = document.activeElement;
+                    currentOpenModal = modalElement;
+                    modalElement.style.display = 'flex';
+                    setTimeout(() => {
+                        modalElement.classList.add('modal-open');
+                        modalFocusableElements = Array.from(modalElement.querySelectorAll('button, input, [href], select, textarea, [tabindex]:not([tabindex="-1"])')).filter(el => el && typeof el.focus === 'function' && el.offsetParent !== null);
+                        if (focusElement && modalFocusableElements.includes(focusElement)) {
+                           try{ focusElement.focus(); } catch(e){}
+                        } else if (modalFocusableElements.length > 0) {
+                           try{ modalFocusableElements[0].focus(); } catch(e){}
+                        }
+                        document.addEventListener('keydown', handleModalFocusTrap);
+                    }, 10);
+                }
+            }
+            function closeModal(modalElement) {
+                if (modalElement && currentOpenModal === modalElement) {
+                    document.removeEventListener('keydown', handleModalFocusTrap);
+                    modalElement.classList.remove('modal-open');
+                    currentOpenModal = null;
+                    setTimeout(() => {
+                        if (modalElement && !modalElement.classList.contains('modal-open')) modalElement.style.display = 'none';
+                        if (elementToFocusOnModalClose && typeof elementToFocusOnModalClose.focus === 'function') {
+                           try { elementToFocusOnModalClose.focus(); } catch(e) { logger.warn("Failed to focus on previous element", e); }
+                        }
+                        elementToFocusOnModalClose = null;
+                    }, 300);
+                }
+            }
 
             async function submitScore() {
                 if (!playerNameInput || !currentPuzzle) return;
@@ -1351,24 +1600,138 @@
                 }
             }
 
-            function openLeaderboardModal() { /* ... same as before ... */ }
-            async function fetchLeaderboardData(difficulty = null, mode = 'classic') { /* ... same as before ... */ }
-            function displayLeaderboardInModal(scores) { /* ... same as before ... */ }
-            function handleModalFocusTrap(event) { /* ... same as before ... */ }
-            function applyTheme(theme) { /* ... same as before ... */ }
+            function openLeaderboardModal() {
+                fetchLeaderboardData(lbDifficultyFilter.value || null, lbModeFilter.value);
+                openModal(leaderboardModal, lbDifficultyFilter);
+            }
+            async function fetchLeaderboardData(difficulty = null, mode = 'classic') {
+                if (!leaderboardModalBody || !lbNoScoresMessage) return;
+                leaderboardModalBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Loading...</td></tr>';
+                lbNoScoresMessage.style.display = 'none';
+                let url = `/api/leaderboard?mode=${encodeURIComponent(mode)}&limit=20`;
+                if (difficulty && difficulty !== "") { url += `&difficulty=${encodeURIComponent(difficulty)}`; }
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) { throw new Error(`HTTP error! status: ${response.status}`); }
+                    const data = await response.json();
+                    displayLeaderboardInModal(data.leaderboard);
+                } catch (error) {
+                    logger.error("Error fetching leaderboard:", error);
+                    leaderboardModalBody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:red;">Error loading leaderboard.</td></tr>';
+                }
+            }
+            function displayLeaderboardInModal(scores) {
+                if (!leaderboardModalBody || !lbNoScoresMessage) return;
+                leaderboardModalBody.innerHTML = '';
+                if (!scores || scores.length === 0) { lbNoScoresMessage.style.display = 'block'; return; }
+                lbNoScoresMessage.style.display = 'none';
+                scores.forEach((score, index) => {
+                    const row = leaderboardModalBody.insertRow();
+                    row.insertCell().textContent = index + 1;
+                    row.insertCell().textContent = score.player_name;
+                    row.insertCell().textContent = score.score;
+                    row.insertCell().textContent = score.time_taken_seconds !== null && score.time_taken_seconds !== undefined ? score.time_taken_seconds : 'N/A';
+                    let submittedDate = 'N/A';
+                    if (score.timestamp) {
+                        try { submittedDate = new Date(score.timestamp).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });}
+                        catch (e) { logger.warn("Could not parse timestamp: ", score.timestamp); }
+                    }
+                    row.insertCell().textContent = submittedDate;
+                });
+            }
 
+            function getShareMessage() {
+                let message = `I just scored ${score} in WordLinks!`;
+                if (currentPuzzle && currentPuzzle.difficulty && currentPuzzle.difficulty.toLowerCase() !== 'unknown') {
+                    message += ` (Difficulty: ${currentPuzzle.difficulty})`;
+                }
+                if (gameMode === "classic" && startTime && !isDailyChallenge && !isChallengeGame) {
+                    const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+                    const minutes = Math.floor(elapsedSeconds / 60);
+                    const seconds = elapsedSeconds % 60;
+                    message += ` Time: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.`;
+                }
+                message += " Can you beat my score?";
+                return message;
+            }
+            function shareToTwitter() {
+                if (!gameActive && score > 0 && !isDailyChallenge && !isChallengeGame) {
+                    const text = getShareMessage();
+                    const gameUrl = window.location.origin + "/home.html";
+                    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(gameUrl)}&hashtags=WordLinksGame,PuzzleGame`;
+                    window.open(twitterUrl, '_blank', 'noopener,noreferrer');
+                } else { showFeedback("Sharing available for completed, non-daily/challenge games with a score!", "feedback-incorrect", 3000); }
+            }
+            function shareToLinkedIn() {
+                if (!gameActive && score > 0 && !isDailyChallenge && !isChallengeGame) {
+                    const gameUrl = window.location.origin + "/home.html";
+                    const title = "I crushed it on WordLinks!";
+                    const summary = getShareMessage() + ` Play here: ${gameUrl}`;
+                    const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(gameUrl)}&title=${encodeURIComponent(title)}&summary=${encodeURIComponent(summary)}`;
+                    window.open(linkedInUrl, '_blank', 'noopener,noreferrer');
+                } else { showFeedback("Sharing available for completed, non-daily/challenge games with a score!", "feedback-incorrect", 3000); }
+            }
+            function shareToWhatsApp() {
+                if (!gameActive && score > 0 && !isDailyChallenge && !isChallengeGame) {
+                    const text = getShareMessage() + ` Play WordLinks: ${window.location.origin}/home.html`;
+                    const whatsappUrl = `whatsapp://send?text=${encodeURIComponent(text)}`;
+                    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+                } else { showFeedback("Sharing available for completed, non-daily/challenge games with a score!", "feedback-incorrect", 3000); }
+            }
+            function showInstagramShareInfo() {
+                 if (!gameActive && score > 0 && !isDailyChallenge && !isChallengeGame) {
+                    showFeedback("To share on Instagram: Take a screenshot of your score and post it!", "feedback-hint", 7000);
+                } else { showFeedback("Sharing available for completed, non-daily/challenge games with a score!", "feedback-incorrect", 3000); }
+            }
+            async function copyGameSummaryToClipboard() {
+                if (!gameActive && score > 0 && !isDailyChallenge && !isChallengeGame) {
+                    const textToCopy = `${getShareMessage()} Play WordLinks here: ${window.location.origin}/home.html`;
+                    try {
+                        await navigator.clipboard.writeText(textToCopy);
+                        showFeedback("Game summary copied to clipboard!", "", 2000);
+                    } catch (err) {
+                        logger.error('Failed to copy game summary: ', err);
+                        showFeedback("Could not copy summary. Please copy manually.", "feedback-incorrect", 3000);
+                        prompt("Copy this summary:", textToCopy);
+                    }
+                } else { showFeedback("Sharing available for completed, non-daily/challenge games with a score!", "feedback-incorrect", 3000); }
+            }
 
-            // Event Listeners
+            function handleModalFocusTrap(event) {
+                if (!currentOpenModal || !currentOpenModal.classList.contains('modal-open')) return;
+                if (event.key === 'Tab') {
+                    if (!modalFocusableElements || modalFocusableElements.length === 0) { event.preventDefault(); return; }
+                    const firstElement = modalFocusableElements[0];
+                    const lastElement = modalFocusableElements[modalFocusableElements.length - 1];
+                    if (event.shiftKey) {
+                        if (document.activeElement === firstElement) { lastElement.focus(); event.preventDefault(); }
+                    } else {
+                        if (document.activeElement === lastElement) { firstElement.focus(); event.preventDefault(); }
+                    }
+                } else if (event.key === 'Escape') {
+                    if (currentOpenModal) { closeModal(currentOpenModal); }
+                }
+            }
+
+            function applyTheme(theme) {
+                if (theme === 'dark') {
+                    document.documentElement.classList.add('dark-theme');
+                    if (themeToggleBtn) themeToggleBtn.innerHTML = `<i class="fas ${sunIconClass}"></i>`;
+                } else {
+                    document.documentElement.classList.remove('dark-theme');
+                    if (themeToggleBtn) themeToggleBtn.innerHTML = `<i class="fas ${moonIconClass}"></i>`;
+                }
+                localStorage.setItem(THEME_STORAGE_KEY, theme);
+            }
+
+            // --- Event Listeners Setup ---
             if(clearSelectionBtn) clearSelectionBtn.addEventListener('click', clearSelection);
             if(hintBtn) hintBtn.addEventListener('click', handleHintClick);
             if(shuffleBtn) shuffleBtn.addEventListener('click', shuffleWordGrid);
-
             if(confirmShowAnswerBtn) confirmShowAnswerBtn.addEventListener('click', async () => { closeModal(showAnswerModal); await revealAllGroups(); });
             if(cancelShowAnswerBtn) cancelShowAnswerBtn.addEventListener('click', () => closeModal(showAnswerModal));
-
             if(confirmSubmitScoreBtn) confirmSubmitScoreBtn.addEventListener('click', submitScore);
             if(cancelSubmitScoreBtn) cancelSubmitScoreBtn.addEventListener('click', () => closeModal(scoreSubmitModal));
-
             if (challengeFriendBtn) challengeFriendBtn.addEventListener('click', showChallengeLink);
             if (viewLeaderboardBtn) viewLeaderboardBtn.addEventListener('click', openLeaderboardModal);
             if (closeLeaderboardBtn) closeLeaderboardBtn.addEventListener('click', () => closeModal(leaderboardModal));
@@ -1377,19 +1740,27 @@
                     fetchLeaderboardData(lbDifficultyFilter.value || null, lbModeFilter.value);
                 });
             }
+            if (shareTwitterBtn) shareTwitterBtn.addEventListener('click', shareToTwitter);
+            if (shareLinkedinBtn) shareLinkedinBtn.addEventListener('click', shareToLinkedIn);
+            if (shareWhatsappBtn) shareWhatsappBtn.addEventListener('click', shareToWhatsApp);
+            if (shareInstagramInfoBtn) shareInstagramInfoBtn.addEventListener('click', showInstagramShareInfo);
+            if (copySummaryBtn) copySummaryBtn.addEventListener('click', copyGameSummaryToClipboard);
             if (newGameBtn) newGameBtn.onclick = goToHome;
-            if (viewSolutionBtn) viewSolutionBtn.onclick = async () => {
-                if(viewSolutionBtn) viewSolutionBtn.disabled = true;
-                if(viewSolutionBtn) viewSolutionBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Revealing...';
-                await revealAllGroups();
-             };
-
+            if (viewSolutionBtn) {
+                viewSolutionBtn.onclick = async () => {
+                    if(viewSolutionBtn) viewSolutionBtn.disabled = true;
+                    if(viewSolutionBtn) viewSolutionBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Revealing...';
+                    await revealAllGroups();
+                 };
+            }
             if (themeToggleBtn) {
                 themeToggleBtn.addEventListener('click', () => {
                     if (document.documentElement.classList.contains('dark-theme')) applyTheme('light');
                     else applyTheme('dark');
                 });
             }
+
+            // --- Initializations ---
             const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
             const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
             if (savedTheme) applyTheme(savedTheme); else if (prefersDark) applyTheme('dark'); else applyTheme('light');

@@ -27,7 +27,7 @@
             --button-stats-hover: linear-gradient(135deg, #117a8b 0%, #0f6674 100%);
             --button-daily-bg: linear-gradient(135deg, #6f42c1 0%, #4a2490 100%);
             --button-daily-hover: linear-gradient(135deg, #4a2490 0%, #321861 100%);
-            --button-challenge-bg: linear-gradient(135deg, #fd7e14 0%, #e85a00 100%); /* For challenge button */
+            --button-challenge-bg: linear-gradient(135deg, #fd7e14 0%, #e85a00 100%);
             --button-challenge-hover: linear-gradient(135deg, #e85a00 0%, #c54a00 100%);
             --button-disabled-bg: #ced4da;
             --button-disabled-text: #6c757d;
@@ -53,6 +53,9 @@
             --leaderboard-filter-bg: var(--input-bg);
             --leaderboard-filter-border: var(--input-border);
             --leaderboard-table-border: var(--input-border);
+            --leaderboard-header-bg: var(--accent-primary); /* Added for stats modal too */
+            --leaderboard-header-text: white; /* Added for stats modal too */
+            --leaderboard-row-even-bg: #f2f2f2; /* Added for stats modal too */
         }
 
         html.dark-theme { /* Dark Theme Overrides */
@@ -94,6 +97,9 @@
             --leaderboard-filter-bg: var(--input-bg);
             --leaderboard-filter-border: var(--input-border);
             --leaderboard-table-border: var(--input-border);
+            --leaderboard-header-bg: #0b5ed7;
+            --leaderboard-header-text: #e9ecef;
+            --leaderboard-row-even-bg: #3E444A;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -114,7 +120,7 @@
             box-shadow: var(--shadow-lg); position: relative;
             transition: background-color var(--transition-speed) ease;
         }
-        #theme-toggle-btn { /* Changed from theme-toggle-btn-home for consistency */
+        #theme-toggle-btn {
             position: absolute; top: 20px; right: 20px; background: none;
             border: none; font-size: 1.3em; cursor: pointer;
             color: var(--theme-toggle-btn-color); padding: 5px;
@@ -129,7 +135,7 @@
             color: var(--text-secondary); margin-bottom: 20px; font-weight: 400; font-size: 1.1em;
             transition: color var(--transition-speed) ease;
         }
-        .game-options-group { /* Wrapper for game options and challenge */
+        .game-options-group {
             margin-bottom: 25px; padding: 20px; background-color: var(--stat-item-bg);
             border-radius: 8px; box-shadow: var(--shadow-sm);
             transition: background-color var(--transition-speed) ease;
@@ -147,15 +153,15 @@
             transition: color var(--transition-speed) ease;
         }
         .mode-selection input[type="radio"] { margin-right: 5px; accent-color: var(--accent-primary); }
-        #countdown-duration-input, #challenge-code-input { /* Grouped input styling */
+        #countdown-duration-input, #challenge-code-input {
             padding: 10px 12px; border-radius: 6px; border: 1px solid var(--input-border);
             background-color: var(--input-bg); color: var(--text-primary);
             font-family: 'Poppins', sans-serif; font-size: 0.9em;
             transition: border-color var(--transition-speed) ease, background-color var(--transition-speed) ease, color var(--transition-speed) ease;
-            margin-bottom: 10px; /* Added for challenge input */
+            margin-bottom: 10px;
         }
         #countdown-duration-input { width: 80px; }
-        #challenge-code-input { width: calc(100% - 130px); margin-right: 10px; } /* Adjusted width */
+        #challenge-code-input { flex-grow: 1; margin-right: 10px; } /* Let it grow */
 
         #countdown-duration-input:focus, #challenge-code-input:focus {
             outline: none; border-color: var(--input-focus-border);
@@ -164,7 +170,6 @@
         #countdown-settings { margin-left: 25px; display: none; }
         .difficulty-buttons { display: flex; flex-direction: column; gap: 15px; margin-bottom: 15px; }
 
-        /* General button styling for difficulty, utility, daily, and challenge start */
         .difficulty-buttons button, .utility-button, #daily-challenge-btn, #start-challenge-btn {
             padding: 15px 25px; cursor: pointer; border-radius: 30px; border: none;
             font-weight: 600; font-size: 1.1em; color: white;
@@ -191,7 +196,7 @@
         #stats-btn:hover:not(:disabled) { background: var(--button-stats-hover); }
         #daily-challenge-btn { background: var(--button-daily-bg); margin-top: 0; margin-bottom: 25px; }
         #daily-challenge-btn:hover:not(:disabled) { background: var(--button-daily-hover); }
-        #start-challenge-btn { background: var(--button-challenge-bg); font-size: 1em; padding: 10px 15px; width: 120px; } /* Specific style */
+        #start-challenge-btn { background: var(--button-challenge-bg); font-size: 1em; padding: 10px 15px; width: auto; flex-shrink:0; }
 
 
         .difficulty-buttons button:disabled, .utility-button:disabled, #daily-challenge-btn:disabled, #start-challenge-btn:disabled {
@@ -217,32 +222,49 @@
             display: none; align-items: center; justify-content: center;
             z-index: 1000; opacity: 0; visibility: hidden;
             transition: opacity 0.3s ease, visibility 0s linear 0.3s, background-color var(--transition-speed) ease;
+            padding: 20px; /* Ensure padding for overlay */
+            overflow-y: auto; /* Allow overlay to scroll if modal content is too tall */
         }
-        .modal-overlay.modal-open { opacity: 1; visibility: visible; display:flex; transition: opacity 0.3s ease; }
-        .modal-content {
-            background: var(--container-bg); padding: 30px 40px; border-radius: 15px;
-            box-shadow: var(--shadow-lg); max-width: 550px;
-            width: 90%;
-            text-align: left; color: var(--text-primary); transform: scale(0.9);
+        .modal-overlay.modal-open { opacity: 1; visibility: visible; display:flex; }
+
+        .modal-content { /* General for all modals unless overridden */
+            background: var(--container-bg); padding: 20px 30px;
+            border-radius: 15px; box-shadow: var(--shadow-lg);
+            width: 90%; text-align: left;
+            color: var(--text-primary); transform: scale(0.9);
             transition: transform 0.3s ease, background-color var(--transition-speed) ease, color var(--transition-speed) ease;
         }
         .modal-overlay.modal-open .modal-content { transform: scale(1); }
+
+        /* Specifically for stats-modal */
+        #stats-modal .modal-content {
+            max-width: 700px;   /* Wider for stats dashboard layout */
+            max-height: 85vh;   /* Limit height */
+            overflow-y: auto;   /* Enable vertical scrolling for the modal content itself */
+            display: flex;        /* Use flex for internal layout */
+            flex-direction: column;
+        }
+
         .modal-title {
             font-size: 1.4em;
             font-weight: 700; margin-bottom: 20px;
             display: flex; align-items: center; justify-content: space-between;
             color: var(--accent-primary); transition: color var(--transition-speed) ease;
+            flex-shrink: 0; /* Keep title visible when scrolling */
         }
         .modal-title .close-modal-btn {
             background: none; border: none; font-size: 1.5em; cursor: pointer;
             color: var(--text-secondary); transition: color var(--transition-speed) ease;
+            padding: 0; line-height: 1;
         }
         .modal-title .close-modal-btn:hover { color: var(--text-primary); }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 15px;
             margin-bottom: 20px;
+            /* Removed flex-grow: 1; as the parent .modal-content will scroll */
         }
         .stat-item {
             background-color: var(--stat-item-bg); padding: 12px; border-radius: 8px;
@@ -314,6 +336,10 @@
             padding-top: 15px;
             border-top: 1px solid var(--input-border);
             transition: border-color var(--transition-speed) ease;
+            /* If .modal-content scrolls, this doesn't need its own scroll typically,
+               UNLESS it's within another non-scrolling flex item.
+               Let's assume it will expand as needed and .modal-content handles scroll.
+            */
         }
         .leaderboard-container h5 {
             font-size: 1.1em;
@@ -360,9 +386,14 @@
         #leaderboard-table th {
             color: var(--text-secondary);
             font-weight: 600;
+            background-color: var(--container-bg); /* Match modal bg for sticky header */
+            position: sticky; /* Make table headers sticky inside scrollable .modal-content */
+            top: 0;           /* Stick to the top of the .modal-content scrolling area */
+            z-index: 1;       /* Ensure header is above table content */
         }
         html.dark-theme #leaderboard-table th {
              color: var(--text-secondary);
+             background-color: var(--container-bg); /* Match modal bg for sticky header */
         }
         #leaderboard-table td:nth-child(1) { width: 10%; text-align: right; padding-right:10px;} /* Rank */
         #leaderboard-table td:nth-child(3) { text-align: right; padding-right: 5px; } /* Score */
@@ -375,10 +406,10 @@
             padding: 10px;
             transition: color var(--transition-speed) ease;
         }
-        .challenge-input-area { /* NEW for challenge input + button flex */
+        .challenge-input-area {
             display: flex;
             align-items: center;
-            gap: 10px; /* Space between input and button */
+            gap: 10px;
             margin-top: 10px;
         }
 
@@ -387,14 +418,15 @@
             .container { padding: 25px 15px; }
             #theme-toggle-btn { top: 10px; right: 10px; font-size: 1.2em; }
             h1 { font-size: 2em; } h2 { font-size: 1em; margin-bottom: 15px;}
-            .game-options-group h3 { font-size: 1em; } /* Adjusted from .game-options */
+            .game-options-group h3 { font-size: 1em; }
             .mode-selection, .duration-selection { gap: 10px; }
             .difficulty-buttons button, .utility-button, #daily-challenge-btn, #start-challenge-btn { font-size: 1em; padding: 12px 20px; }
-            #challenge-code-input { width: calc(100% - 110px); } /* Adjust for smaller button */
-            #start-challenge-btn { width: 100px; padding: 10px; font-size: 0.9em;}
+            #challenge-code-input { width: calc(100% - 100px); } /* Adjusted width for slightly larger button */
+            #start-challenge-btn { width: auto; padding: 10px 15px; font-size: 0.9em;}
 
 
             .modal-content { padding: 20px; max-width: 95%; }
+            #stats-modal .modal-content { padding: 15px; } /* Specific padding for stats modal on small screens */
             .modal-title { font-size: 1.2em; }
             .stats-grid { grid-template-columns: 1fr; }
             .difficulty-stats-container { grid-column: span 1; }
@@ -411,14 +443,14 @@
 </head>
 <body>
     <div class="container">
-        <button id="theme-toggle-btn" aria-label="Toggle dark mode"> <!-- Renamed ID -->
+        <button id="theme-toggle-btn" aria-label="Toggle dark mode">
             <i class="fas fa-moon"></i>
         </button>
 
         <h1>WordLinks</h1>
         <h2>Select a difficulty, game mode, or try the Daily Challenge!</h2>
 
-        <div class="game-options-group"> <!-- Changed class name -->
+        <div class="game-options-group">
             <h3>Game Mode & Options</h3>
             <div class="mode-selection">
                 <label for="mode-classic">
@@ -444,7 +476,7 @@
 
         <button id="daily-challenge-btn"><i class="fas fa-calendar-day"></i> Daily Challenge</button>
 
-        <!-- Challenge a Friend Section - NEW -->
+        <!-- Challenge a Friend Section -->
         <div class="game-options-group challenge-section">
             <h3><i class="fas fa-user-friends"></i> Play a Challenge!</h3>
             <div class="challenge-input-area">
@@ -452,7 +484,6 @@
                 <button id="start-challenge-btn"><i class="fas fa-bolt"></i> Start</button>
             </div>
         </div>
-        <!-- End Challenge a Friend Section -->
 
         <button id="stats-btn" class="utility-button" style="margin-top: 25px;"><i class="fas fa-chart-bar"></i> View Stats & Leaderboard</button>
 
@@ -490,7 +521,7 @@
                     <h4>Max Streak</h4>
                     <p><span id="stats-max-streak">0</span><span id="max-streak-stars" class="stars"></span></p>
                 </div>
-                <div class="stat-item" style="grid-column: span 2;">
+                <div class="stat-item" style="grid-column: span 2;"> <!-- Make it span more columns if stats-grid is wide -->
                     <h4>Fastest Solve Time (Classic)</h4>
                     <p id="stats-fastest-time">N/A</p>
                 </div>
@@ -527,12 +558,11 @@
                             <option value="hard">Hard</option>
                             <option value="Daily Challenge">Daily Challenge</option>
                         </select>
-                        <label for="leaderboard-mode-filter" style="margin-left: 10px;">Mode:</label> <!-- Added Mode Filter -->
+                        <label for="leaderboard-mode-filter" style="margin-left: 10px;">Mode:</label>
                         <select id="leaderboard-mode-filter">
                             <option value="classic" selected>Classic</option>
                             <option value="countdown">Countdown</option>
                              <option value="challenge">Challenge</option>
-                            <!-- Add other modes here if applicable -->
                         </select>
                     </div>
                     <div id="leaderboard-loading" style="display:none;">Loading leaderboard...</div>
@@ -555,40 +585,41 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Existing selectors
             const difficultyButtons = document.querySelectorAll('.difficulty-buttons button');
             const dailyChallengeBtn = document.getElementById('daily-challenge-btn');
             const loadingSpinner = document.getElementById('loading-spinner');
             const errorMessageHome = document.getElementById('error-message-home');
+            const PUZZLE_STORAGE_KEY = 'currentPuzzle';
+            const STATS_STORAGE_KEY = 'wordLinksGameStats';
+            const THEME_STORAGE_KEY = 'wordLinksTheme';
+
             const statsBtn = document.getElementById('stats-btn');
             const statsModal = document.getElementById('stats-modal');
             const closeStatsModalBtn = document.getElementById('close-stats-modal-btn');
-            const themeToggleBtn = document.getElementById('theme-toggle-btn'); // Renamed from -home
+            const themeToggleBtn = document.getElementById('theme-toggle-btn');
+            const sunIconClass = 'fa-sun';
+            const moonIconClass = 'fa-moon';
+
             const gameModeRadios = document.querySelectorAll('input[name="gameMode"]');
             const countdownSettingsDiv = document.getElementById('countdown-settings');
             const countdownDurationInput = document.getElementById('countdown-duration-input');
+
             const leaderboardBody = document.getElementById('leaderboard-body');
             const leaderboardLoading = document.getElementById('leaderboard-loading');
             const noLeaderboardDataMsg = document.getElementById('no-leaderboard-data');
             const leaderboardDifficultyFilter = document.getElementById('leaderboard-difficulty-filter');
-            const leaderboardModeFilter = document.getElementById('leaderboard-mode-filter'); // NEW for mode filter
+            const leaderboardModeFilter = document.getElementById('leaderboard-mode-filter');
 
-            // NEW Selectors for Challenge a Friend
             const challengeCodeInput = document.getElementById('challenge-code-input');
             const startChallengeBtn = document.getElementById('start-challenge-btn');
 
-            const PUZZLE_STORAGE_KEY = 'currentPuzzle';
-            const STATS_STORAGE_KEY = 'wordLinksGameStats';
-            const THEME_STORAGE_KEY = 'wordLinksTheme'; // Use one theme key
-            const sunIconClass = 'fa-sun';
-            const moonIconClass = 'fa-moon';
 
             function showLoading(show = true) {
                 if (loadingSpinner) loadingSpinner.style.display = show ? 'block' : 'none';
                 difficultyButtons.forEach(btn => btn.disabled = show);
                 if (dailyChallengeBtn) dailyChallengeBtn.disabled = show;
                 if (statsBtn) statsBtn.disabled = show;
-                if (startChallengeBtn) startChallengeBtn.disabled = show; // Disable challenge button too
+                if (startChallengeBtn) startChallengeBtn.disabled = show;
                 if (errorMessageHome) errorMessageHome.style.display = 'none';
             }
 
@@ -597,7 +628,7 @@
                     errorMessageHome.textContent = message;
                     errorMessageHome.style.display = 'block';
                 }
-                showLoading(false); // Always ensure loading indicators are turned off on error
+                showLoading(false);
             }
 
             async function fetchAndStartGame(difficulty, isDaily = false, isChallenge = false, challengeId = null) {
@@ -605,7 +636,7 @@
                 let selectedGameMode = 'classic';
                 let countdownDurationSeconds = 0;
 
-                if (!isDaily && !isChallenge) { // Only consider radio buttons for normal games
+                if (!isDaily && !isChallenge) {
                     document.querySelectorAll('input[name="gameMode"]').forEach(radio => {
                         if (radio.checked) selectedGameMode = radio.value;
                     });
@@ -618,9 +649,9 @@
                         countdownDurationSeconds = minutes * 60;
                     }
                 } else if (isChallenge) {
-                    selectedGameMode = 'challenge'; // Override mode for challenges
+                    selectedGameMode = 'challenge';
                 } else if (isDaily) {
-                    selectedGameMode = 'daily'; // Specific mode for daily
+                    selectedGameMode = 'daily';
                 }
 
 
@@ -650,18 +681,16 @@
                     let fetchOptions = {};
 
                     if (isChallenge && challengeId) {
-                        // For challenges, we set up session storage and redirect.
-                        // The actual puzzle data is fetched by game.html's initGame.
-                        sessionStorage.removeItem(PUZZLE_STORAGE_KEY); // Clear previous
-                        sessionStorage.setItem('isChallengeGame', 'true'); // Set flag
+                        sessionStorage.removeItem(PUZZLE_STORAGE_KEY);
+                        sessionStorage.setItem('isChallengeGame', 'true');
                         sessionStorage.removeItem('isDailyChallenge');
-                        sessionStorage.setItem('gameMode', 'challenge'); // Set game mode for challenge
+                        sessionStorage.setItem('gameMode', 'challenge');
                         window.location.href = `/game?challenge=${encodeURIComponent(challengeId)}`;
-                        return; // Exit after initiating navigation
+                        return;
                     } else if (isDaily) {
                         endpoint = '/api/daily_challenge';
                         fetchOptions = { method: 'GET' };
-                    } else { // Regular game generation
+                    } else {
                         endpoint = '/api/generate_puzzle';
                         fetchOptions = {
                             method: 'POST',
@@ -682,14 +711,14 @@
 
                     if (puzzleData && puzzleData.puzzle_id && puzzleData.words) {
                         sessionStorage.setItem(PUZZLE_STORAGE_KEY, JSON.stringify(puzzleData));
-                        sessionStorage.setItem('gameMode', selectedGameMode); // Use determined game mode
+                        sessionStorage.setItem('gameMode', selectedGameMode);
                         if (selectedGameMode === 'countdown' && countdownDurationSeconds > 0) {
                             sessionStorage.setItem('countdownDuration', countdownDurationSeconds.toString());
                         } else {
                             sessionStorage.removeItem('countdownDuration');
                         }
                         sessionStorage.setItem('isDailyChallenge', isDaily.toString());
-                        sessionStorage.removeItem('isChallengeGame'); // Clear if it was a normal or daily start
+                        sessionStorage.removeItem('isChallengeGame');
 
                         document.body.classList.add('fade-out');
                         setTimeout(() => { window.location.href = '/game'; }, 300);
@@ -700,8 +729,7 @@
                     console.error("Failed to start game:", error);
                     showError(`Failed to start game: ${error.message}. Please try again.`);
                 } finally {
-                    // Re-enable buttons if not redirecting or if error before redirect
-                    if (!(isChallenge && challengeId)) { // Don't re-enable if redirect for challenge is initiated
+                    if (!(isChallenge && challengeId)) {
                         showLoading(false);
                     }
                 }
@@ -716,12 +744,10 @@
                 dailyChallengeBtn.addEventListener('click', () => fetchAndStartGame(null, true));
             }
 
-            // NEW Event Listener for Start Challenge Button
             if (startChallengeBtn) {
                 startChallengeBtn.addEventListener('click', () => {
                     const challengeCode = challengeCodeInput.value.trim();
                     if (challengeCode) {
-                        // The fetchAndStartGame function now handles the redirect for challenges
                         fetchAndStartGame(null, false, true, challengeCode);
                     } else {
                         showError("Please enter a challenge code.");
@@ -729,26 +755,20 @@
                 });
             }
 
-
             gameModeRadios.forEach(radio => {
                 radio.addEventListener('change', function() {
-                    if (this.value === 'countdown' && this.checked) {
-                        if(countdownSettingsDiv) countdownSettingsDiv.style.display = 'block';
-                    } else {
-                        if(countdownSettingsDiv) countdownSettingsDiv.style.display = 'none';
+                    if (countdownSettingsDiv) {
+                        countdownSettingsDiv.style.display = this.value === 'countdown' && this.checked ? 'block' : 'none';
                     }
                 });
             });
-            // Initial check for countdown display
             const modeCountdownRadio = document.getElementById('mode-countdown');
             if (modeCountdownRadio && countdownSettingsDiv) {
                 countdownSettingsDiv.style.display = modeCountdownRadio.checked ? 'block' : 'none';
             }
 
-
             function displayStats() {
-                // ... (Keep your existing displayStats function - it seems quite complete)
-                 const storedStats = localStorage.getItem(STATS_STORAGE_KEY);
+                const storedStats = localStorage.getItem(STATS_STORAGE_KEY);
                 let defaultPerformanceSub = { plays: 0, wins: 0, totalHints: 0, totalMistakes: 0, totalTime: 0 };
                 let stats = {
                     wins: 0, losses: 0, currentStreak: 0, maxStreak: 0, fastestTime: null, perfectWins: 0,
@@ -763,8 +783,7 @@
                     try {
                         const parsed = JSON.parse(storedStats);
                         stats = {
-                            ...stats,
-                            ...parsed,
+                            ...stats, ...parsed,
                             performance: {
                                 easy: { ...defaultPerformanceSub, ...(parsed.performance?.easy || {}) },
                                 medium: { ...defaultPerformanceSub, ...(parsed.performance?.medium || {}) },
@@ -776,14 +795,11 @@
 
                 document.getElementById('stats-wins').textContent = stats.wins;
                 document.getElementById('stats-losses').textContent = stats.losses;
-
                 const totalPlaysOverall = stats.wins + stats.losses;
                 const winRateOverall = totalPlaysOverall > 0 ? ((stats.wins / totalPlaysOverall) * 100).toFixed(0) : 0;
                 document.getElementById('stats-win-rate').textContent = `${winRateOverall}%`;
 
-                let totalHintsAll = 0;
-                let totalMistakesAll = 0;
-                let playsWithPerfData = 0;
+                let totalHintsAll = 0, totalMistakesAll = 0, playsWithPerfData = 0;
                 for (const diff in stats.performance) {
                     if (stats.performance.hasOwnProperty(diff) && stats.performance[diff].plays > 0) {
                         totalHintsAll += stats.performance[diff].totalHints;
@@ -791,85 +807,42 @@
                         playsWithPerfData += stats.performance[diff].plays;
                     }
                 }
-                const avgHintsOverall = playsWithPerfData > 0 ? (totalHintsAll / playsWithPerfData).toFixed(1) : "0.0";
-                const avgMistakesOverall = playsWithPerfData > 0 ? (totalMistakesAll / playsWithPerfData).toFixed(1) : "0.0";
-                document.getElementById('stats-avg-hints').textContent = avgHintsOverall;
-                document.getElementById('stats-avg-mistakes').textContent = avgMistakesOverall;
-
-                const currentStreakEl = document.getElementById('stats-current-streak');
-                const currentStreakStarsEl = document.getElementById('current-streak-stars');
-                if(currentStreakEl) currentStreakEl.textContent = stats.currentStreak;
-                if(currentStreakStarsEl) currentStreakStarsEl.innerHTML = getStreakStarsHTML(stats.currentStreak);
-
-                const maxStreakEl = document.getElementById('stats-max-streak');
-                const maxStreakStarsEl = document.getElementById('max-streak-stars');
-                if(maxStreakEl) maxStreakEl.textContent = stats.maxStreak;
-                if(maxStreakStarsEl) maxStreakStarsEl.innerHTML = getStreakStarsHTML(stats.maxStreak);
-
-                const perfectWinsEl = document.getElementById('stats-perfect-wins');
+                document.getElementById('stats-avg-hints').textContent = playsWithPerfData > 0 ? (totalHintsAll / playsWithPerfData).toFixed(1) : "0.0";
+                document.getElementById('stats-avg-mistakes').textContent = playsWithPerfData > 0 ? (totalMistakesAll / playsWithPerfData).toFixed(1) : "0.0";
+                document.getElementById('stats-current-streak').innerHTML = `${stats.currentStreak} ${getStreakStarsHTML(stats.currentStreak)}`;
+                document.getElementById('stats-max-streak').innerHTML = `${stats.maxStreak} ${getStreakStarsHTML(stats.maxStreak)}`;
+                document.getElementById('stats-perfect-wins').textContent = stats.perfectWins || 0;
                 const perfectWinsBadgeEl = document.getElementById('perfect-wins-badge');
-                if(perfectWinsEl) perfectWinsEl.textContent = stats.perfectWins || 0;
-                if(perfectWinsBadgeEl) {
-                    if ((stats.perfectWins || 0) > 0) {
-                        perfectWinsBadgeEl.innerHTML = `<span class="badge badge-perfect">Perfect!</span>`;
-                    } else {
-                        perfectWinsBadgeEl.innerHTML = '';
-                    }
-                }
-
+                if(perfectWinsBadgeEl) perfectWinsBadgeEl.innerHTML = (stats.perfectWins || 0) > 0 ? `<span class="badge badge-perfect">Perfect!</span>` : '';
                 const fastestTimeEl = document.getElementById('stats-fastest-time');
-                if(fastestTimeEl) {
-                    if (stats.fastestTime !== null && stats.fastestTime !== undefined) {
-                        const minutes = Math.floor(stats.fastestTime / 60);
-                        const seconds = stats.fastestTime % 60;
-                        fastestTimeEl.textContent =
-                            `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-                    } else {
-                        fastestTimeEl.textContent = 'N/A';
-                    }
-                }
+                if(fastestTimeEl) fastestTimeEl.textContent = stats.fastestTime ? `${Math.floor(stats.fastestTime / 60).toString().padStart(2, '0')}:${(stats.fastestTime % 60).toString().padStart(2, '0')}` : 'N/A';
 
                 ['easy', 'medium', 'hard'].forEach(diff => {
                     const perf = stats.performance[diff];
                     const winRateDiff = perf.plays > 0 ? ((perf.wins / perf.plays) * 100).toFixed(0) + "%" : "N/A";
                     const avgHintsDiff = perf.plays > 0 ? (perf.totalHints / perf.plays).toFixed(1) : "N/A";
-
-                    const winRateEl = document.getElementById(`stats-${diff}-winrate`);
-                    const avgHintsEl = document.getElementById(`stats-${diff}-avghints`);
-
-                    if(winRateEl) winRateEl.textContent = `WR: ${winRateDiff}`;
-                    if(avgHintsEl) avgHintsEl.textContent = `Hints: ${avgHintsDiff}`;
+                    if(document.getElementById(`stats-${diff}-winrate`)) document.getElementById(`stats-${diff}-winrate`).textContent = `WR: ${winRateDiff}`;
+                    if(document.getElementById(`stats-${diff}-avghints`)) document.getElementById(`stats-${diff}-avghints`).textContent = `Hints: ${avgHintsDiff}`;
                 });
             }
 
             function getStreakStarsHTML(streak) {
-                // ... (Keep your existing getStreakStarsHTML function)
                 let starsHTML = '';
-                if (streak >= 10) {
-                    starsHTML = '<i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>';
-                } else if (streak >= 5) {
-                    starsHTML = '<i class="fas fa-star"></i><i class="fas fa-star"></i>';
-                } else if (streak >= 2) {
-                    starsHTML = '<i class="fas fa-star"></i>';
-                }
+                const starCount = Math.min(Math.floor(streak / 2), 3); // Example: 1 star for 2-3, 2 for 4-5, 3 for 6+ (max 3)
+                for (let i = 0; i < starCount; i++) starsHTML += '<i class="fas fa-star"></i>';
                 return starsHTML;
             }
 
             async function fetchAndDisplayLeaderboard() {
-                // ... (Keep your existing fetchAndDisplayLeaderboard function)
-                 if (!leaderboardBody || !leaderboardLoading || !noLeaderboardDataMsg || !leaderboardDifficultyFilter || !leaderboardModeFilter) return;
-
+                if (!leaderboardBody || !leaderboardLoading || !noLeaderboardDataMsg || !leaderboardDifficultyFilter || !leaderboardModeFilter) return;
                 leaderboardLoading.style.display = 'block';
                 leaderboardBody.innerHTML = '';
                 noLeaderboardDataMsg.style.display = 'none';
 
                 const selectedDifficulty = leaderboardDifficultyFilter.value;
-                const selectedMode = leaderboardModeFilter.value; // Get selected mode
-
+                const selectedMode = leaderboardModeFilter.value;
                 let apiUrl = `/api/leaderboard?mode=${encodeURIComponent(selectedMode)}&limit=10`;
-                if (selectedDifficulty && selectedDifficulty !== "") { // Check for empty string from "All"
-                    apiUrl += `&difficulty=${encodeURIComponent(selectedDifficulty)}`;
-                }
+                if (selectedDifficulty) apiUrl += `&difficulty=${encodeURIComponent(selectedDifficulty)}`;
 
                 try {
                     const response = await fetch(apiUrl);
@@ -884,40 +857,34 @@
                             row.insertCell().textContent = index + 1;
                             row.insertCell().textContent = entry.player_name;
                             row.insertCell().textContent = entry.score;
-                            let details = entry.difficulty || 'N/A'; // Show difficulty from score entry
+                            let details = entry.difficulty || '';
                             if (entry.time_taken_seconds !== null && entry.time_taken_seconds !== undefined) {
                                  const minutes = Math.floor(entry.time_taken_seconds / 60);
                                  const seconds = entry.time_taken_seconds % 60;
-                                 details += ` (${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')})`;
+                                 details += (details ? ' - ' : '') + `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
                             }
                             row.insertCell().textContent = details;
                         });
                     } else {
                         noLeaderboardDataMsg.style.display = 'block';
-                        noLeaderboardDataMsg.textContent = 'No scores yet for this selection!';
                     }
                 } catch (error) {
                     console.error("Error fetching leaderboard:", error);
-                    if(noLeaderboardDataMsg) {
-                        noLeaderboardDataMsg.textContent = `Error: ${error.message}`;
-                        noLeaderboardDataMsg.style.display = 'block';
-                    }
+                    if(noLeaderboardDataMsg) { noLeaderboardDataMsg.textContent = `Error: ${error.message}`; noLeaderboardDataMsg.style.display = 'block'; }
                 } finally {
                     if(leaderboardLoading) leaderboardLoading.style.display = 'none';
                 }
             }
 
             function openStatsModal() {
-                // ... (Keep your existing openStatsModal function)
                 if(!statsModal) return;
                 displayStats();
-                fetchAndDisplayLeaderboard(); // Initial fetch for default filters
+                fetchAndDisplayLeaderboard(); // Fetch with default filters
                 statsModal.style.display = 'flex';
                 setTimeout(() => statsModal.classList.add('modal-open'), 10);
             }
             function closeStatsModal() {
-                // ... (Keep your existing closeStatsModal function)
-                 if(!statsModal) return;
+                if(!statsModal) return;
                 statsModal.classList.remove('modal-open');
                 setTimeout(() => { if(!statsModal.classList.contains('modal-open')) statsModal.style.display = 'none'; }, 300);
             }
@@ -932,24 +899,19 @@
                     closeStatsModal();
                 }
             });
-            // Event listener for leaderboard filters in stats modal
-            if (leaderboardDifficultyFilter) {
-                 leaderboardDifficultyFilter.addEventListener('change', fetchAndDisplayLeaderboard);
-            }
-            if (leaderboardModeFilter) { // NEW
-                leaderboardModeFilter.addEventListener('change', fetchAndDisplayLeaderboard);
-            }
+            if (leaderboardDifficultyFilter) leaderboardDifficultyFilter.addEventListener('change', fetchAndDisplayLeaderboard);
+            if (leaderboardModeFilter) leaderboardModeFilter.addEventListener('change', fetchAndDisplayLeaderboard);
 
 
             function applyTheme(theme) {
                 if (theme === 'dark') {
                     document.documentElement.classList.add('dark-theme');
-                    if (themeToggleBtn) themeToggleBtn.innerHTML = `<i class="fas ${sunIconClass}"></i>`;
+                    if (themeToggleBtn) themeToggleBtn.innerHTML = `<i class="fas fa-sun"></i>`;
                 } else {
                     document.documentElement.classList.remove('dark-theme');
-                    if (themeToggleBtn) themeToggleBtn.innerHTML = `<i class="fas ${moonIconClass}"></i>`;
+                    if (themeToggleBtn) themeToggleBtn.innerHTML = `<i class="fas fa-moon"></i>`;
                 }
-                localStorage.setItem(THEME_STORAGE_KEY, theme); // Use consistent key
+                localStorage.setItem(THEME_STORAGE_KEY, theme);
             }
 
             if (themeToggleBtn) {
@@ -961,7 +923,6 @@
                     }
                 });
             }
-            // Initialize theme
             const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
             const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
             if (savedTheme) { applyTheme(savedTheme); }
