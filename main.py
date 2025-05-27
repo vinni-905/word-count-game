@@ -6,7 +6,7 @@ from typing import List, Dict, Any, Optional, Annotated
 from pydantic import BaseModel, Field
 import logging
 import os
-import datetime # Keep for other potential uses, though not directly for submission_date in add_score call
+import datetime
 import time
 
 # Import functions from puzzle_logic module
@@ -197,11 +197,26 @@ async def api_get_solution(puzzle_id: str):
         logger.warning(f"Solution for {puzzle_id} not found in active_puzzles.")
         raise HTTPException(status_code=404, detail="Puzzle solution not found or puzzle is no longer active.")
 
+@app.get("/api/get_challenge_puzzle/{challenge_puzzle_id:str}", response_class=JSONResponse)
+async def api_get_challenge_puzzle_data(challenge_puzzle_id: str):
+    logger.info(f"API Req: Get challenge puzzle data for ID: {challenge_puzzle_id}")
+    if challenge_puzzle_id in active_puzzles:
+        puzzle_detail = active_puzzles[challenge_puzzle_id]
+        logger.debug(f"Found challenge puzzle {challenge_puzzle_id} in active_puzzles.")
+        return {
+            "puzzle_id": puzzle_detail["puzzle_id"],
+            "words": puzzle_detail.get("words_on_grid", []),
+            "difficulty": puzzle_detail.get("difficulty", "Challenge")
+        }
+    else:
+        logger.warning(f"Challenge puzzle {challenge_puzzle_id} not found in active_puzzles.")
+        raise HTTPException(status_code=404, detail="Challenge puzzle not found or has expired.")
+
+
 @app.post("/api/submit_score", status_code=201)
 async def api_submit_score(payload: ScoreSubmitPayload):
     logger.info(f"API Req: Submit score for {payload.player_name}, Score: {payload.score}, Diff: {payload.puzzle_difficulty}")
     try:
-        # submission_date is now handled by the database default
         add_score_to_leaderboard(
             player_name=payload.player_name.strip(),
             score=payload.score,
@@ -209,7 +224,6 @@ async def api_submit_score(payload: ScoreSubmitPayload):
             time_taken=payload.time_taken,
             puzzle_id=payload.puzzle_id,
             game_mode=payload.game_mode if payload.game_mode else "classic"
-            # No submission_date passed here
         )
         return {"message": "Score submitted successfully!"}
     except Exception as e:

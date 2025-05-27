@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en"> <!-- Theme class added by JS -->
 <head>
@@ -26,8 +25,10 @@
             --button-hard-hover: linear-gradient(135deg, #b02a37 0%, #8c222c 100%);
             --button-stats-bg: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%);
             --button-stats-hover: linear-gradient(135deg, #117a8b 0%, #0f6674 100%);
-            --button-daily-bg: linear-gradient(135deg, #6f42c1 0%, #4a2490 100%); 
+            --button-daily-bg: linear-gradient(135deg, #6f42c1 0%, #4a2490 100%);
             --button-daily-hover: linear-gradient(135deg, #4a2490 0%, #321861 100%);
+            --button-challenge-bg: linear-gradient(135deg, #fd7e14 0%, #e85a00 100%); /* For challenge button */
+            --button-challenge-hover: linear-gradient(135deg, #e85a00 0%, #c54a00 100%);
             --button-disabled-bg: #ced4da;
             --button-disabled-text: #6c757d;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
@@ -71,6 +72,8 @@
             --button-stats-hover: linear-gradient(135deg, #0b5a68 0%, #084c58 100%);
             --button-daily-bg: linear-gradient(135deg, #59359a 0%, #3c1e72 100%);
             --button-daily-hover: linear-gradient(135deg, #3c1e72 0%, #2c1553 100%);
+            --button-challenge-bg: linear-gradient(135deg, #c4630e 0%, #b04e00 100%);
+            --button-challenge-hover: linear-gradient(135deg, #b04e00 0%, #934000 100%);
             --button-disabled-bg: #5a6268;
             --button-disabled-text: #adb5bd;
             --modal-overlay-bg: rgba(0, 0, 0, 0.8);
@@ -111,7 +114,7 @@
             box-shadow: var(--shadow-lg); position: relative;
             transition: background-color var(--transition-speed) ease;
         }
-        #theme-toggle-btn {
+        #theme-toggle-btn { /* Changed from theme-toggle-btn-home for consistency */
             position: absolute; top: 20px; right: 20px; background: none;
             border: none; font-size: 1.3em; cursor: pointer;
             color: var(--theme-toggle-btn-color); padding: 5px;
@@ -126,12 +129,12 @@
             color: var(--text-secondary); margin-bottom: 20px; font-weight: 400; font-size: 1.1em;
             transition: color var(--transition-speed) ease;
         }
-        .game-options {
-            margin-bottom: 25px; padding: 15px; background-color: var(--stat-item-bg);
+        .game-options-group { /* Wrapper for game options and challenge */
+            margin-bottom: 25px; padding: 20px; background-color: var(--stat-item-bg);
             border-radius: 8px; box-shadow: var(--shadow-sm);
             transition: background-color var(--transition-speed) ease;
         }
-        .game-options h3 {
+        .game-options-group h3 {
             font-size: 1.1em; color: var(--text-primary); margin-bottom: 15px;
             text-align: left; transition: color var(--transition-speed) ease;
         }
@@ -144,19 +147,25 @@
             transition: color var(--transition-speed) ease;
         }
         .mode-selection input[type="radio"] { margin-right: 5px; accent-color: var(--accent-primary); }
-        #countdown-duration-input {
-            padding: 8px 12px; border-radius: 6px; border: 1px solid var(--input-border);
-            background-color: var(--input-bg); color: var(--text-primary); width: 80px;
+        #countdown-duration-input, #challenge-code-input { /* Grouped input styling */
+            padding: 10px 12px; border-radius: 6px; border: 1px solid var(--input-border);
+            background-color: var(--input-bg); color: var(--text-primary);
             font-family: 'Poppins', sans-serif; font-size: 0.9em;
             transition: border-color var(--transition-speed) ease, background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+            margin-bottom: 10px; /* Added for challenge input */
         }
-        #countdown-duration-input:focus {
+        #countdown-duration-input { width: 80px; }
+        #challenge-code-input { width: calc(100% - 130px); margin-right: 10px; } /* Adjusted width */
+
+        #countdown-duration-input:focus, #challenge-code-input:focus {
             outline: none; border-color: var(--input-focus-border);
             box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--input-focus-border) 25%, transparent);
         }
         #countdown-settings { margin-left: 25px; display: none; }
         .difficulty-buttons { display: flex; flex-direction: column; gap: 15px; margin-bottom: 15px; }
-        .difficulty-buttons button, .utility-button, #daily-challenge-btn {
+
+        /* General button styling for difficulty, utility, daily, and challenge start */
+        .difficulty-buttons button, .utility-button, #daily-challenge-btn, #start-challenge-btn {
             padding: 15px 25px; cursor: pointer; border-radius: 30px; border: none;
             font-weight: 600; font-size: 1.1em; color: white;
             transition: background var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
@@ -164,11 +173,13 @@
         }
         .difficulty-buttons button:hover:not(:disabled),
         .utility-button:hover:not(:disabled),
-        #daily-challenge-btn:hover:not(:disabled) { transform: translateY(-3px) scale(1.02); box-shadow: var(--shadow-lg); }
+        #daily-challenge-btn:hover:not(:disabled),
+        #start-challenge-btn:hover:not(:disabled) { transform: translateY(-3px) scale(1.02); box-shadow: var(--shadow-lg); }
 
         .difficulty-buttons button:active:not(:disabled),
         .utility-button:active:not(:disabled),
-        #daily-challenge-btn:active:not(:disabled) { transform: translateY(0) scale(1); box-shadow: var(--shadow-md); }
+        #daily-challenge-btn:active:not(:disabled),
+        #start-challenge-btn:active:not(:disabled) { transform: translateY(0) scale(1); box-shadow: var(--shadow-md); }
 
         #easy-btn    { background: var(--button-easy-bg); }
         #easy-btn:hover:not(:disabled) { background: var(--button-easy-hover); }
@@ -180,13 +191,14 @@
         #stats-btn:hover:not(:disabled) { background: var(--button-stats-hover); }
         #daily-challenge-btn { background: var(--button-daily-bg); margin-top: 0; margin-bottom: 25px; }
         #daily-challenge-btn:hover:not(:disabled) { background: var(--button-daily-hover); }
+        #start-challenge-btn { background: var(--button-challenge-bg); font-size: 1em; padding: 10px 15px; width: 120px; } /* Specific style */
 
 
-        .difficulty-buttons button:disabled, .utility-button:disabled, #daily-challenge-btn:disabled {
+        .difficulty-buttons button:disabled, .utility-button:disabled, #daily-challenge-btn:disabled, #start-challenge-btn:disabled {
             background: var(--button-disabled-bg); color: var(--button-disabled-text);
             cursor: not-allowed; box-shadow: none; transform: none;
         }
-        .difficulty-buttons button i, .utility-button i, #daily-challenge-btn i { font-size: 1.2em; }
+        .difficulty-buttons button i, .utility-button i, #daily-challenge-btn i, #start-challenge-btn i { font-size: 1.2em; }
 
         #loading-spinner {
             display: none; margin: 20px auto; width: 40px; height: 40px;
@@ -209,14 +221,14 @@
         .modal-overlay.modal-open { opacity: 1; visibility: visible; display:flex; transition: opacity 0.3s ease; }
         .modal-content {
             background: var(--container-bg); padding: 30px 40px; border-radius: 15px;
-            box-shadow: var(--shadow-lg); max-width: 550px; /* Increased width for leaderboard */
+            box-shadow: var(--shadow-lg); max-width: 550px;
             width: 90%;
             text-align: left; color: var(--text-primary); transform: scale(0.9);
             transition: transform 0.3s ease, background-color var(--transition-speed) ease, color var(--transition-speed) ease;
         }
         .modal-overlay.modal-open .modal-content { transform: scale(1); }
         .modal-title {
-            font-size: 1.4em; 
+            font-size: 1.4em;
             font-weight: 700; margin-bottom: 20px;
             display: flex; align-items: center; justify-content: space-between;
             color: var(--accent-primary); transition: color var(--transition-speed) ease;
@@ -226,11 +238,11 @@
             color: var(--text-secondary); transition: color var(--transition-speed) ease;
         }
         .modal-title .close-modal-btn:hover { color: var(--text-primary); }
-        .stats-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
-            gap: 15px; 
-            margin-bottom: 20px; 
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
         }
         .stat-item {
             background-color: var(--stat-item-bg); padding: 12px; border-radius: 8px;
@@ -238,14 +250,14 @@
             transition: background-color var(--transition-speed) ease;
         }
         .stat-item h4 {
-            margin-bottom: 6px; font-size: 0.8em; 
+            margin-bottom: 6px; font-size: 0.8em;
             color: var(--text-secondary);
             font-weight: 600; text-transform: uppercase;
             line-height: 1.2;
             transition: color var(--transition-speed) ease;
         }
         .stat-item p {
-            font-size: 1.3em; 
+            font-size: 1.3em;
             font-weight: 700; color: var(--accent-primary); margin:0;
             display: flex; align-items: center; justify-content: center;
             transition: color var(--transition-speed) ease;
@@ -253,22 +265,58 @@
         .stat-item .stars { margin-left: 8px; color: var(--star-color); font-size: 0.75em; }
         .stat-item .stars .fa-star { margin-right: 2px; }
         .badge {
-            display: inline-block; padding: 0.25em 0.6em; font-size: 0.7em; 
+            display: inline-block; padding: 0.25em 0.6em; font-size: 0.7em;
             font-weight: 700; line-height: 1; text-align: center;
             white-space: nowrap; vertical-align: baseline; border-radius: 0.375rem;
             margin-left: 8px;
         }
         .badge-perfect { color: #fff; background: var(--badge-perfect-bg); }
 
+        .difficulty-stats-container {
+            grid-column: 1 / -1;
+            margin-top: 10px;
+        }
+        .difficulty-stats-container h5 {
+            font-size: 1em;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .difficulty-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+        }
+        .difficulty-stat-item {
+            background-color: var(--stat-item-bg);
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.8em;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+        }
+        .difficulty-stat-item strong {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--accent-primary);
+            font-weight: 600;
+        }
+        .difficulty-stat-item span {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 0.9em;
+        }
+
+
         .leaderboard-container {
-            grid-column: 1 / -1; /* Span full width if stats-grid is 2 or 3 columns */
+            grid-column: 1 / -1;
             margin-top: 20px;
             padding-top: 15px;
             border-top: 1px solid var(--input-border);
             transition: border-color var(--transition-speed) ease;
         }
         .leaderboard-container h5 {
-            font-size: 1.1em; /* Slightly larger than stat-item h4 */
+            font-size: 1.1em;
             color: var(--text-primary);
             margin-bottom: 12px;
             text-align: center;
@@ -291,7 +339,7 @@
             padding: 6px 10px;
             border-radius: 6px;
             border: 1px solid var(--input-border);
-            background-color: var(--leaderboard-filter-bg); /* Use specific var or input-bg */
+            background-color: var(--leaderboard-filter-bg);
             color: var(--text-primary);
             font-family: 'Poppins', sans-serif;
             font-size: 0.9em;
@@ -300,7 +348,7 @@
         #leaderboard-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.85em; /* Slightly smaller for more data */
+            font-size: 0.85em;
         }
         #leaderboard-table th, #leaderboard-table td {
             padding: 8px 5px;
@@ -314,18 +362,24 @@
             font-weight: 600;
         }
         html.dark-theme #leaderboard-table th {
-             color: var(--text-secondary); /* Ensure good contrast in dark mode */
+             color: var(--text-secondary);
         }
         #leaderboard-table td:nth-child(1) { width: 10%; text-align: right; padding-right:10px;} /* Rank */
         #leaderboard-table td:nth-child(3) { text-align: right; padding-right: 5px; } /* Score */
         #leaderboard-table td:nth-child(4) { text-align: center; font-size: 0.9em; } /* Details */
 
-        #leaderboard-loading, #no-leaderboard-data { 
-            text-align: center; 
-            color: var(--text-secondary); 
+        #leaderboard-loading, #no-leaderboard-data {
+            text-align: center;
+            color: var(--text-secondary);
             font-style: italic;
             padding: 10px;
             transition: color var(--transition-speed) ease;
+        }
+        .challenge-input-area { /* NEW for challenge input + button flex */
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Space between input and button */
+            margin-top: 10px;
         }
 
 
@@ -333,32 +387,39 @@
             .container { padding: 25px 15px; }
             #theme-toggle-btn { top: 10px; right: 10px; font-size: 1.2em; }
             h1 { font-size: 2em; } h2 { font-size: 1em; margin-bottom: 15px;}
-            .game-options h3 { font-size: 1em; }
+            .game-options-group h3 { font-size: 1em; } /* Adjusted from .game-options */
             .mode-selection, .duration-selection { gap: 10px; }
-            .difficulty-buttons button, .utility-button, #daily-challenge-btn { font-size: 1em; padding: 12px 20px; }
-            .modal-content { padding: 20px; max-width: 95%; } /* Adjust modal padding */
+            .difficulty-buttons button, .utility-button, #daily-challenge-btn, #start-challenge-btn { font-size: 1em; padding: 12px 20px; }
+            #challenge-code-input { width: calc(100% - 110px); } /* Adjust for smaller button */
+            #start-challenge-btn { width: 100px; padding: 10px; font-size: 0.9em;}
+
+
+            .modal-content { padding: 20px; max-width: 95%; }
             .modal-title { font-size: 1.2em; }
-            .stats-grid { grid-template-columns: 1fr; } 
+            .stats-grid { grid-template-columns: 1fr; }
             .difficulty-stats-container { grid-column: span 1; }
-            .difficulty-stats-grid { grid-template-columns: 1fr; } 
-            .stat-item p { font-size: 1.2em;} /* Adjust stat font sizes */
+            .difficulty-stats-grid { grid-template-columns: 1fr; }
+            .stat-item p { font-size: 1.2em;}
             .stat-item h4 { font-size: 0.75em;}
             #leaderboard-table { font-size: 0.8em; }
             #leaderboard-table td:nth-child(1) { width: 15%;}
+            .challenge-input-area { flex-direction: column; }
+            #challenge-code-input { width: 100%; margin-right: 0; margin-bottom: 10px; }
+            #start-challenge-btn { width: 100%; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <button id="theme-toggle-btn" aria-label="Toggle dark mode">
+        <button id="theme-toggle-btn" aria-label="Toggle dark mode"> <!-- Renamed ID -->
             <i class="fas fa-moon"></i>
         </button>
 
         <h1>WordLinks</h1>
         <h2>Select a difficulty, game mode, or try the Daily Challenge!</h2>
 
-        <div class="game-options">
-            <h3>Game Mode</h3>
+        <div class="game-options-group"> <!-- Changed class name -->
+            <h3>Game Mode & Options</h3>
             <div class="mode-selection">
                 <label for="mode-classic">
                     <input type="radio" id="mode-classic" name="gameMode" value="classic" checked>
@@ -383,7 +444,17 @@
 
         <button id="daily-challenge-btn"><i class="fas fa-calendar-day"></i> Daily Challenge</button>
 
-        <button id="stats-btn" class="utility-button" style="margin-top: 25px;"><i class="fas fa-chart-bar"></i> View Stats</button>
+        <!-- Challenge a Friend Section - NEW -->
+        <div class="game-options-group challenge-section">
+            <h3><i class="fas fa-user-friends"></i> Play a Challenge!</h3>
+            <div class="challenge-input-area">
+                <input type="text" id="challenge-code-input" placeholder="Enter Challenge Code (Puzzle ID)">
+                <button id="start-challenge-btn"><i class="fas fa-bolt"></i> Start</button>
+            </div>
+        </div>
+        <!-- End Challenge a Friend Section -->
+
+        <button id="stats-btn" class="utility-button" style="margin-top: 25px;"><i class="fas fa-chart-bar"></i> View Stats & Leaderboard</button>
 
         <div id="loading-spinner"></div>
         <p id="error-message-home"></p>
@@ -393,7 +464,7 @@
         <div class="modal-content">
             <div class="modal-title">
                 <span>Performance Dashboard & Leaderboard</span>
-                <button id="close-stats-modal-btn" class="close-modal-btn" aria-label="Close statistics modal">&times;</button>
+                <button id="close-stats-modal-btn" class="close-modal-btn" aria-label="Close statistics modal">×</button>
             </div>
             <div class="stats-grid">
                 <div class="stat-item"><h4>Wins</h4><p id="stats-wins">0</p></div>
@@ -444,17 +515,24 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="leaderboard-container">
-                    <h5>Top Scores (Classic Mode)</h5>
+                    <h5>Top Scores</h5>
                     <div class="leaderboard-filters">
                         <label for="leaderboard-difficulty-filter">Difficulty:</label>
                         <select id="leaderboard-difficulty-filter">
-                            <option value="">All Classic</option>
+                            <option value="">All</option>
                             <option value="easy">Easy</option>
                             <option value="medium">Medium</option>
                             <option value="hard">Hard</option>
-                            <option value="Daily Challenge">Daily Challenge</option> 
+                            <option value="Daily Challenge">Daily Challenge</option>
+                        </select>
+                        <label for="leaderboard-mode-filter" style="margin-left: 10px;">Mode:</label> <!-- Added Mode Filter -->
+                        <select id="leaderboard-mode-filter">
+                            <option value="classic" selected>Classic</option>
+                            <option value="countdown">Countdown</option>
+                             <option value="challenge">Challenge</option>
+                            <!-- Add other modes here if applicable -->
                         </select>
                     </div>
                     <div id="leaderboard-loading" style="display:none;">Loading leaderboard...</div>
@@ -477,36 +555,40 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Existing selectors
             const difficultyButtons = document.querySelectorAll('.difficulty-buttons button');
             const dailyChallengeBtn = document.getElementById('daily-challenge-btn');
             const loadingSpinner = document.getElementById('loading-spinner');
             const errorMessageHome = document.getElementById('error-message-home');
-            const PUZZLE_STORAGE_KEY = 'currentPuzzle';
-            const STATS_STORAGE_KEY = 'wordLinksGameStats';
-            const THEME_STORAGE_KEY = 'wordLinksTheme';
-
             const statsBtn = document.getElementById('stats-btn');
             const statsModal = document.getElementById('stats-modal');
             const closeStatsModalBtn = document.getElementById('close-stats-modal-btn');
-            const themeToggleBtn = document.getElementById('theme-toggle-btn');
-            const sunIconClass = 'fa-sun';
-            const moonIconClass = 'fa-moon';
-
+            const themeToggleBtn = document.getElementById('theme-toggle-btn'); // Renamed from -home
             const gameModeRadios = document.querySelectorAll('input[name="gameMode"]');
             const countdownSettingsDiv = document.getElementById('countdown-settings');
             const countdownDurationInput = document.getElementById('countdown-duration-input');
-            
             const leaderboardBody = document.getElementById('leaderboard-body');
             const leaderboardLoading = document.getElementById('leaderboard-loading');
             const noLeaderboardDataMsg = document.getElementById('no-leaderboard-data');
             const leaderboardDifficultyFilter = document.getElementById('leaderboard-difficulty-filter');
+            const leaderboardModeFilter = document.getElementById('leaderboard-mode-filter'); // NEW for mode filter
 
+            // NEW Selectors for Challenge a Friend
+            const challengeCodeInput = document.getElementById('challenge-code-input');
+            const startChallengeBtn = document.getElementById('start-challenge-btn');
+
+            const PUZZLE_STORAGE_KEY = 'currentPuzzle';
+            const STATS_STORAGE_KEY = 'wordLinksGameStats';
+            const THEME_STORAGE_KEY = 'wordLinksTheme'; // Use one theme key
+            const sunIconClass = 'fa-sun';
+            const moonIconClass = 'fa-moon';
 
             function showLoading(show = true) {
                 if (loadingSpinner) loadingSpinner.style.display = show ? 'block' : 'none';
                 difficultyButtons.forEach(btn => btn.disabled = show);
                 if (dailyChallengeBtn) dailyChallengeBtn.disabled = show;
                 if (statsBtn) statsBtn.disabled = show;
+                if (startChallengeBtn) startChallengeBtn.disabled = show; // Disable challenge button too
                 if (errorMessageHome) errorMessageHome.style.display = 'none';
             }
 
@@ -515,81 +597,99 @@
                     errorMessageHome.textContent = message;
                     errorMessageHome.style.display = 'block';
                 }
-                if (loadingSpinner && loadingSpinner.style.display === 'block') {
-                    showLoading(false);
-                }
+                showLoading(false); // Always ensure loading indicators are turned off on error
             }
 
-            async function startGame(difficulty, isDaily = false) {
+            async function fetchAndStartGame(difficulty, isDaily = false, isChallenge = false, challengeId = null) {
                 showLoading(true);
                 let selectedGameMode = 'classic';
                 let countdownDurationSeconds = 0;
 
-                if (!isDaily) {
+                if (!isDaily && !isChallenge) { // Only consider radio buttons for normal games
                     document.querySelectorAll('input[name="gameMode"]').forEach(radio => {
                         if (radio.checked) selectedGameMode = radio.value;
                     });
                     if (selectedGameMode === 'countdown') {
                         const minutes = parseInt(countdownDurationInput.value, 10);
                         if (isNaN(minutes) || minutes < 1 || minutes > 10) {
-                            showError("Valid countdown: 1-10 min.");
+                            showError("Valid countdown duration is 1-10 minutes.");
                             showLoading(false); return;
                         }
                         countdownDurationSeconds = minutes * 60;
                     }
+                } else if (isChallenge) {
+                    selectedGameMode = 'challenge'; // Override mode for challenges
+                } else if (isDaily) {
+                    selectedGameMode = 'daily'; // Specific mode for daily
                 }
 
+
                 let performanceDataForBackend = null;
-                if (!isDaily && difficulty) { 
+                if (!isDaily && !isChallenge && difficulty) {
                     const storedStats = localStorage.getItem(STATS_STORAGE_KEY);
                     if (storedStats) {
                         try {
                             const parsedStats = JSON.parse(storedStats);
-                            const difficultyKey = difficulty.toLowerCase(); 
-                            if (parsedStats.performance && parsedStats.performance[difficultyKey]) {
+                            const difficultyKey = difficulty.toLowerCase();
+                            if (parsedStats.performance && parsedStats.performance[difficultyKey] && parsedStats.performance[difficultyKey].plays > 0) {
                                 const perf = parsedStats.performance[difficultyKey];
-                                if (perf.plays > 0) { 
-                                    performanceDataForBackend = {
-                                        avg_hints: perf.totalHints / perf.plays,
-                                        avg_mistakes: perf.totalMistakes / perf.plays,
-                                        win_rate: perf.wins / perf.plays,
-                                        avg_solve_time: perf.totalTime / perf.plays, 
-                                        plays: perf.plays
-                                    };
-                                }
+                                performanceDataForBackend = {
+                                    avg_hints: parseFloat((perf.totalHints / perf.plays).toFixed(2)),
+                                    avg_mistakes: parseFloat((perf.totalMistakes / perf.plays).toFixed(2)),
+                                    win_rate: parseFloat((perf.wins / perf.plays).toFixed(2)),
+                                    avg_solve_time: perf.wins > 0 ? parseFloat((perf.totalTime / perf.wins).toFixed(2)) : null,
+                                    plays: perf.plays
+                                };
                             }
                         } catch (e) { console.error("Error reading stats for backend:", e); }
                     }
                 }
 
                 try {
-                    let response;
-                    let endpoint = isDaily ? '/api/daily_challenge' : '/api/generate_puzzle';
-                    let fetchOptions = { method: isDaily ? 'GET' : 'POST' };
-                    if (!isDaily) {
-                        fetchOptions.headers = { 'Content-Type': 'application/json' };
-                        const payload = { difficulty: difficulty };
-                        if (performanceDataForBackend) {
-                            payload.user_performance_summary = performanceDataForBackend;
-                        }
-                        fetchOptions.body = JSON.stringify(payload);
-                    }
-                    response = await fetch(endpoint, fetchOptions);
+                    let endpoint = '';
+                    let fetchOptions = {};
 
+                    if (isChallenge && challengeId) {
+                        // For challenges, we set up session storage and redirect.
+                        // The actual puzzle data is fetched by game.html's initGame.
+                        sessionStorage.removeItem(PUZZLE_STORAGE_KEY); // Clear previous
+                        sessionStorage.setItem('isChallengeGame', 'true'); // Set flag
+                        sessionStorage.removeItem('isDailyChallenge');
+                        sessionStorage.setItem('gameMode', 'challenge'); // Set game mode for challenge
+                        window.location.href = `/game?challenge=${encodeURIComponent(challengeId)}`;
+                        return; // Exit after initiating navigation
+                    } else if (isDaily) {
+                        endpoint = '/api/daily_challenge';
+                        fetchOptions = { method: 'GET' };
+                    } else { // Regular game generation
+                        endpoint = '/api/generate_puzzle';
+                        fetchOptions = {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                difficulty: difficulty,
+                                user_performance_summary: performanceDataForBackend
+                            })
+                        };
+                    }
+
+                    const response = await fetch(endpoint, fetchOptions);
                     if (!response.ok) {
                         const errorData = await response.json().catch(() => ({ detail: `HTTP error ${response.status}` }));
                         throw new Error(errorData.detail || `Failed to load puzzle: ${response.statusText}`);
                     }
                     const puzzleData = await response.json();
+
                     if (puzzleData && puzzleData.puzzle_id && puzzleData.words) {
                         sessionStorage.setItem(PUZZLE_STORAGE_KEY, JSON.stringify(puzzleData));
-                        sessionStorage.setItem('gameMode', isDaily ? 'classic' : selectedGameMode);
-                        if (!isDaily && selectedGameMode === 'countdown') {
+                        sessionStorage.setItem('gameMode', selectedGameMode); // Use determined game mode
+                        if (selectedGameMode === 'countdown' && countdownDurationSeconds > 0) {
                             sessionStorage.setItem('countdownDuration', countdownDurationSeconds.toString());
                         } else {
                             sessionStorage.removeItem('countdownDuration');
                         }
                         sessionStorage.setItem('isDailyChallenge', isDaily.toString());
+                        sessionStorage.removeItem('isChallengeGame'); // Clear if it was a normal or daily start
 
                         document.body.classList.add('fade-out');
                         setTimeout(() => { window.location.href = '/game'; }, 300);
@@ -599,16 +699,36 @@
                 } catch (error) {
                     console.error("Failed to start game:", error);
                     showError(`Failed to start game: ${error.message}. Please try again.`);
+                } finally {
+                    // Re-enable buttons if not redirecting or if error before redirect
+                    if (!(isChallenge && challengeId)) { // Don't re-enable if redirect for challenge is initiated
+                        showLoading(false);
+                    }
                 }
             }
 
+
             difficultyButtons.forEach(button => {
-                button.addEventListener('click', () => startGame(button.dataset.difficulty, false));
+                button.addEventListener('click', () => fetchAndStartGame(button.dataset.difficulty, false));
             });
 
             if (dailyChallengeBtn) {
-                dailyChallengeBtn.addEventListener('click', () => startGame(null, true));
+                dailyChallengeBtn.addEventListener('click', () => fetchAndStartGame(null, true));
             }
+
+            // NEW Event Listener for Start Challenge Button
+            if (startChallengeBtn) {
+                startChallengeBtn.addEventListener('click', () => {
+                    const challengeCode = challengeCodeInput.value.trim();
+                    if (challengeCode) {
+                        // The fetchAndStartGame function now handles the redirect for challenges
+                        fetchAndStartGame(null, false, true, challengeCode);
+                    } else {
+                        showError("Please enter a challenge code.");
+                    }
+                });
+            }
+
 
             gameModeRadios.forEach(radio => {
                 radio.addEventListener('change', function() {
@@ -619,19 +739,18 @@
                     }
                 });
             });
+            // Initial check for countdown display
             const modeCountdownRadio = document.getElementById('mode-countdown');
-            if (modeCountdownRadio && countdownSettingsDiv) { 
-                if (modeCountdownRadio.checked) {
-                     countdownSettingsDiv.style.display = 'block';
-                } else {
-                     countdownSettingsDiv.style.display = 'none';
-                }
+            if (modeCountdownRadio && countdownSettingsDiv) {
+                countdownSettingsDiv.style.display = modeCountdownRadio.checked ? 'block' : 'none';
             }
 
+
             function displayStats() {
-                const storedStats = localStorage.getItem(STATS_STORAGE_KEY);
+                // ... (Keep your existing displayStats function - it seems quite complete)
+                 const storedStats = localStorage.getItem(STATS_STORAGE_KEY);
                 let defaultPerformanceSub = { plays: 0, wins: 0, totalHints: 0, totalMistakes: 0, totalTime: 0 };
-                let stats = { 
+                let stats = {
                     wins: 0, losses: 0, currentStreak: 0, maxStreak: 0, fastestTime: null, perfectWins: 0,
                     performance: {
                         easy: { ...defaultPerformanceSub },
@@ -643,10 +762,10 @@
                 if (storedStats) {
                     try {
                         const parsed = JSON.parse(storedStats);
-                        stats = { 
-                            ...stats, 
-                            ...parsed, 
-                            performance: { 
+                        stats = {
+                            ...stats,
+                            ...parsed,
+                            performance: {
                                 easy: { ...defaultPerformanceSub, ...(parsed.performance?.easy || {}) },
                                 medium: { ...defaultPerformanceSub, ...(parsed.performance?.medium || {}) },
                                 hard: { ...defaultPerformanceSub, ...(parsed.performance?.hard || {}) }
@@ -664,7 +783,7 @@
 
                 let totalHintsAll = 0;
                 let totalMistakesAll = 0;
-                let playsWithPerfData = 0; 
+                let playsWithPerfData = 0;
                 for (const diff in stats.performance) {
                     if (stats.performance.hasOwnProperty(diff) && stats.performance[diff].plays > 0) {
                         totalHintsAll += stats.performance[diff].totalHints;
@@ -709,12 +828,12 @@
                         fastestTimeEl.textContent = 'N/A';
                     }
                 }
-                
+
                 ['easy', 'medium', 'hard'].forEach(diff => {
-                    const perf = stats.performance[diff]; 
+                    const perf = stats.performance[diff];
                     const winRateDiff = perf.plays > 0 ? ((perf.wins / perf.plays) * 100).toFixed(0) + "%" : "N/A";
                     const avgHintsDiff = perf.plays > 0 ? (perf.totalHints / perf.plays).toFixed(1) : "N/A";
-                    
+
                     const winRateEl = document.getElementById(`stats-${diff}-winrate`);
                     const avgHintsEl = document.getElementById(`stats-${diff}-avghints`);
 
@@ -724,6 +843,7 @@
             }
 
             function getStreakStarsHTML(streak) {
+                // ... (Keep your existing getStreakStarsHTML function)
                 let starsHTML = '';
                 if (streak >= 10) {
                     starsHTML = '<i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>';
@@ -736,18 +856,21 @@
             }
 
             async function fetchAndDisplayLeaderboard() {
-                if (!leaderboardBody || !leaderboardLoading || !noLeaderboardDataMsg || !leaderboardDifficultyFilter) return;
+                // ... (Keep your existing fetchAndDisplayLeaderboard function)
+                 if (!leaderboardBody || !leaderboardLoading || !noLeaderboardDataMsg || !leaderboardDifficultyFilter || !leaderboardModeFilter) return;
 
                 leaderboardLoading.style.display = 'block';
-                leaderboardBody.innerHTML = ''; 
+                leaderboardBody.innerHTML = '';
                 noLeaderboardDataMsg.style.display = 'none';
 
                 const selectedDifficulty = leaderboardDifficultyFilter.value;
-                let apiUrl = `/api/leaderboard?mode=classic&limit=10`; // Default to classic, can add mode filter later
-                if (selectedDifficulty && selectedDifficulty !== "All Classic") { // Adjust for "All Classic"
-                    apiUrl += `&difficulty=${selectedDifficulty}`;
+                const selectedMode = leaderboardModeFilter.value; // Get selected mode
+
+                let apiUrl = `/api/leaderboard?mode=${encodeURIComponent(selectedMode)}&limit=10`;
+                if (selectedDifficulty && selectedDifficulty !== "") { // Check for empty string from "All"
+                    apiUrl += `&difficulty=${encodeURIComponent(selectedDifficulty)}`;
                 }
-                
+
                 try {
                     const response = await fetch(apiUrl);
                     if (!response.ok) {
@@ -761,7 +884,7 @@
                             row.insertCell().textContent = index + 1;
                             row.insertCell().textContent = entry.player_name;
                             row.insertCell().textContent = entry.score;
-                            let details = entry.difficulty;
+                            let details = entry.difficulty || 'N/A'; // Show difficulty from score entry
                             if (entry.time_taken_seconds !== null && entry.time_taken_seconds !== undefined) {
                                  const minutes = Math.floor(entry.time_taken_seconds / 60);
                                  const seconds = entry.time_taken_seconds % 60;
@@ -785,14 +908,16 @@
             }
 
             function openStatsModal() {
+                // ... (Keep your existing openStatsModal function)
                 if(!statsModal) return;
-                displayStats(); 
-                fetchAndDisplayLeaderboard(); 
+                displayStats();
+                fetchAndDisplayLeaderboard(); // Initial fetch for default filters
                 statsModal.style.display = 'flex';
                 setTimeout(() => statsModal.classList.add('modal-open'), 10);
             }
             function closeStatsModal() {
-                if(!statsModal) return;
+                // ... (Keep your existing closeStatsModal function)
+                 if(!statsModal) return;
                 statsModal.classList.remove('modal-open');
                 setTimeout(() => { if(!statsModal.classList.contains('modal-open')) statsModal.style.display = 'none'; }, 300);
             }
@@ -807,21 +932,26 @@
                     closeStatsModal();
                 }
             });
+            // Event listener for leaderboard filters in stats modal
             if (leaderboardDifficultyFilter) {
                  leaderboardDifficultyFilter.addEventListener('change', fetchAndDisplayLeaderboard);
             }
+            if (leaderboardModeFilter) { // NEW
+                leaderboardModeFilter.addEventListener('change', fetchAndDisplayLeaderboard);
+            }
+
 
             function applyTheme(theme) {
                 if (theme === 'dark') {
                     document.documentElement.classList.add('dark-theme');
                     if (themeToggleBtn) themeToggleBtn.innerHTML = `<i class="fas ${sunIconClass}"></i>`;
-                    localStorage.setItem(THEME_STORAGE_KEY, 'dark');
                 } else {
                     document.documentElement.classList.remove('dark-theme');
                     if (themeToggleBtn) themeToggleBtn.innerHTML = `<i class="fas ${moonIconClass}"></i>`;
-                    localStorage.setItem(THEME_STORAGE_KEY, 'light');
                 }
+                localStorage.setItem(THEME_STORAGE_KEY, theme); // Use consistent key
             }
+
             if (themeToggleBtn) {
                 themeToggleBtn.addEventListener('click', () => {
                     if (document.documentElement.classList.contains('dark-theme')) {
@@ -831,6 +961,7 @@
                     }
                 });
             }
+            // Initialize theme
             const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
             const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
             if (savedTheme) { applyTheme(savedTheme); }
@@ -840,4 +971,3 @@
     </script>
 </body>
 </html>
-```
