@@ -11,11 +11,8 @@
 
     <style>
         :root { /* Light Theme (Default) */
-            --bg-gradient-start: #f8f9fa;
-            --bg-gradient-end: #ffffff;
-            --container-bg: #ffffff;
-            --text-primary: #343a40;
-            --text-secondary: #6c757d;
+            --bg-gradient-start: #f8f9fa; --bg-gradient-end: #ffffff;
+            --container-bg: #ffffff; --text-primary: #343a40; --text-secondary: #6c757d;
             --accent-primary: #007bff;
             --button-easy-bg: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
             --button-easy-hover: linear-gradient(135deg, #1e7e34 0%, #155724 100%);
@@ -29,28 +26,25 @@
             --button-daily-hover: linear-gradient(135deg, #4a2490 0%, #321861 100%);
             --button-challenge-bg: linear-gradient(135deg, #fd7e14 0%, #e85a00 100%);
             --button-challenge-hover: linear-gradient(135deg, #e85a00 0%, #c54a00 100%);
-            --button-submit-puzzle-bg: var(--button-info-bg); /* Using info for submit puzzle button */
+            --button-submit-puzzle-bg: var(--button-info-bg);
             --button-submit-puzzle-hover: var(--button-info-hover);
-            --button-disabled-bg: #ced4da;
-            --button-disabled-text: #6c757d;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
-            --shadow-md: 0 4px 8px rgba(0,0,0,0.1);
-            --shadow-lg: 0 10px 20px rgba(0,0,0,0.1);
-            --transition-speed: 0.25s;
-            --modal-overlay-bg: rgba(0, 0, 0, 0.6);
-            --stat-item-bg: #f8f9fa;
+            --button-auth-bg: var(--button-primary-bg);
+            --button-auth-hover: var(--button-primary-hover);
+            --button-guest-bg: var(--button-info-bg);
+            --button-guest-hover: var(--button-info-hover);
+            --button-logout-bg: var(--button-hard-bg);
+            --button-logout-hover: var(--button-hard-hover);
+            --button-disabled-bg: #ced4da; --button-disabled-text: #6c757d;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1); --shadow-md: 0 4px 8px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 20px rgba(0,0,0,0.1); --transition-speed: 0.25s;
+            --modal-overlay-bg: rgba(0, 0, 0, 0.6); --stat-item-bg: #f8f9fa;
             --theme-toggle-btn-color: var(--text-secondary);
             --theme-toggle-btn-hover-color: var(--text-primary);
-            --error-bg: #f8d7da;
-            --error-text: #842029;
-            --error-border: #f5c2c7;
-            --spinner-light: #f3f3f3;
-            --spinner-dark: var(--accent-primary);
-            --input-bg: #fff;
-            --input-border: #ced4da;
-            --input-focus-border: var(--accent-primary);
-            --label-color: var(--text-secondary);
-            --star-color: #FFD700;
+            --error-bg: #f8d7da; --error-text: #842029; --error-border: #f5c2c7;
+            --success-bg: #d1e7dd; --success-text: #0f5132; --success-border: #badbcc;
+            --spinner-light: #f3f3f3; --spinner-dark: var(--accent-primary);
+            --input-bg: #fff; --input-border: #ced4da; --input-focus-border: var(--accent-primary);
+            --label-color: var(--text-secondary); --star-color: #FFD700;
             --badge-perfect-bg: var(--button-success-bg);
             --leaderboard-filter-bg: var(--input-bg);
             --leaderboard-filter-border: var(--input-border);
@@ -60,12 +54,9 @@
             --leaderboard-row-even-bg: #f2f2f2;
         }
 
-        html.dark-theme { /* Dark Theme Overrides */
-            --bg-gradient-start: #212529;
-            --bg-gradient-end: #343a40;
-            --container-bg: #495057;
-            --text-primary: #f8f9fa;
-            --text-secondary: #adb5bd;
+        html.dark-theme {
+            --bg-gradient-start: #212529; --bg-gradient-end: #343a40;
+            --container-bg: #495057; --text-primary: #f8f9fa; --text-secondary: #adb5bd;
             --accent-primary: #0d6efd;
             --button-easy-bg: linear-gradient(135deg, #1a6130 0%, #144b24 100%);
             --button-easy-hover: linear-gradient(135deg, #144b24 0%, #0e3619 100%);
@@ -81,29 +72,20 @@
             --button-challenge-hover: linear-gradient(135deg, #b04e00 0%, #934000 100%);
             --button-submit-puzzle-bg: var(--button-info-bg);
             --button-submit-puzzle-hover: var(--button-info-hover);
-            --button-disabled-bg: #5a6268;
-            --button-disabled-text: #adb5bd;
-            --modal-overlay-bg: rgba(0, 0, 0, 0.8);
-            --stat-item-bg: #343a40;
-            --theme-toggle-btn-color: var(--text-secondary);
-            --theme-toggle-btn-hover-color: var(--text-primary);
-            --error-bg: #591C21;
-            --error-text: #f5c2c7;
-            --error-border: #c87079;
-            --spinner-light: #495057;
-            --spinner-dark: var(--accent-primary);
-            --input-bg: #343a40;
-            --input-border: #6c757d;
-            --input-focus-border: var(--accent-primary);
-            --label-color: var(--text-secondary);
-            --star-color: #FFC107;
-            --badge-perfect-bg: var(--button-success-bg);
-            --leaderboard-filter-bg: var(--input-bg);
-            --leaderboard-filter-border: var(--input-border);
-            --leaderboard-table-border: var(--input-border);
-            --leaderboard-header-bg: #0b5ed7;
-            --leaderboard-header-text: #e9ecef;
-            --leaderboard-row-even-bg: #3E444A;
+            --button-auth-bg: var(--button-primary-bg);
+            --button-auth-hover: var(--button-primary-hover);
+            --button-guest-bg: var(--button-info-bg);
+            --button-guest-hover: var(--button-info-hover);
+            --button-logout-bg: var(--button-hard-bg);
+            --button-logout-hover: var(--button-hard-hover);
+            --button-disabled-bg: #5a6268; --button-disabled-text: #adb5bd;
+            --modal-overlay-bg: rgba(0, 0, 0, 0.8); --stat-item-bg: #343a40;
+            --error-bg: #591C21; --error-text: #f5c2c7; --error-border: #c87079;
+            --success-bg: #14452F; --success-text: #a3d4b8; --success-border: #2f6f4f;
+            --spinner-light: #495057; --spinner-dark: var(--accent-primary);
+            --input-bg: #343a40; --input-border: #6c757d; --label-color: var(--text-secondary);
+            --leaderboard-header-bg: #0b5ed7; --leaderboard-header-text: #e9ecef;
+            --leaderboard-row-even-bg: #3E444A; --leaderboard-border-color: #5A6268;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -112,10 +94,11 @@
             background: linear-gradient(to bottom, var(--bg-gradient-start), var(--bg-gradient-end));
             color: var(--text-primary); padding: 20px; min-height: 100vh;
             display: flex; align-items: center; justify-content: center; text-align: center;
-            opacity: 0; animation: fadeInPage 0.5s ease-out forwards;
+            /* opacity: 0; animation: fadeInPage 0.5s ease-out forwards; */ /* Temporarily removed for debug */
+            opacity: 1; /* Ensure body is visible */
             transition: background var(--transition-speed) ease, color var(--transition-speed) ease;
         }
-        @keyframes fadeInPage { to { opacity: 1; } }
+        /* @keyframes fadeInPage { to { opacity: 1; } } */ /* Temporarily removed for debug */
         body.fade-out { opacity: 1; animation: fadeOutPage 0.3s ease-in forwards; }
         @keyframes fadeOutPage { to { opacity: 0; } }
         .container {
@@ -131,67 +114,63 @@
             transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
         }
         #theme-toggle-btn:hover { color: var(--theme-toggle-btn-hover-color); transform: scale(1.1); }
-        h1 {
-            color: var(--text-primary); margin-bottom: 15px; font-weight: 700; font-size: 2.5em;
+        h1 { color: var(--text-primary) !important; margin-bottom: 10px; font-weight: 700; font-size: 2.5em; transition: color var(--transition-speed) ease;}
+        #user-greeting {
+            font-size: 1.1em; color: var(--text-primary) !important; /* MODIFIED for better default visibility */
+            margin-bottom: 20px; min-height: 1.2em; font-weight: 600;
             transition: color var(--transition-speed) ease;
         }
-        h2 {
-            color: var(--text-secondary); margin-bottom: 20px; font-weight: 400; font-size: 1.1em;
-            transition: color var(--transition-speed) ease;
-        }
-        .game-options-group {
+        h2 { color: var(--text-secondary) !important; margin-bottom: 20px; font-weight: 400; font-size: 1.1em; transition: color var(--transition-speed) ease;}
+
+        .options-section {
             margin-bottom: 25px; padding: 20px; background-color: var(--stat-item-bg);
             border-radius: 8px; box-shadow: var(--shadow-sm);
             transition: background-color var(--transition-speed) ease;
         }
-        .game-options-group h3 {
-            font-size: 1.1em; color: var(--text-primary); margin-bottom: 15px;
+        .options-section h3 {
+            font-size: 1.1em; color: var(--text-primary) !important; margin-top:0; margin-bottom: 15px;
             text-align: left; transition: color var(--transition-speed) ease;
         }
         .mode-selection, .duration-selection {
             display: flex; align-items: center; gap: 15px; margin-bottom: 10px; flex-wrap: wrap;
         }
         .mode-selection label, .duration-selection label {
-            color: var(--label-color); font-weight: 600; cursor: pointer;
+            color: var(--label-color) !important; font-weight: 600; cursor: pointer;
             display: flex; align-items: center; gap: 5px;
             transition: color var(--transition-speed) ease;
         }
         .mode-selection input[type="radio"] { margin-right: 5px; accent-color: var(--accent-primary); }
-        #countdown-duration-input, #challenge-code-input {
+        #countdown-duration-input, #challenge-code-input, .auth-modal-input {
             padding: 10px 12px; border-radius: 6px; border: 1px solid var(--input-border);
-            background-color: var(--input-bg); color: var(--text-primary);
+            background-color: var(--input-bg); color: var(--text-primary) !important; /* Ensure input text is visible */
             font-family: 'Poppins', sans-serif; font-size: 0.9em;
             transition: border-color var(--transition-speed) ease, background-color var(--transition-speed) ease, color var(--transition-speed) ease;
-            margin-bottom: 10px;
+            margin-bottom: 10px; width:100%;
         }
         #countdown-duration-input { width: 80px; }
         #challenge-code-input { flex-grow: 1; margin-right: 10px; }
 
-        #countdown-duration-input:focus, #challenge-code-input:focus {
+        #countdown-duration-input:focus, #challenge-code-input:focus, .auth-modal-input:focus {
             outline: none; border-color: var(--input-focus-border);
             box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--input-focus-border) 25%, transparent);
         }
         #countdown-settings { margin-left: 25px; display: none; }
         .difficulty-buttons { display: flex; flex-direction: column; gap: 15px; margin-bottom: 15px; }
 
-        .difficulty-buttons button, .utility-button, #daily-challenge-btn, #start-challenge-btn, #go-to-submit-puzzle-btn {
+        .action-button {
             padding: 15px 25px; cursor: pointer; border-radius: 30px; border: none;
-            font-weight: 600; font-size: 1.1em; color: rgb(65, 12, 12);
+            font-weight: 600; font-size: 1.1em; color: rgba(10, 220, 80, 0.637) !important; /* FORCED white text for buttons */
             transition: background var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
             box-shadow: var(--shadow-md); display: flex; align-items: center; justify-content: center; gap: 10px;
-            text-decoration: none; /* For <a> styled as button */
+            text-decoration: none; width: 100%; margin-bottom: 10px;
         }
-        .difficulty-buttons button:hover:not(:disabled),
-        .utility-button:hover:not(:disabled),
-        #daily-challenge-btn:hover:not(:disabled),
-        #start-challenge-btn:hover:not(:disabled),
-        #go-to-submit-puzzle-btn:hover:not(:disabled) { transform: translateY(-3px) scale(1.02); box-shadow: var(--shadow-lg); }
-
-        .difficulty-buttons button:active:not(:disabled),
-        .utility-button:active:not(:disabled),
-        #daily-challenge-btn:active:not(:disabled),
-        #start-challenge-btn:active:not(:disabled),
-        #go-to-submit-puzzle-btn:active:not(:disabled) { transform: translateY(0) scale(1); box-shadow: var(--shadow-md); }
+        .action-button:hover:not(:disabled) { transform: translateY(-3px) scale(1.02); box-shadow: var(--shadow-lg); }
+        .action-button:active:not(:disabled) { transform: translateY(0) scale(1); box-shadow: var(--shadow-md); }
+        .action-button:disabled {
+            background: var(--button-disabled-bg) !important; color: var(--button-disabled-text) !important;
+            cursor: not-allowed; box-shadow: none; transform: none;
+        }
+        .action-button i { font-size: 1.2em; }
 
         #easy-btn    { background: var(--button-easy-bg); }
         #easy-btn:hover:not(:disabled) { background: var(--button-easy-hover); }
@@ -201,246 +180,75 @@
         #hard-btn:hover:not(:disabled) { background: var(--button-hard-hover); }
         #stats-btn { background: var(--button-stats-bg); }
         #stats-btn:hover:not(:disabled) { background: var(--button-stats-hover); }
-        #daily-challenge-btn { background: var(--button-daily-bg); margin-top: 0; margin-bottom: 25px; }
+        #daily-challenge-btn { background: var(--button-daily-bg); }
         #daily-challenge-btn:hover:not(:disabled) { background: var(--button-daily-hover); }
-        #start-challenge-btn { background: var(--button-challenge-bg); font-size: 1em; padding: 10px 15px; width: auto; flex-shrink:0; }
-        #go-to-submit-puzzle-btn { background: var(--button-submit-puzzle-bg); } /* NEW */
+        /* Custom color for login/register buttons */
+        #show-login-modal-btn, #show-register-modal-btn {
+            background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%) !important;
+            color: #5ca41d !important;
+        }
+        #show-login-modal-btn:hover, #show-register-modal-btn:hover {
+            background: linear-gradient(135deg, #3a3f99 0%, #6c70c7 100%) !important;
+        }
+        #start-challenge-btn { background: var(--button-challenge-bg); font-size: 1em; padding: 10px 15px; width: auto; flex-shrink:0; margin-bottom:0; }
+        #go-to-submit-puzzle-btn { background: var(--button-submit-puzzle-bg); }
         #go-to-submit-puzzle-btn:hover:not(:disabled) { background: var(--button-submit-puzzle-hover); }
+        #show-login-modal-btn, #show-register-modal-btn { background: var(--button-auth-bg) !important; color: rgb(215, 12, 12) !important; margin-bottom: 0 !important; }
+        #show-login-modal-btn:hover, #show-register-modal-btn:hover { background: var(--button-auth-hover) !important; }
+        #play-as-guest-btn { background: var(--button-guest-bg) !important; color: rgb(23, 122, 90) !important; }
+        #play-as-guest-btn:hover { background: var(--button-guest-hover) !important; }
+        #logout-btn { background: var(--button-logout-bg) !important; color: rgb(26, 26, 26) !important; }
+        #logout-btn:hover { background: var(--button-logout-hover) !important; }
 
-
-        .difficulty-buttons button:disabled, .utility-button:disabled, #daily-challenge-btn:disabled, #start-challenge-btn:disabled, #go-to-submit-puzzle-btn:disabled {
-            background: var(--button-disabled-bg); color: var(--button-disabled-text);
-            cursor: not-allowed; box-shadow: none; transform: none;
-        }
-        .difficulty-buttons button i, .utility-button i, #daily-challenge-btn i, #start-challenge-btn i, #go-to-submit-puzzle-btn i { font-size: 1.2em; }
-
-        #loading-spinner {
-            display: none; margin: 20px auto; width: 40px; height: 40px;
-            border: 5px solid var(--spinner-light); border-top: 5px solid var(--spinner-dark);
-            border-radius: 50%; animation: spin 1s linear infinite;
-        }
+        #loading-spinner { display: none; margin: 20px auto; width: 40px; height: 40px; border: 5px solid var(--spinner-light); border-top: 5px solid var(--spinner-dark); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        #error-message-home {
-            display: none; margin-top: 20px; padding: 10px 15px;
-            background-color: var(--error-bg); color: var(--error-text);
-            border: 1px solid var(--error-border); border-radius: 8px; font-weight: 600;
-            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, border-color var(--transition-speed) ease;
-        }
-        .modal-overlay {
-            position: fixed; inset: 0; background-color: var(--modal-overlay-bg);
-            display: none; align-items: center; justify-content: center;
-            z-index: 1000; opacity: 0; visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0s linear 0.3s, background-color var(--transition-speed) ease;
-            padding: 20px;
-            overflow-y: auto;
-        }
+        #error-message-home { display: none; margin-top: 20px; padding: 10px 15px; background-color: var(--error-bg); color: var(--error-text); border: 1px solid var(--error-border); border-radius: 8px; font-weight: 600; }
+
+        .modal-overlay { position: fixed; inset: 0; background-color: var(--modal-overlay-bg); display: none; align-items: center; justify-content: center; z-index: 1000; opacity: 0; visibility: visible; transition: opacity 0.3s ease, visibility 0s linear 0.3s; padding: 20px; overflow-y: auto; }
         .modal-overlay.modal-open { opacity: 1; visibility: visible; display:flex; }
-
-        .modal-content {
-            background: var(--container-bg); padding: 20px 30px;
-            border-radius: 15px; box-shadow: var(--shadow-lg);
-            width: 90%; text-align: left;
-            color: var(--text-primary); transform: scale(0.9);
-            transition: transform 0.3s ease, background-color var(--transition-speed) ease, color var(--transition-speed) ease;
-        }
+        .modal-content { background: var(--container-bg); padding: 20px 30px; border-radius: 15px; box-shadow: var(--shadow-lg); width: 90%; text-align: left; color: var(--text-primary); transform: scale(0.9); transition: transform 0.3s ease, background-color var(--transition-speed) ease, color var(--transition-speed) ease; }
         .modal-overlay.modal-open .modal-content { transform: scale(1); }
-
-        #stats-modal .modal-content {
-            max-width: 700px;
-            max-height: 85vh;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .modal-title {
-            font-size: 1.4em;
-            font-weight: 700; margin-bottom: 20px;
-            display: flex; align-items: center; justify-content: space-between;
-            color: var(--accent-primary); transition: color var(--transition-speed) ease;
-            flex-shrink: 0;
-        }
-        .modal-title .close-modal-btn {
-            background: none; border: none; font-size: 1.5em; cursor: pointer;
-            color: var(--text-secondary); transition: color var(--transition-speed) ease;
-            padding: 0; line-height: 1;
-        }
+        #stats-modal .modal-content { max-width: 700px; max-height: 85vh; overflow-y: auto; display: flex; flex-direction: column; }
+        #login-modal .modal-content, #register-modal .modal-content { max-width: 400px; text-align: center; }
+        .modal-title { font-size: 1.4em; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; color: var(--accent-primary); transition: color var(--transition-speed) ease; flex-shrink: 0; }
+        .modal-title .close-modal-btn { background: none; border: none; font-size: 1.5em; cursor: pointer; color: var(--text-secondary); transition: color var(--transition-speed) ease; padding: 0; line-height: 1; }
         .modal-title .close-modal-btn:hover { color: var(--text-primary); }
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; color: var(--label-color) !important; } /* Force label color */
+        .auth-modal-button { width:100%; margin-top:10px; padding: 12px !important; font-size:1em !important; }
+        .auth-error { color:var(--error-text) !important; display:none; margin-top:10px; font-size:0.9em; text-align: center; }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        .stat-item {
-            background-color: var(--stat-item-bg); padding: 12px; border-radius: 8px;
-            text-align: center; box-shadow: var(--shadow-sm);
-            transition: background-color var(--transition-speed) ease;
-        }
-        .stat-item h4 {
-            margin-bottom: 6px; font-size: 0.8em;
-            color: var(--text-secondary);
-            font-weight: 600; text-transform: uppercase;
-            line-height: 1.2;
-            transition: color var(--transition-speed) ease;
-        }
-        .stat-item p {
-            font-size: 1.3em;
-            font-weight: 700; color: var(--accent-primary); margin:0;
-            display: flex; align-items: center; justify-content: center;
-            transition: color var(--transition-speed) ease;
-        }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .stat-item { background-color: var(--stat-item-bg); padding: 12px; border-radius: 8px; text-align: center; box-shadow: var(--shadow-sm); }
+        .stat-item h4 { margin-bottom: 6px; font-size: 0.8em; color: var(--text-secondary) !important; font-weight: 600; text-transform: uppercase; line-height: 1.2; }
+        .stat-item p { font-size: 1.3em; font-weight: 700; color: var(--accent-primary) !important; margin:0; display: flex; align-items: center; justify-content: center; }
         .stat-item .stars { margin-left: 8px; color: var(--star-color); font-size: 0.75em; }
         .stat-item .stars .fa-star { margin-right: 2px; }
-        .badge {
-            display: inline-block; padding: 0.25em 0.6em; font-size: 0.7em;
-            font-weight: 700; line-height: 1; text-align: center;
-            white-space: nowrap; vertical-align: baseline; border-radius: 0.375rem;
-            margin-left: 8px;
-        }
+        .badge { display: inline-block; padding: 0.25em 0.6em; font-size: 0.7em; font-weight: 700; line-height: 1; text-align: center; white-space: nowrap; vertical-align: baseline; border-radius: 0.375rem; margin-left: 8px; }
         .badge-perfect { color: #fff; background: var(--badge-perfect-bg); }
+        .difficulty-stats-container { grid-column: 1 / -1; margin-top: 10px; }
+        .difficulty-stats-container h5 { font-size: 1em; color: var(--text-primary) !important; margin-bottom: 10px; text-align: center; }
+        .difficulty-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
+        .difficulty-stat-item { background-color: var(--stat-item-bg); padding: 10px; border-radius: 6px; font-size: 0.8em; text-align: center; box-shadow: var(--shadow-sm); }
+        .difficulty-stat-item strong { display: block; margin-bottom: 5px; color: var(--accent-primary) !important; font-weight: 600; }
+        .difficulty-stat-item span { display: block; color: var(--text-secondary) !important; font-size: 0.9em; margin-top:3px;}
+        .leaderboard-container { grid-column: 1 / -1; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--input-border); }
+        .leaderboard-container h5 { font-size: 1.1em; color: var(--text-primary) !important; margin-bottom: 12px; text-align: center; }
+        .leaderboard-filters { display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
+        .leaderboard-filters label { font-size: 0.9em; color: var(--label-color) !important; }
+        .leaderboard-filters select { padding: 6px 10px; border-radius: 6px; border: 1px solid var(--input-border); background-color: var(--leaderboard-filter-bg); color: var(--text-primary) !important; font-family: 'Poppins', sans-serif; font-size: 0.9em; }
+        #leaderboard-table { width: 100%; border-collapse: collapse; font-size: 0.85em; }
+        #leaderboard-table th, #leaderboard-table td { padding: 8px 5px; text-align: left; border-bottom: 1px solid var(--leaderboard-table-border); color: var(--text-primary) !important; }
+        #leaderboard-table th { color: var(--text-secondary) !important; font-weight: 600; background-color: var(--container-bg); position: sticky; top: 0; z-index: 1; }
+        html.dark-theme #leaderboard-table th { color: var(--text-secondary) !important; background-color: var(--container-bg); }
+        #leaderboard-table td:nth-child(1) { width: 10%; text-align: right; padding-right:10px;}
+        #leaderboard-table td:nth-child(3) { text-align: right; padding-right: 5px; }
+        #leaderboard-table td:nth-child(4) { text-align: center; font-size: 0.9em; }
+        #leaderboard-loading, #no-leaderboard-data { text-align: center; color: var(--text-secondary) !important; font-style: italic; padding: 10px; }
+        .challenge-input-area { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
 
-        .difficulty-stats-container {
-            grid-column: 1 / -1;
-            margin-top: 10px;
-        }
-        .difficulty-stats-container h5 {
-            font-size: 1em;
-            color: var(--text-primary);
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        .difficulty-stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 10px;
-        }
-        .difficulty-stat-item {
-            background-color: var(--stat-item-bg);
-            padding: 10px;
-            border-radius: 6px;
-            font-size: 0.8em;
-            text-align: center;
-            box-shadow: var(--shadow-sm);
-        }
-        .difficulty-stat-item strong {
-            display: block;
-            margin-bottom: 5px;
-            color: var(--accent-primary);
-            font-weight: 600;
-        }
-        .difficulty-stat-item span {
-            display: block;
-            color: var(--text-secondary);
-            font-size: 0.9em;
-        }
-
-        .leaderboard-container {
-            grid-column: 1 / -1;
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px solid var(--input-border);
-            transition: border-color var(--transition-speed) ease;
-        }
-        .leaderboard-container h5 {
-            font-size: 1.1em;
-            color: var(--text-primary);
-            margin-bottom: 12px;
-            text-align: center;
-            transition: color var(--transition-speed) ease;
-        }
-        .leaderboard-filters {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
-        .leaderboard-filters label {
-            font-size: 0.9em;
-            color: var(--label-color);
-             transition: color var(--transition-speed) ease;
-        }
-        .leaderboard-filters select {
-            padding: 6px 10px;
-            border-radius: 6px;
-            border: 1px solid var(--input-border);
-            background-color: var(--leaderboard-filter-bg);
-            color: var(--text-primary);
-            font-family: 'Poppins', sans-serif;
-            font-size: 0.9em;
-            transition: border-color var(--transition-speed) ease, background-color var(--transition-speed) ease, color var(--transition-speed) ease;
-        }
-        #leaderboard-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85em;
-        }
-        #leaderboard-table th, #leaderboard-table td {
-            padding: 8px 5px;
-            text-align: left;
-            border-bottom: 1px solid var(--leaderboard-table-border);
-            color: var(--text-primary);
-            transition: color var(--transition-speed) ease, border-color var(--transition-speed) ease;
-        }
-        #leaderboard-table th {
-            color: var(--text-secondary);
-            font-weight: 600;
-            background-color: var(--container-bg); /* Match modal bg for sticky header */
-            position: sticky;
-            top: 0;
-            z-index: 1;
-        }
-        html.dark-theme #leaderboard-table th {
-             color: var(--text-secondary);
-             background-color: var(--container-bg);
-        }
-        #leaderboard-table td:nth-child(1) { width: 10%; text-align: right; padding-right:10px;} /* Rank */
-        #leaderboard-table td:nth-child(3) { text-align: right; padding-right: 5px; } /* Score */
-        #leaderboard-table td:nth-child(4) { text-align: center; font-size: 0.9em; } /* Details */
-
-        #leaderboard-loading, #no-leaderboard-data {
-            text-align: center;
-            color: var(--text-secondary);
-            font-style: italic;
-            padding: 10px;
-            transition: color var(--transition-speed) ease;
-        }
-        .challenge-input-area {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-
-        @media (max-width: 480px) {
-            .container { padding: 25px 15px; }
-            #theme-toggle-btn { top: 10px; right: 10px; font-size: 1.2em; }
-            h1 { font-size: 2em; } h2 { font-size: 1em; margin-bottom: 15px;}
-            .game-options-group h3 { font-size: 1em; }
-            .mode-selection, .duration-selection { gap: 10px; }
-            .difficulty-buttons button, .utility-button, #daily-challenge-btn, #start-challenge-btn, #go-to-submit-puzzle-btn { font-size: 1em; padding: 12px 20px; }
-            #challenge-code-input { width: calc(100% - 100px); }
-            #start-challenge-btn { width: auto; padding: 10px 15px; font-size: 0.9em;}
-
-
-            .modal-content { padding: 20px; max-width: 95%; }
-            #stats-modal .modal-content { padding: 15px; }
-            .modal-title { font-size: 1.2em; }
-            .stats-grid { grid-template-columns: 1fr; }
-            .difficulty-stats-container { grid-column: span 1; }
-            .difficulty-stats-grid { grid-template-columns: 1fr; }
-            .stat-item p { font-size: 1.2em;}
-            .stat-item h4 { font-size: 0.75em;}
-            #leaderboard-table { font-size: 0.8em; }
-            #leaderboard-table td:nth-child(1) { width: 15%;}
-            .challenge-input-area { flex-direction: column; }
-            #challenge-code-input { width: 100%; margin-right: 0; margin-bottom: 10px; }
-            #start-challenge-btn { width: 100%; }
-        }
+        @media (max-width: 480px) { /* ... (keep existing media queries) ... */ }
+        @media (max-width: 768px) { /* ... (keep existing media queries) ... */ }
     </style>
 </head>
 <body>
@@ -450,55 +258,120 @@
         </button>
 
         <h1>WordLinks</h1>
-        <h2>Select a difficulty, game mode, or try the Daily Challenge!</h2>
+        <div id="user-greeting"></div>
 
-        <div class="game-options-group">
-            <h3>Game Mode & Options</h3>
-            <div class="mode-selection">
-                <label for="mode-classic">
-                    <input type="radio" id="mode-classic" name="gameMode" value="classic" checked>
-                    <i class="fas fa-stopwatch"></i> Classic
-                </label>
-                <label for="mode-countdown">
-                    <input type="radio" id="mode-countdown" name="gameMode" value="countdown">
-                    <i class="fas fa-hourglass-half"></i> Countdown
-                </label>
+        <div id="auth-options" class="options-section" style="padding-bottom: 5px;">
+             <h3>Join or Continue</h3>
+            <div class="auth-options-buttons" style="display: flex; flex-direction: column; gap: 10px;">
+                <button id="show-login-modal-btn" class="action-button"><i class="fas fa-sign-in-alt"></i> Login</button>
+                <button id="show-register-modal-btn" class="action-button"><i class="fas fa-user-plus"></i> Register</button>
             </div>
-            <div id="countdown-settings">
-                <label for="countdown-duration-input">Duration (minutes): </label>
-                <input type="number" id="countdown-duration-input" value="3" min="1" max="10">
-            </div>
+            <p style="margin: 15px 0 10px; color: var(--text-secondary);">Or</p>
+            <button id="play-as-guest-btn" class="action-button"><i class="fas fa-user-secret"></i> Play as Guest</button>
         </div>
 
-        <div class="difficulty-buttons">
-            <button id="easy-btn" data-difficulty="easy"><i class="fas fa-seedling"></i> Easy</button>
-            <button id="medium-btn" data-difficulty="medium"><i class="fas fa-balance-scale"></i> Medium</button>
-            <button id="hard-btn" data-difficulty="hard"><i class="fas fa-fire"></i> Hard</button>
+        <div id="game-setup-section" style="display: none;">
+            <h2>Select a difficulty, game mode, or try the Daily Challenge!</h2>
+            <div class="options-section">
+                <h3>Game Mode & Options</h3>
+                <div class="mode-selection">
+                    <label for="mode-classic">
+                        <input type="radio" id="mode-classic" name="gameMode" value="classic" checked>
+                        <i class="fas fa-stopwatch"></i> Classic
+                    </label>
+                    <label for="mode-countdown">
+                        <input type="radio" id="mode-countdown" name="gameMode" value="countdown">
+                        <i class="fas fa-hourglass-half"></i> Countdown
+                    </label>
+                </div>
+                <div id="countdown-settings" style="display:none;">
+                    <label for="countdown-duration-input">Duration (minutes): </label>
+                    <input type="number" id="countdown-duration-input" value="3" min="1" max="10">
+                </div>
+            </div>
+            <div class="difficulty-buttons">
+                <button id="easy-btn" data-difficulty="easy" class="action-button"><i class="fas fa-seedling"></i> Easy</button>
+                <button id="medium-btn" data-difficulty="medium" class="action-button"><i class="fas fa-balance-scale"></i> Medium</button>
+                <button id="hard-btn" data-difficulty="hard" class="action-button"><i class="fas fa-fire"></i> Hard</button>
+            </div>
+            <button id="daily-challenge-btn" class="action-button"><i class="fas fa-calendar-day"></i> Daily Challenge</button>
         </div>
 
-        <button id="daily-challenge-btn"><i class="fas fa-calendar-day"></i> Daily Challenge</button>
-
-        <!-- Challenge a Friend Section - Integrated -->
-        <div class="game-options-group challenge-section">
-            <h3><i class="fas fa-user-friends"></i> Play a Challenge!</h3>
-            <div class="challenge-input-area">
-                <input type="text" id="challenge-code-input" placeholder="Enter Challenge Code (Puzzle ID)">
+        <div id="challenge-section-home" class="options-section challenge-section" style="display: none;">
+             <h3><i class="fas fa-user-friends"></i> Play a Challenge!</h3>
+             <div class="challenge-input-area">
+                <input type="text" id="challenge-code-input" placeholder="Enter Challenge Code">
                 <button id="start-challenge-btn"><i class="fas fa-bolt"></i> Start</button>
             </div>
         </div>
 
-        <button id="stats-btn" class="utility-button" style="margin-top: 25px;"><i class="fas fa-chart-bar"></i> View Stats & Leaderboard</button>
-
-        <!-- Link to Submit Puzzle Page - NEW -->
-        <a href="/submit-puzzle" id="go-to-submit-puzzle-btn" class="utility-button" style="margin-top: 15px; display: block;">
+        <button id="stats-btn" class="action-button" style="margin-top: 25px; display:none;"><i class="fas fa-chart-bar"></i> View Stats & Leaderboard</button>
+        <a href="/submit-puzzle" id="go-to-submit-puzzle-btn" class="action-button" style="margin-top: 15px; display: none;">
             <i class="fas fa-plus-circle"></i> Create & Submit Your Puzzle
         </a>
+        <button id="logout-btn" class="action-button" style="margin-top: 15px; display:none;"><i class="fas fa-sign-out-alt"></i> Logout</button>
 
-
-        <div id="loading-spinner"></div>
-        <p id="error-message-home"></p>
+        <div id="loading-spinner" style="display: none;"></div>
+        <p id="error-message-home" style="display: none;"></p>
     </div>
 
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-title">
+                <span>Login</span>
+                <button id="close-login-modal-btn" class="close-modal-btn" aria-label="Close login modal">×</button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-username">Username:</label>
+                    <input type="text" id="login-username" class="auth-modal-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password:</label>
+                    <input type="password" id="login-password" class="auth-modal-input" required>
+                </div>
+                <button type="submit" class="action-button auth-modal-button">Login</button>
+            </form>
+            <p id="login-error" class="auth-error"></p>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="register-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-title">
+                <span>Register New Account</span>
+                <button id="close-register-modal-btn" class="close-modal-btn" aria-label="Close registration modal">×</button>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="register-username">Username (3-50 chars, letters/numbers/_):</label>
+                    <input type="text" id="register-username" class="auth-modal-input" required minlength="3" maxlength="50" pattern="^[a-zA-Z0-9_]+$">
+                </div>
+                <div class="form-group">
+                    <label for="register-email">Email (Optional):</label>
+                    <input type="email" id="register-email" class="auth-modal-input">
+                </div>
+                <div class="form-group">
+                    <label for="register-full-name">Full Name (Optional):</label>
+                    <input type="text" id="register-full-name" class="auth-modal-input" maxlength="100">
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Password (min 8 chars):</label>
+                    <input type="password" id="register-password" class="auth-modal-input" required minlength="8">
+                </div>
+                 <div class="form-group">
+                    <label for="register-confirm-password">Confirm Password:</label>
+                    <input type="password" id="register-confirm-password" class="auth-modal-input" required minlength="8">
+                </div>
+                <button type="submit" class="action-button auth-modal-button">Register</button>
+            </form>
+            <p id="register-error" class="auth-error"></p>
+        </div>
+    </div>
+
+    <!-- Stats Modal -->
     <div id="stats-modal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-title">
@@ -508,90 +381,48 @@
             <div class="stats-grid">
                 <div class="stat-item"><h4>Wins</h4><p id="stats-wins">0</p></div>
                 <div class="stat-item"><h4>Losses</h4><p id="stats-losses">0</p></div>
-                <div class="stat-item">
-                    <h4>Win Rate</h4><p id="stats-win-rate">0%</p>
-                </div>
-                <div class="stat-item">
-                    <h4>Avg. Hints / Game</h4><p><span id="stats-avg-hints">0.0</span></p>
-                </div>
-                <div class="stat-item">
-                    <h4>Avg. Mistakes / Game</h4><p><span id="stats-avg-mistakes">0.0</span></p>
-                </div>
-                <div class="stat-item">
-                    <h4>Perfect Wins</h4>
-                    <p><span id="stats-perfect-wins">0</span><span id="perfect-wins-badge"></span></p>
-                </div>
-                <div class="stat-item">
-                    <h4>Current Streak</h4>
-                    <p><span id="stats-current-streak">0</span><span id="current-streak-stars" class="stars"></span></p>
-                </div>
-                <div class="stat-item">
-                    <h4>Max Streak</h4>
-                    <p><span id="stats-max-streak">0</span><span id="max-streak-stars" class="stars"></span></p>
-                </div>
+                <div class="stat-item"><h4>Win Rate</h4><p id="stats-win-rate">0%</p></div>
+                <div class="stat-item"><h4>Avg. Hints / Game</h4><p><span id="stats-avg-hints">0.0</span></p></div>
+                <div class="stat-item"><h4>Avg. Mistakes / Game</h4><p><span id="stats-avg-mistakes">0.0</span></p></div>
+                <div class="stat-item"><h4>Perfect Wins</h4><p><span id="stats-perfect-wins">0</span><span id="perfect-wins-badge"></span></p></div>
+                <div class="stat-item"><h4>Current Streak</h4><p><span id="stats-current-streak">0</span><span id="current-streak-stars" class="stars"></span></p></div>
+                <div class="stat-item"><h4>Max Streak</h4><p><span id="stats-max-streak">0</span><span id="max-streak-stars" class="stars"></span></p></div>
                 <div class="stat-item" style="grid-column: span 2;">
-                    <h4>Fastest Solve Time (Classic)</h4>
-                    <p id="stats-fastest-time">N/A</p>
+                    <h4>Fastest Solve Time (Classic)</h4><p id="stats-fastest-time">N/A</p>
                 </div>
-
-                <div class="difficulty-stats-container">
-                    <h5>Performance by Difficulty</h5>
-                    <div class="difficulty-stats-grid">
-                        <div class="difficulty-stat-item">
-                            <strong>Easy</strong>
-                            <span id="stats-easy-winrate">WR: N/A</span>
-                            <span id="stats-easy-avghints">Hints: N/A</span>
-                        </div>
-                        <div class="difficulty-stat-item">
-                            <strong>Medium</strong>
-                            <span id="stats-medium-winrate">WR: N/A</span>
-                            <span id="stats-medium-avghints">Hints: N/A</span>
-                        </div>
-                        <div class="difficulty-stat-item">
-                            <strong>Hard</strong>
-                            <span id="stats-hard-winrate">WR: N/A</span>
-                            <span id="stats-hard-avghints">Hints: N/A</span>
-                        </div>
-                    </div>
+            </div>
+            <div class="difficulty-stats-container">
+                <h5>Performance by Difficulty</h5>
+                <div class="difficulty-stats-grid">
+                    <div class="difficulty-stat-item"><strong>Easy</strong> <span id="stats-easy-winrate">WR: N/A</span> <span id="stats-easy-avghints">Hints: N/A</span> <span id="stats-easy-avgtime">Time: N/A</span></div>
+                    <div class="difficulty-stat-item"><strong>Medium</strong> <span id="stats-medium-winrate">WR: N/A</span> <span id="stats-medium-avghints">Hints: N/A</span> <span id="stats-medium-avgtime">Time: N/A</span></div>
+                    <div class="difficulty-stat-item"><strong>Hard</strong> <span id="stats-hard-winrate">WR: N/A</span> <span id="stats-hard-avghints">Hints: N/A</span> <span id="stats-hard-avgtime">Time: N/A</span></div>
                 </div>
-
-                <div class="leaderboard-container">
-                    <h5>Top Scores</h5>
-                    <div class="leaderboard-filters">
-                        <label for="leaderboard-difficulty-filter">Difficulty:</label>
-                        <select id="leaderboard-difficulty-filter">
-                            <option value="">All</option>
-                            <option value="easy">Easy</option>
-                            <option value="medium">Medium</option>
-                            <option value="hard">Hard</option>
-                            <option value="Daily Challenge">Daily Challenge</option>
-                        </select>
-                        <label for="leaderboard-mode-filter" style="margin-left: 10px;">Mode:</label>
-                        <select id="leaderboard-mode-filter">
-                            <option value="classic" selected>Classic</option>
-                            <option value="countdown">Countdown</option>
-                             <option value="challenge">Challenge</option>
-                        </select>
-                    </div>
-                    <div id="leaderboard-loading" style="display:none;">Loading leaderboard...</div>
-                    <table id="leaderboard-table">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Name</th>
-                                <th>Score</th>
-                                <th>Details</th>
-                            </tr>
-                        </thead>
-                        <tbody id="leaderboard-body"></tbody>
-                    </table>
-                    <p id="no-leaderboard-data" style="display:none;">No scores yet for this selection!</p>
+            </div>
+            <div class="leaderboard-container">
+                <h5>Top Scores</h5>
+                <div class="leaderboard-filters">
+                    <label for="leaderboard-difficulty-filter">Difficulty:</label>
+                    <select id="leaderboard-difficulty-filter">
+                        <option value="">All</option> <option value="easy">Easy</option> <option value="medium">Medium</option> <option value="hard">Hard</option> <option value="Daily Challenge">Daily Challenge</option>
+                    </select>
+                    <label for="leaderboard-mode-filter" style="margin-left: 10px;">Mode:</label>
+                    <select id="leaderboard-mode-filter">
+                        <option value="classic" selected>Classic</option> <option value="countdown">Countdown</option> <option value="challenge">Challenge</option>
+                    </select>
                 </div>
+                <div id="leaderboard-loading" style="display:none;">Loading leaderboard...</div>
+                <table id="leaderboard-table">
+                    <thead><tr><th>#</th><th>Name</th><th>Score</th><th>Details</th></tr></thead>
+                    <tbody id="leaderboard-body"></tbody>
+                </table>
+                <p id="no-leaderboard-data" style="display:none;">No scores yet for this selection!</p>
             </div>
         </div>
     </div>
 
     <script>
+    try {
         document.addEventListener('DOMContentLoaded', () => {
             const difficultyButtons = document.querySelectorAll('.difficulty-buttons button');
             const dailyChallengeBtn = document.getElementById('daily-challenge-btn');
@@ -611,57 +442,145 @@
             const leaderboardModeFilter = document.getElementById('leaderboard-mode-filter');
             const challengeCodeInput = document.getElementById('challenge-code-input');
             const startChallengeBtn = document.getElementById('start-challenge-btn');
-            const goToSubmitPuzzleBtn = document.getElementById('go-to-submit-puzzle-btn'); // Get the new button/link
+            const goToSubmitPuzzleBtn = document.getElementById('go-to-submit-puzzle-btn');
+
+            const authOptionsDiv = document.getElementById('auth-options');
+            const gameSetupSection = document.getElementById('game-setup-section');
+            const challengeSectionHome = document.getElementById('challenge-section-home');
+            const userGreetingEl = document.getElementById('user-greeting');
+            const logoutBtn = document.getElementById('logout-btn');
+            const showLoginModalBtn = document.getElementById('show-login-modal-btn');
+            const loginModal = document.getElementById('login-modal');
+            const closeLoginModalBtn = document.getElementById('close-login-modal-btn');
+            const loginForm = document.getElementById('login-form');
+            const loginErrorEl = document.getElementById('login-error');
+            const showRegisterModalBtn = document.getElementById('show-register-modal-btn');
+            const registerModal = document.getElementById('register-modal');
+            const closeRegisterModalBtn = document.getElementById('close-register-modal-btn');
+            const registerForm = document.getElementById('register-form');
+            const registerErrorEl = document.getElementById('register-error');
+            const playAsGuestBtn = document.getElementById('play-as-guest-btn');
 
             const PUZZLE_STORAGE_KEY = 'currentPuzzle';
             const STATS_STORAGE_KEY = 'wordLinksGameStats';
             const THEME_STORAGE_KEY = 'wordLinksTheme';
+            const TOKEN_KEY = 'wordlinks_auth_token';
             const sunIconClass = 'fa-sun';
             const moonIconClass = 'fa-moon';
 
+            let currentOpenAuthModal = null;
+            // let currentOpenStatsModal = null; // Replaced by currentOpenAuthModal for general modal Esc handling
+
+            // --- Utility Functions ---
             function showLoading(show = true) {
                 if (loadingSpinner) loadingSpinner.style.display = show ? 'block' : 'none';
-                difficultyButtons.forEach(btn => btn.disabled = show);
-                if (dailyChallengeBtn) dailyChallengeBtn.disabled = show;
-                if (statsBtn) statsBtn.disabled = show;
-                if (startChallengeBtn) startChallengeBtn.disabled = show;
-                if (goToSubmitPuzzleBtn) goToSubmitPuzzleBtn.style.pointerEvents = show ? 'none' : 'auto'; // Disable link clicks
+                const allActionButtons = document.querySelectorAll('.action-button'); // Select all action buttons
+                allActionButtons.forEach(btn => { if(btn) btn.disabled = show; });
+                if (goToSubmitPuzzleBtn) goToSubmitPuzzleBtn.style.pointerEvents = show ? 'none' : 'auto';
                 if (errorMessageHome) errorMessageHome.style.display = 'none';
             }
 
             function showError(message) {
-                if (errorMessageHome) {
-                    errorMessageHome.textContent = message;
-                    errorMessageHome.style.display = 'block';
-                }
+                if (errorMessageHome) { errorMessageHome.textContent = message; errorMessageHome.style.display = 'block'; }
                 showLoading(false);
             }
 
+            // --- Auth Functions ---
+            function storeToken(token) { localStorage.setItem(TOKEN_KEY, token); }
+            function getToken() { return localStorage.getItem(TOKEN_KEY); }
+            function removeToken() { localStorage.removeItem(TOKEN_KEY); }
+
+            function updateUIForLoggedInUser(user) {
+                if (userGreetingEl) userGreetingEl.textContent = `Welcome, ${user.username}!`;
+                if (authOptionsDiv) authOptionsDiv.style.display = 'none';
+                if (gameSetupSection) gameSetupSection.style.display = 'block';
+                if (challengeSectionHome) challengeSectionHome.style.display = 'block';
+                if (statsBtn) statsBtn.style.display = 'flex';
+                if (goToSubmitPuzzleBtn) goToSubmitPuzzleBtn.style.display = 'flex'; // Use flex for <a> styled as button
+                if (logoutBtn) logoutBtn.style.display = 'flex';
+            }
+
+            function updateUIForGuest() {
+                if (userGreetingEl) userGreetingEl.textContent = 'Welcome, Guest!';
+                if (authOptionsDiv) authOptionsDiv.style.display = 'block';
+                if (gameSetupSection) gameSetupSection.style.display = 'none';
+                if (challengeSectionHome) challengeSectionHome.style.display = 'none';
+                if (statsBtn) statsBtn.style.display = 'flex';
+                if (goToSubmitPuzzleBtn) goToSubmitPuzzleBtn.style.display = 'flex';
+                if (logoutBtn) logoutBtn.style.display = 'none';
+            }
+
+            async function fetchCurrentUser() {
+                const token = getToken();
+                if (!token) { updateUIForGuest(); return null; }
+                showLoading(true);
+                try {
+                    const response = await fetch('/users/me', { headers: { 'Authorization': `Bearer ${token}` } });
+                    if (response.ok) {
+                        const user = await response.json();
+                        updateUIForLoggedInUser(user); return user;
+                    } else { removeToken(); updateUIForGuest(); if (response.status === 401) console.warn("Token invalid or expired."); return null; }
+                } catch (error) { console.error("Error fetching current user:", error); removeToken(); updateUIForGuest(); return null; }
+                finally { showLoading(false); }
+            }
+
+            function showAuthError(element, message) {
+                if (element) { element.textContent = message; element.style.display = 'block'; }
+            }
+            function clearAuthError(element) {
+                if (element) { element.textContent = ''; element.style.display = 'none'; }
+            }
+
+            // --- Generic Modal Functions ---
+            function openModal(modalElement, focusElement = null) {
+                if(currentOpenAuthModal) closeModal(currentOpenAuthModal); // Close any other open modal first
+                if (modalElement) {
+                    modalElement.style.display = 'flex';
+                    setTimeout(() => modalElement.classList.add('modal-open'), 10);
+                    currentOpenAuthModal = modalElement; // Use general tracker
+                    const firstFocusable = modalElement.querySelector('input, button, select, a[href]');
+                    if (focusElement && typeof focusElement.focus === 'function') { try{focusElement.focus();} catch(e){} }
+                    else if (firstFocusable) try{firstFocusable.focus();} catch(e){}
+                    document.addEventListener('keydown', handleModalKeydown);
+                }
+            }
+            function closeModal(modalElement) {
+                if (modalElement && currentOpenAuthModal === modalElement) { // Only close if it's the current one
+                    modalElement.classList.remove('modal-open');
+                    setTimeout(() => {if(modalElement && !modalElement.classList.contains('modal-open')) modalElement.style.display = 'none';}, 300);
+                    currentOpenAuthModal = null;
+                    document.removeEventListener('keydown', handleModalKeydown);
+                     // Clear specific modal errors on close
+                    if(modalElement === loginModal && loginErrorEl) clearAuthError(loginErrorEl);
+                    if(modalElement === registerModal && registerErrorEl) clearAuthError(registerErrorEl);
+                }
+            }
+             function handleModalKeydown(event) { // General handler for Esc on any open modal
+                if (event.key === 'Escape' && currentOpenAuthModal) {
+                    closeModal(currentOpenAuthModal);
+                }
+            }
+
+
+            // --- Game Start Logic ---
             async function fetchAndStartGame(difficulty, isDaily = false, isChallenge = false, challengeId = null) {
                 showLoading(true);
                 let selectedGameMode = 'classic';
                 let countdownDurationSeconds = 0;
 
                 if (!isDaily && !isChallenge) {
-                    document.querySelectorAll('input[name="gameMode"]').forEach(radio => {
-                        if (radio.checked) selectedGameMode = radio.value;
-                    });
+                    gameModeRadios.forEach(radio => { if (radio.checked) selectedGameMode = radio.value; });
                     if (selectedGameMode === 'countdown') {
                         const minutes = parseInt(countdownDurationInput.value, 10);
-                        if (isNaN(minutes) || minutes < 1 || minutes > 10) {
-                            showError("Valid countdown duration is 1-10 minutes.");
-                            showLoading(false); return;
-                        }
+                        if (isNaN(minutes) || minutes < 1 || minutes > 10) { showError("Valid countdown: 1-10 min."); showLoading(false); return; }
                         countdownDurationSeconds = minutes * 60;
                     }
-                } else if (isChallenge) {
-                    selectedGameMode = 'challenge';
-                } else if (isDaily) {
-                    selectedGameMode = 'daily';
-                }
+                } else if (isChallenge) { selectedGameMode = 'challenge'; }
+                else if (isDaily) { selectedGameMode = 'daily'; }
 
                 let performanceDataForBackend = null;
-                if (!isDaily && !isChallenge && difficulty) {
+                const token = getToken();
+                if (!isDaily && !isChallenge && difficulty && token) {
                     const storedStats = localStorage.getItem(STATS_STORAGE_KEY);
                     if (storedStats) {
                         try {
@@ -684,135 +603,81 @@
                 try {
                     let endpoint = '';
                     let fetchOptions = {};
-
                     if (isChallenge && challengeId) {
                         sessionStorage.removeItem(PUZZLE_STORAGE_KEY);
                         sessionStorage.setItem('isChallengeGame', 'true');
                         sessionStorage.removeItem('isDailyChallenge');
-                        sessionStorage.setItem('gameMode', 'challenge'); // Ensure gameMode is set for challenge
-                        document.body.classList.add('fade-out'); // Add fade for navigation
+                        sessionStorage.setItem('gameMode', 'challenge');
+                        document.body.classList.add('fade-out');
                         setTimeout(() => {window.location.href = `/game?challenge=${encodeURIComponent(challengeId)}`;},300);
                         return;
                     } else if (isDaily) {
-                        endpoint = '/api/daily_challenge';
-                        fetchOptions = { method: 'GET' };
+                        endpoint = '/api/daily_challenge'; fetchOptions = { method: 'GET' };
                     } else {
                         endpoint = '/api/generate_puzzle';
                         fetchOptions = {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                difficulty: difficulty,
-                                user_performance_summary: performanceDataForBackend
-                            })
+                            method: 'POST', headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ difficulty: difficulty, user_performance_summary: performanceDataForBackend })
                         };
                     }
-
                     const response = await fetch(endpoint, fetchOptions);
                     if (!response.ok) {
                         const errorData = await response.json().catch(() => ({ detail: `HTTP error ${response.status}` }));
                         throw new Error(errorData.detail || `Failed to load puzzle: ${response.statusText}`);
                     }
                     const puzzleData = await response.json();
-
                     if (puzzleData && puzzleData.puzzle_id && puzzleData.words) {
                         sessionStorage.setItem(PUZZLE_STORAGE_KEY, JSON.stringify(puzzleData));
                         sessionStorage.setItem('gameMode', selectedGameMode);
                         if (selectedGameMode === 'countdown' && countdownDurationSeconds > 0) {
                             sessionStorage.setItem('countdownDuration', countdownDurationSeconds.toString());
-                        } else {
-                            sessionStorage.removeItem('countdownDuration');
-                        }
+                        } else { sessionStorage.removeItem('countdownDuration'); }
                         sessionStorage.setItem('isDailyChallenge', isDaily.toString());
                         sessionStorage.removeItem('isChallengeGame');
-
                         document.body.classList.add('fade-out');
                         setTimeout(() => { window.location.href = '/game'; }, 300);
-                    } else {
-                        throw new Error("Received invalid puzzle data from server.");
-                    }
-                } catch (error) {
-                    console.error("Failed to start game:", error);
-                    showError(`Failed to start game: ${error.message}. Please try again.`);
-                } finally {
-                    if (!(isChallenge && challengeId)) {
-                        showLoading(false);
-                    }
-                }
+                    } else { throw new Error("Received invalid puzzle data from server."); }
+                } catch (error) { console.error("Failed to start game:", error); showError(`Failed to start game: ${error.message}. Please try again.`);
+                } finally { if (!(isChallenge && challengeId)) { showLoading(false); } }
             }
 
-            difficultyButtons.forEach(button => {
-                button.addEventListener('click', () => fetchAndStartGame(button.dataset.difficulty, false));
-            });
-
-            if (dailyChallengeBtn) {
-                dailyChallengeBtn.addEventListener('click', () => fetchAndStartGame(null, true));
-            }
-
-            if (startChallengeBtn) {
-                startChallengeBtn.addEventListener('click', () => {
-                    const challengeCode = challengeCodeInput.value.trim();
-                    if (challengeCode) {
-                        fetchAndStartGame(null, false, true, challengeCode);
-                    } else {
-                        showError("Please enter a challenge code.");
-                    }
-                });
-            }
-
-            gameModeRadios.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    if (countdownSettingsDiv) {
-                        countdownSettingsDiv.style.display = this.value === 'countdown' && this.checked ? 'block' : 'none';
-                    }
-                });
-            });
-            const modeCountdownRadio = document.getElementById('mode-countdown');
-            if (modeCountdownRadio && countdownSettingsDiv) {
-                countdownSettingsDiv.style.display = modeCountdownRadio.checked ? 'block' : 'none';
-            }
-
+            // --- Stats Modal Functions ---
             function displayStats() {
                 const storedStats = localStorage.getItem(STATS_STORAGE_KEY);
                 let defaultPerformanceSub = { plays: 0, wins: 0, totalHints: 0, totalMistakes: 0, totalTime: 0 };
                 let stats = {
                     wins: 0, losses: 0, currentStreak: 0, maxStreak: 0, fastestTime: null, perfectWins: 0,
-                    performance: {
-                        easy: { ...defaultPerformanceSub },
-                        medium: { ...defaultPerformanceSub },
-                        hard: { ...defaultPerformanceSub }
-                    }
+                    performance: { easy: { ...defaultPerformanceSub }, medium: { ...defaultPerformanceSub }, hard: { ...defaultPerformanceSub }}
                 };
                 if (storedStats) {
                     try {
                         const parsed = JSON.parse(storedStats);
-                        stats = { ...stats, ...parsed, performance: { ...stats.performance, ...parsed.performance }};
-                         // Ensure nested performance objects are also merged correctly
-                        for (const diff of ['easy', 'medium', 'hard']) {
-                            stats.performance[diff] = { ...defaultPerformanceSub, ...(parsed.performance?.[diff] || {}) };
-                        }
+                        stats = { ...stats, ...parsed };
+                        stats.performance = {
+                            easy: { ...defaultPerformanceSub, ...(parsed.performance?.easy || {}) },
+                            medium: { ...defaultPerformanceSub, ...(parsed.performance?.medium || {}) },
+                            hard: { ...defaultPerformanceSub, ...(parsed.performance?.hard || {}) }
+                        };
                     } catch(e) { console.error("Error parsing stats, using defaults.", e); }
                 }
-
                 document.getElementById('stats-wins').textContent = stats.wins;
                 document.getElementById('stats-losses').textContent = stats.losses;
                 const totalPlaysOverall = stats.wins + stats.losses;
                 const winRateOverall = totalPlaysOverall > 0 ? ((stats.wins / totalPlaysOverall) * 100).toFixed(0) : 0;
                 document.getElementById('stats-win-rate').textContent = `${winRateOverall}%`;
-
                 let totalHintsAll = 0, totalMistakesAll = 0, playsWithPerfData = 0;
                 for (const diff in stats.performance) {
                     if (stats.performance.hasOwnProperty(diff) && stats.performance[diff].plays > 0) {
-                        totalHintsAll += stats.performance[diff].totalHints;
-                        totalMistakesAll += stats.performance[diff].totalMistakes;
+                        totalHintsAll += (stats.performance[diff].totalHints || 0);
+                        totalMistakesAll += (stats.performance[diff].totalMistakes || 0);
                         playsWithPerfData += stats.performance[diff].plays;
                     }
                 }
                 document.getElementById('stats-avg-hints').textContent = playsWithPerfData > 0 ? (totalHintsAll / playsWithPerfData).toFixed(1) : "0.0";
                 document.getElementById('stats-avg-mistakes').textContent = playsWithPerfData > 0 ? (totalMistakesAll / playsWithPerfData).toFixed(1) : "0.0";
-                document.getElementById('stats-current-streak').innerHTML = `${stats.currentStreak} ${getStreakStarsHTML(stats.currentStreak)}`;
-                document.getElementById('stats-max-streak').innerHTML = `${stats.maxStreak} ${getStreakStarsHTML(stats.maxStreak)}`;
-                document.getElementById('stats-perfect-wins').textContent = stats.perfectWins || 0;
+                if(document.getElementById('stats-current-streak')) document.getElementById('stats-current-streak').innerHTML = `${stats.currentStreak} <span class="stars">${getStreakStarsHTML(stats.currentStreak)}</span>`;
+                if(document.getElementById('stats-max-streak')) document.getElementById('stats-max-streak').innerHTML = `${stats.maxStreak} <span class="stars">${getStreakStarsHTML(stats.maxStreak)}</span>`;
+                if(document.getElementById('stats-perfect-wins')) document.getElementById('stats-perfect-wins').textContent = stats.perfectWins || 0;
                 const perfectWinsBadgeEl = document.getElementById('perfect-wins-badge');
                 if(perfectWinsBadgeEl) perfectWinsBadgeEl.innerHTML = (stats.perfectWins || 0) > 0 ? `<span class="badge badge-perfect">Perfect!</span>` : '';
                 const fastestTimeEl = document.getElementById('stats-fastest-time');
@@ -822,114 +687,162 @@
                     const perf = stats.performance[diff];
                     const winRateDiff = perf.plays > 0 ? ((perf.wins / perf.plays) * 100).toFixed(0) + "%" : "N/A";
                     const avgHintsDiff = perf.plays > 0 ? (perf.totalHints / perf.plays).toFixed(1) : "N/A";
+                    const avgSolveTimeDiff = perf.wins > 0 ? (perf.totalTime / perf.wins).toFixed(0) + 's' : 'N/A';
                     if(document.getElementById(`stats-${diff}-winrate`)) document.getElementById(`stats-${diff}-winrate`).textContent = `WR: ${winRateDiff}`;
                     if(document.getElementById(`stats-${diff}-avghints`)) document.getElementById(`stats-${diff}-avghints`).textContent = `Hints: ${avgHintsDiff}`;
+                    if(document.getElementById(`stats-${diff}-avgtime`)) document.getElementById(`stats-${diff}-avgtime`).textContent = `Time: ${avgSolveTimeDiff}`;
                 });
             }
-
             function getStreakStarsHTML(streak) {
-                let starsHTML = '';
-                const starCount = Math.min(Math.floor(streak / 2), 3);
-                for (let i = 0; i < starCount; i++) starsHTML += '<i class="fas fa-star"></i>';
-                return starsHTML;
+                let starsHTML = ''; const starCount = Math.min(Math.floor(streak / 2), 3);
+                for (let i = 0; i < starCount; i++) starsHTML += '<i class="fas fa-star"></i>'; return starsHTML;
             }
-
             async function fetchAndDisplayLeaderboard() {
                 if (!leaderboardBody || !leaderboardLoading || !noLeaderboardDataMsg || !leaderboardDifficultyFilter || !leaderboardModeFilter) return;
-                leaderboardLoading.style.display = 'block';
-                leaderboardBody.innerHTML = '';
-                noLeaderboardDataMsg.style.display = 'none';
-
+                leaderboardLoading.style.display = 'block'; leaderboardBody.innerHTML = ''; noLeaderboardDataMsg.style.display = 'none';
                 const selectedDifficulty = leaderboardDifficultyFilter.value;
                 const selectedMode = leaderboardModeFilter.value;
                 let apiUrl = `/api/leaderboard?mode=${encodeURIComponent(selectedMode)}&limit=10`;
                 if (selectedDifficulty) apiUrl += `&difficulty=${encodeURIComponent(selectedDifficulty)}`;
-
                 try {
                     const response = await fetch(apiUrl);
-                    if (!response.ok) {
-                        const errorData = await response.json().catch(() => ({detail: "Failed to load leaderboard."}));
-                        throw new Error(errorData.detail);
-                    }
+                    if (!response.ok) { const errorData = await response.json().catch(() => ({detail: "Failed to load."})); throw new Error(errorData.detail); }
                     const data = await response.json();
                     if (data.leaderboard && data.leaderboard.length > 0) {
                         data.leaderboard.forEach((entry, index) => {
                             const row = leaderboardBody.insertRow();
-                            row.insertCell().textContent = index + 1;
-                            row.insertCell().textContent = entry.player_name;
+                            row.insertCell().textContent = index + 1; row.insertCell().textContent = entry.player_name;
                             row.insertCell().textContent = entry.score;
                             let details = entry.difficulty || '';
                             if (entry.time_taken_seconds !== null && entry.time_taken_seconds !== undefined) {
-                                 const minutes = Math.floor(entry.time_taken_seconds / 60);
-                                 const seconds = entry.time_taken_seconds % 60;
+                                 const minutes = Math.floor(entry.time_taken_seconds / 60); const seconds = entry.time_taken_seconds % 60;
                                  details += (details ? ' - ' : '') + `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
                             }
                             row.insertCell().textContent = details;
                         });
-                    } else {
-                        noLeaderboardDataMsg.style.display = 'block';
-                    }
-                } catch (error) {
-                    console.error("Error fetching leaderboard:", error);
-                    if(noLeaderboardDataMsg) { noLeaderboardDataMsg.textContent = `Error: ${error.message}`; noLeaderboardDataMsg.style.display = 'block'; }
-                } finally {
-                    if(leaderboardLoading) leaderboardLoading.style.display = 'none';
-                }
+                    } else { noLeaderboardDataMsg.style.display = 'block'; }
+                } catch (error) { console.error("Error fetching leaderboard:", error); if(noLeaderboardDataMsg) { noLeaderboardDataMsg.textContent = `Error: ${error.message}`; noLeaderboardDataMsg.style.display = 'block'; }
+                } finally { if(leaderboardLoading) leaderboardLoading.style.display = 'none'; }
             }
-
             function openStatsModal() {
-                if(!statsModal) return;
-                displayStats();
-                fetchAndDisplayLeaderboard();
-                statsModal.style.display = 'flex';
-                setTimeout(() => statsModal.classList.add('modal-open'), 10);
+                if(!statsModal) return; displayStats();
+                fetchAndDisplayLeaderboard(leaderboardDifficultyFilter.value || null, leaderboardModeFilter.value);
+                openModal(statsModal, leaderboardDifficultyFilter); // Use generic openModal
             }
-            function closeStatsModal() {
-                if(!statsModal) return;
-                statsModal.classList.remove('modal-open');
-                setTimeout(() => { if(statsModal && !statsModal.classList.contains('modal-open')) statsModal.style.display = 'none'; }, 300);
+            // Close function for stats modal - using generic closeModal
+            // function closeStatsModal() { closeModal(statsModal); }
+
+
+            // --- Event Listeners ---
+            difficultyButtons.forEach(button => button.addEventListener('click', () => fetchAndStartGame(button.dataset.difficulty, false)));
+            if (dailyChallengeBtn) dailyChallengeBtn.addEventListener('click', () => fetchAndStartGame(null, true));
+            if (startChallengeBtn) {
+                startChallengeBtn.addEventListener('click', () => {
+                    const challengeCode = challengeCodeInput.value.trim();
+                    if (challengeCode) fetchAndStartGame(null, false, true, challengeCode);
+                    else showError("Please enter a challenge code.");
+                });
+            }
+            gameModeRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (countdownSettingsDiv) countdownSettingsDiv.style.display = this.value === 'countdown' && this.checked ? 'block' : 'none';
+                });
+            });
+            const modeCountdownRadio = document.getElementById('mode-countdown'); // Re-check after DOM fully parsed
+            if (modeCountdownRadio && countdownSettingsDiv) {
+                countdownSettingsDiv.style.display = modeCountdownRadio.checked ? 'block' : 'none';
             }
 
             if (statsBtn) statsBtn.addEventListener('click', openStatsModal);
-            if (closeStatsModalBtn) closeStatsModalBtn.addEventListener('click', closeStatsModal);
-            if (statsModal) {
-                statsModal.addEventListener('click', (event) => { if (event.target === statsModal) closeStatsModal(); });
-            }
-            document.addEventListener('keydown', (event) => {
-                if (event.key === 'Escape' && statsModal && statsModal.classList.contains('modal-open')) {
-                    closeStatsModal();
-                }
-            });
+            if (closeStatsModalBtn) closeStatsModalBtn.addEventListener('click', () => closeModal(statsModal)); // Use generic
+            
             if (leaderboardDifficultyFilter) leaderboardDifficultyFilter.addEventListener('change', fetchAndDisplayLeaderboard);
             if (leaderboardModeFilter) leaderboardModeFilter.addEventListener('change', fetchAndDisplayLeaderboard);
 
+            if (showLoginModalBtn) showLoginModalBtn.addEventListener('click', () => openModal(loginModal)); // Use generic openModal
+            if (closeLoginModalBtn) closeLoginModalBtn.addEventListener('click', () => closeModal(loginModal)); // Use generic closeModal
+            if(loginModal) loginModal.addEventListener('click', (e) => { if (e.target === loginModal) closeModal(loginModal); });
+            if (showRegisterModalBtn) showRegisterModalBtn.addEventListener('click', () => openModal(registerModal));
+            if (closeRegisterModalBtn) closeRegisterModalBtn.addEventListener('click', () => closeModal(registerModal));
+            if(registerModal) registerModal.addEventListener('click', (e) => { if (e.target === registerModal) closeModal(registerModal); });
 
-            function applyTheme(theme) {
-                if (theme === 'dark') {
-                    document.documentElement.classList.add('dark-theme');
-                    if (themeToggleBtn) themeToggleBtn.innerHTML = `<i class="fas ${sunIconClass}"></i>`;
-                } else {
-                    document.documentElement.classList.remove('dark-theme');
-                    if (themeToggleBtn) themeToggleBtn.innerHTML = `<i class="fas ${moonIconClass}"></i>`;
-                }
-                localStorage.setItem(THEME_STORAGE_KEY, theme);
+            if (loginForm) {
+                loginForm.addEventListener('submit', async (e) => {
+                    e.preventDefault(); clearAuthError(loginErrorEl);
+                    const username = loginForm.querySelector('#login-username').value;
+                    const password = loginForm.querySelector('#login-password').value;
+                    const formData = new FormData(); formData.append('username', username); formData.append('password', password);
+                    try {
+                        const response = await fetch('/auth/token', { method: 'POST', body: formData });
+                        const data = await response.json();
+                        if (response.ok) { storeToken(data.access_token); await fetchCurrentUser(); closeModal(loginModal); }
+                        else { showAuthError(loginErrorEl, data.detail || "Login failed."); }
+                    } catch (error) { showAuthError(loginErrorEl, "An error occurred."); console.error("Login error:", error); }
+                });
+            }
+            if (registerForm) {
+                registerForm.addEventListener('submit', async (e) => {
+                    e.preventDefault(); clearAuthError(registerErrorEl);
+                    const username = registerForm.querySelector('#register-username').value;
+                    const email = registerForm.querySelector('#register-email').value;
+                    const fullName = registerForm.querySelector('#register-full-name').value;
+                    const password = registerForm.querySelector('#register-password').value;
+                    const confirmPassword = registerForm.querySelector('#register-confirm-password').value;
+                    if (password !== confirmPassword) { showAuthError(registerErrorEl, "Passwords do not match."); return; }
+                    if (password.length < 8) { showAuthError(registerErrorEl, "Password min 8 chars."); return; }
+                    try {
+                        const response = await fetch('/auth/register', {
+                            method: 'POST', headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ username, email: email || null, full_name: fullName || null, password })
+                        });
+                        const data = await response.json();
+                        if (response.ok) {
+                            showAuthError(registerErrorEl, "Registration successful! Please login.");
+                            if(registerErrorEl) registerErrorEl.style.color = 'var(--success-text)';
+                            setTimeout(() => { closeModal(registerModal); openModal(loginModal); clearAuthError(registerErrorEl); if(registerErrorEl) registerErrorEl.style.color = 'var(--error-text)';}, 2500);
+                        } else { showAuthError(registerErrorEl, data.detail || "Registration failed."); }
+                    } catch (error) { showAuthError(registerErrorEl, "An error occurred."); console.error("Register error:", error); }
+                });
+            }
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    removeToken();
+                    sessionStorage.clear();
+                    localStorage.removeItem(STATS_STORAGE_KEY);
+                    updateUIForGuest();
+                });
+            }
+            if (playAsGuestBtn) {
+                playAsGuestBtn.addEventListener('click', () => {
+                    if (authOptionsDiv) authOptionsDiv.style.display = 'none';
+                    if (gameSetupSection) gameSetupSection.style.display = 'block';
+                    if (challengeSectionHome) challengeSectionHome.style.display = 'block';
+                    if (statsBtn) statsBtn.style.display = 'flex';
+                    if (goToSubmitPuzzleBtn) goToSubmitPuzzleBtn.style.display = 'flex';
+                });
             }
 
+            function applyTheme(theme) {
+                if (theme === 'dark') { document.documentElement.classList.add('dark-theme'); if (themeToggleBtn) themeToggleBtn.innerHTML = `<i class="fas ${sunIconClass}"></i>`; }
+                else { document.documentElement.classList.remove('dark-theme'); if (themeToggleBtn) themeToggleBtn.innerHTML = `<i class="fas ${moonIconClass}"></i>`; }
+                localStorage.setItem(THEME_STORAGE_KEY, theme);
+            }
             if (themeToggleBtn) {
                 themeToggleBtn.addEventListener('click', () => {
-                    if (document.documentElement.classList.contains('dark-theme')) {
-                        applyTheme('light');
-                    } else {
-                        applyTheme('dark');
-                    }
+                    if (document.documentElement.classList.contains('dark-theme')) applyTheme('light');
+                    else applyTheme('dark');
                 });
             }
             const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
             const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-            if (savedTheme) { applyTheme(savedTheme); }
-            else if (prefersDark) { applyTheme('dark'); }
-            else { applyTheme('light'); }
+            if (savedTheme) applyTheme(savedTheme); else if (prefersDark) applyTheme('dark'); else applyTheme('light');
+
+            fetchCurrentUser(); // Initial UI setup based on token
         });
+    } catch (e) {
+        console.error("GLOBAL CATCH (Home Page): Critical error:", e);
+        document.body.innerHTML = `<div style="padding:20px;text-align:center;"><h1>Oops!</h1><p>A critical error occurred: ${e.message}</p></div>`;
+    }
     </script>
 </body>
 </html>
