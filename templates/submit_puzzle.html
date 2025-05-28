@@ -9,7 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Basic styles - copy from home.html or game.html and adapt */
         :root { /* Light Theme (Default) */
             --bg-gradient-start: #f8f9fa; --bg-gradient-end: #ffffff;
             --container-bg: #ffffff; --text-primary: #343a40; --text-secondary: #6c757d;
@@ -20,13 +19,17 @@
             --shadow-lg: 0 10px 20px rgba(0,0,0,0.1);--transition-speed: 0.25s;
             --error-bg: #f8d7da; --error-text: #842029; --error-border: #f5c2c7;
             --success-bg: #d1e7dd; --success-text: #0f5132; --success-border: #badbcc;
+            --theme-toggle-btn-color: var(--text-secondary);
+            --theme-toggle-btn-hover-color: var(--text-primary);
         }
-        html.dark-theme {
+        html.dark-theme { /* Dark Theme Overrides */
             --bg-gradient-start: #212529; --bg-gradient-end: #343a40;
             --container-bg: #495057; --text-primary: #f8f9fa; --text-secondary: #adb5bd;
             --accent-primary: #0d6efd; --input-bg: #343a40; --input-border: #6c757d;
             --error-bg: #591C21; --error-text: #f5c2c7; --error-border: #c87079;
             --success-bg: #14452F; --success-text: #a3d4b8; --success-border: #2f6f4f;
+            --theme-toggle-btn-color: var(--text-secondary);
+            --theme-toggle-btn-hover-color: var(--text-primary);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -35,57 +38,80 @@
             background: linear-gradient(to bottom, var(--bg-gradient-start), var(--bg-gradient-end));
             color: var(--text-primary); padding: 20px; min-height: 100vh;
             display: flex; align-items: center; justify-content: center;
+            transition: background var(--transition-speed) ease, color var(--transition-speed) ease;
         }
         .container {
-            background: var(--container-bg); padding: 30px; border-radius: 16px;
-            box-shadow: var(--shadow-lg); width: 100%; max-width: 800px;
+            background: var(--container-bg); padding: 30px 40px; border-radius: 16px;
+            box-shadow: var(--shadow-lg); width: 100%; max-width: 800px; position: relative;
+            transition: background-color var(--transition-speed) ease;
         }
-        h1 { text-align: center; color: var(--accent-primary); margin-bottom: 25px; }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 5px; font-weight: 600; color: var(--text-secondary); }
+        #theme-toggle-btn {
+            position: absolute; top: 20px; right: 20px; background: none;
+            border: none; font-size: 1.3em; cursor: pointer;
+            color: var(--theme-toggle-btn-color); padding: 5px;
+            transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
+        }
+        #theme-toggle-btn:hover { color: var(--theme-toggle-btn-hover-color); transform: scale(1.1); }
+
+        h1 { text-align: center; color: var(--accent-primary); margin-bottom: 15px; font-weight: 700;}
+        .page-description { text-align: center; margin-bottom: 25px; color: var(--text-secondary); font-size: 0.95em;}
+        .form-section { margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 6px; font-weight: 600; color: var(--text-secondary); text-align: left;}
         input[type="text"], textarea {
-            width: 100%; padding: 10px; border-radius: 6px;
+            width: 100%; padding: 10px 12px; border-radius: 6px;
             border: 1px solid var(--input-border); font-size: 1em;
             background-color: var(--input-bg); color: var(--text-primary);
+            font-family: 'Poppins', sans-serif;
+            transition: border-color var(--transition-speed) ease, background-color var(--transition-speed) ease, color var(--transition-speed) ease;
         }
         textarea { min-height: 60px; resize: vertical; }
         input[type="text"]:focus, textarea:focus {
             outline: none; border-color: var(--input-focus-border);
             box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--input-focus-border) 25%, transparent);
         }
-        .word-inputs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 5px; }
-        .group-container { padding: 15px; border: 1px solid var(--input-border); border-radius: 8px; margin-bottom: 20px; }
-        .group-container h3 { margin-top: 0; margin-bottom: 10px; color: var(--accent-primary); }
+        .word-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-top: 8px; }
+        .group-container { padding: 20px; border: 1px solid var(--input-border); border-radius: 8px; margin-bottom: 25px; background-color: color-mix(in srgb, var(--container-bg) 90%, var(--text-primary) 3%); }
+        .group-container h3 { margin-top: 0; margin-bottom: 15px; color: var(--accent-primary); font-size: 1.2em; border-bottom: 1px solid var(--input-border); padding-bottom: 10px;}
         .submit-btn {
             display: block; width: 100%; padding: 12px; border: none; border-radius: 25px;
             background: var(--button-primary-bg); color: white;
             font-size: 1.1em; font-weight: 600; cursor: pointer;
-            transition: background var(--transition-speed) ease; margin-top: 20px;
+            transition: background var(--transition-speed) ease, transform 0.1s ease; margin-top: 20px;
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
         }
-        .submit-btn:hover:not(:disabled) { background: var(--button-primary-hover); }
-        .submit-btn:disabled { background: #ccc; cursor: not-allowed; }
+        .submit-btn:hover:not(:disabled) { background: var(--button-primary-hover); transform: translateY(-2px); }
+        .submit-btn:active:not(:disabled) { transform: translateY(0); }
+        .submit-btn:disabled { background: #ccc; cursor: not-allowed; opacity: 0.7;}
         .message-area {
-            margin-top: 15px; padding: 10px; border-radius: 6px; text-align: center;
+            margin-top: 20px; padding: 12px; border-radius: 6px; text-align: center;
             font-weight: 600; display: none;
         }
         .message-area.success { background-color: var(--success-bg); color: var(--success-text); border: 1px solid var(--success-border); }
         .message-area.error { background-color: var(--error-bg); color: var(--error-text); border: 1px solid var(--error-border); }
-        .home-link { display: block; text-align: center; margin-top: 20px; color: var(--accent-primary); }
+        .home-link { display: inline-block; text-align: center; margin-top: 25px; color: var(--accent-primary); text-decoration: none; font-weight: 600; padding: 8px 15px; border: 1px solid var(--accent-primary); border-radius: 20px; }
+        .home-link:hover { background-color: var(--accent-primary); color: white; }
+
+        @media (max-width: 600px) {
+            .container { padding: 20px; }
+            .word-inputs { grid-template-columns: repeat(2, 1fr); }
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <button id="theme-toggle-btn" aria-label="Toggle dark mode"><i class="fas fa-moon"></i></button>
         <h1><i class="fas fa-plus-circle"></i> Submit Your Own Puzzle</h1>
-        <p style="text-align: center; margin-bottom: 20px; color: var(--text-secondary);">
-            Create 4 groups of 4 unique words each. Provide a clear description for the connection in each group.
+        <p class="page-description">
+            Create 4 groups, each with 4 unique words. Provide a clear description for the connection in each group.
+            All 16 words across the entire puzzle must be unique.
         </p>
         <form id="submit-puzzle-form">
-            <div class="form-group">
-                <label for="submitter-name">Your Name/Alias (Optional):</label>
+            <div class="form-section">
+                <label for="submitter-name">Your Name/Alias (Optional, will use username if logged in):</label>
                 <input type="text" id="submitter-name" name="submitter_name" maxlength="50">
             </div>
 
-            <!-- Group 1 -->
             <div class="group-container">
                 <h3>Group 1</h3>
                 <div class="form-group">
@@ -94,14 +120,13 @@
                 </div>
                 <label>Words for Group 1 (4 unique words):</label>
                 <div class="word-inputs">
-                    <input type="text" name="group1_words[]" required maxlength="25">
-                    <input type="text" name="group1_words[]" required maxlength="25">
-                    <input type="text" name="group1_words[]" required maxlength="25">
-                    <input type="text" name="group1_words[]" required maxlength="25">
+                    <input type="text" name="group1_words[]" required maxlength="25" placeholder="Word 1">
+                    <input type="text" name="group1_words[]" required maxlength="25" placeholder="Word 2">
+                    <input type="text" name="group1_words[]" required maxlength="25" placeholder="Word 3">
+                    <input type="text" name="group1_words[]" required maxlength="25" placeholder="Word 4">
                 </div>
             </div>
 
-            <!-- Group 2 -->
             <div class="group-container">
                 <h3>Group 2</h3>
                 <div class="form-group">
@@ -110,14 +135,13 @@
                 </div>
                 <label>Words for Group 2 (4 unique words):</label>
                 <div class="word-inputs">
-                    <input type="text" name="group2_words[]" required maxlength="25">
-                    <input type="text" name="group2_words[]" required maxlength="25">
-                    <input type="text" name="group2_words[]" required maxlength="25">
-                    <input type="text" name="group2_words[]" required maxlength="25">
+                    <input type="text" name="group2_words[]" required maxlength="25" placeholder="Word 1">
+                    <input type="text" name="group2_words[]" required maxlength="25" placeholder="Word 2">
+                    <input type="text" name="group2_words[]" required maxlength="25" placeholder="Word 3">
+                    <input type="text" name="group2_words[]" required maxlength="25" placeholder="Word 4">
                 </div>
             </div>
 
-            <!-- Group 3 -->
             <div class="group-container">
                 <h3>Group 3</h3>
                 <div class="form-group">
@@ -126,14 +150,13 @@
                 </div>
                 <label>Words for Group 3 (4 unique words):</label>
                 <div class="word-inputs">
-                    <input type="text" name="group3_words[]" required maxlength="25">
-                    <input type="text" name="group3_words[]" required maxlength="25">
-                    <input type="text" name="group3_words[]" required maxlength="25">
-                    <input type="text" name="group3_words[]" required maxlength="25">
+                    <input type="text" name="group3_words[]" required maxlength="25" placeholder="Word 1">
+                    <input type="text" name="group3_words[]" required maxlength="25" placeholder="Word 2">
+                    <input type="text" name="group3_words[]" required maxlength="25" placeholder="Word 3">
+                    <input type="text" name="group3_words[]" required maxlength="25" placeholder="Word 4">
                 </div>
             </div>
 
-            <!-- Group 4 -->
             <div class="group-container">
                 <h3>Group 4</h3>
                 <div class="form-group">
@@ -142,10 +165,10 @@
                 </div>
                 <label>Words for Group 4 (4 unique words):</label>
                 <div class="word-inputs">
-                    <input type="text" name="group4_words[]" required maxlength="25">
-                    <input type="text" name="group4_words[]" required maxlength="25">
-                    <input type="text" name="group4_words[]" required maxlength="25">
-                    <input type="text" name="group4_words[]" required maxlength="25">
+                    <input type="text" name="group4_words[]" required maxlength="25" placeholder="Word 1">
+                    <input type="text" name="group4_words[]" required maxlength="25" placeholder="Word 2">
+                    <input type="text" name="group4_words[]" required maxlength="25" placeholder="Word 3">
+                    <input type="text" name="group4_words[]" required maxlength="25" placeholder="Word 4">
                 </div>
             </div>
 
@@ -154,7 +177,7 @@
             </button>
         </form>
         <div id="submission-message" class="message-area"></div>
-        <a href="/home.html" class="home-link">Back to Home</a>
+        <a href="/home.html" class="home-link"><i class="fas fa-home"></i> Back to Home</a>
     </div>
 
     <script>
@@ -162,6 +185,39 @@
             const form = document.getElementById('submit-puzzle-form');
             const submitBtn = document.getElementById('submit-puzzle-btn');
             const messageArea = document.getElementById('submission-message');
+            const submitterNameInput = document.getElementById('submitter-name');
+            const themeToggleBtn = document.getElementById('theme-toggle-btn');
+
+            const TOKEN_KEY = 'wordlinks_auth_token';
+            const THEME_STORAGE_KEY = 'wordLinksTheme'; // Consistent key
+            const sunIconClass = 'fa-sun';
+            const moonIconClass = 'fa-moon';
+
+            function getToken() {
+                return localStorage.getItem(TOKEN_KEY);
+            }
+
+            async function prefillSubmitterName() {
+                const token = getToken();
+                if (token && submitterNameInput) {
+                    try {
+                        const response = await fetch('/users/me', {
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+                        if (response.ok) {
+                            const user = await response.json();
+                            if (user && user.username) {
+                                submitterNameInput.value = user.username;
+                                // submitterNameInput.disabled = true; // Optionally disable if logged in
+                            }
+                        } else {
+                            console.warn("Could not fetch user for prefill on submit page; token might be invalid.");
+                        }
+                    } catch (error) {
+                        console.error("Error prefilling submitter name:", error);
+                    }
+                }
+            }
 
             form.addEventListener('submit', async function(event) {
                 event.preventDefault();
@@ -169,11 +225,11 @@
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
                 messageArea.style.display = 'none';
                 messageArea.textContent = '';
-                messageArea.className = 'message-area'; // Reset class
+                messageArea.className = 'message-area';
 
                 const formData = new FormData(form);
                 const payload = {
-                    submitter_name: formData.get('submitter_name') || null,
+                    submitter_name: formData.get('submitter_name').trim() || null,
                     group1: {
                         words: formData.getAll('group1_words[]').map(w => w.trim()).filter(w => w),
                         description: formData.get('group1_description').trim()
@@ -192,35 +248,19 @@
                     }
                 };
 
-                // Basic client-side validation (Pydantic on backend is primary)
                 let valid = true;
+                let allWordsForUniquenessCheck = [];
                 for (let i = 1; i <= 4; i++) {
-                    if (payload[`group${i}`].words.length !== 4) {
-                        showMessage(`Group ${i} must have exactly 4 words.`, 'error');
-                        valid = false; break;
-                    }
-                    if (!payload[`group${i}`].description) {
-                        showMessage(`Description for Group ${i} is required.`, 'error');
-                        valid = false; break;
-                    }
-                     // Check for unique words within a group
-                    if (new Set(payload[`group${i}`].words.map(w => w.toLowerCase())).size !== 4) {
-                        showMessage(`Words within Group ${i} must be unique.`, 'error');
-                        valid = false; break;
-                    }
+                    const group = payload[`group${i}`];
+                    if (group.words.length !== 4) { showMessage(`Group ${i} must have exactly 4 words. You provided ${group.words.length}.`, 'error'); valid = false; break; }
+                    if (!group.description) { showMessage(`Description for Group ${i} is required.`, 'error'); valid = false; break; }
+                    const lowerCaseWordsInGroup = group.words.map(w => w.toLowerCase());
+                    if (new Set(lowerCaseWordsInGroup).size !== 4) { showMessage(`Words within Group ${i} must be unique (case-insensitive).`, 'error'); valid = false; break; }
+                    allWordsForUniquenessCheck.push(...lowerCaseWordsInGroup);
                 }
-                // Check for unique words across all groups
                 if (valid) {
-                    const allWords = [
-                        ...payload.group1.words, ...payload.group2.words,
-                        ...payload.group3.words, ...payload.group4.words
-                    ].map(w => w.toLowerCase());
-                    if (new Set(allWords).size !== 16) {
-                        showMessage('All 16 words across all groups must be unique.', 'error');
-                        valid = false;
-                    }
+                    if (new Set(allWordsForUniquenessCheck).size !== 16) { showMessage('All 16 words across all groups must be unique (case-insensitive).', 'error'); valid = false; }
                 }
-
 
                 if (!valid) {
                     submitBtn.disabled = false;
@@ -228,24 +268,35 @@
                     return;
                 }
 
+                const fetchOptions = {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                };
+                const token = getToken();
+                if (token) {
+                    fetchOptions.headers['Authorization'] = `Bearer ${token}`;
+                }
+
                 try {
-                    const response = await fetch('/api/submit_user_puzzle', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-
+                    const response = await fetch('/api/submit_user_puzzle', fetchOptions);
                     const result = await response.json();
-
                     if (response.ok) {
-                        showMessage(result.message || 'Puzzle submitted successfully!', 'success');
+                        showMessage(result.message || 'Puzzle submitted successfully! Thank you.', 'success');
                         form.reset();
+                        if (submitterNameInput && token) { prefillSubmitterName(); } // Re-prefill after successful submission if still logged in
                     } else {
-                        throw new Error(result.detail || 'Failed to submit puzzle.');
+                        throw new Error(result.detail || result.message || 'Failed to submit puzzle.');
                     }
                 } catch (error) {
                     console.error('Submission error:', error);
-                    showMessage(`Error: ${error.message}`, 'error');
+                    let displayErrorMessage = "An unexpected error occurred.";
+                    if (error && typeof error.message === 'string') {
+                        displayErrorMessage = "Error: " + error.message;
+                    } else if (typeof error === 'string') {
+                        displayErrorMessage = "Error: " + error;
+                    }
+                    showMessage(displayErrorMessage, 'error');
                 } finally {
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Puzzle for Review';
@@ -254,9 +305,42 @@
 
             function showMessage(text, type) {
                 messageArea.textContent = text;
-                messageArea.className = `message-area ${type}`; // 'success' or 'error'
+                messageArea.className = `message-area ${type}`;
                 messageArea.style.display = 'block';
+                if (type === 'success') {
+                    setTimeout(() => {
+                        if (messageArea.textContent === text) { messageArea.style.display = 'none';}
+                    }, 7000);
+                }
             }
+            
+            function applyTheme(theme) {
+                if (theme === 'dark') {
+                    document.documentElement.classList.add('dark-theme');
+                    if (themeToggleBtn) themeToggleBtn.innerHTML = `<i class="fas ${sunIconClass}"></i>`;
+                } else {
+                    document.documentElement.classList.remove('dark-theme');
+                    if (themeToggleBtn) themeToggleBtn.innerHTML = `<i class="fas ${moonIconClass}"></i>`;
+                }
+                localStorage.setItem(THEME_STORAGE_KEY, theme);
+            }
+
+            if (themeToggleBtn) {
+                themeToggleBtn.addEventListener('click', () => {
+                    if (document.documentElement.classList.contains('dark-theme')) {
+                        applyTheme('light');
+                    } else {
+                        applyTheme('dark');
+                    }
+                });
+            }
+            const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (savedTheme) { applyTheme(savedTheme); }
+            else if (prefersDark) { applyTheme('dark'); }
+            else { applyTheme('light'); }
+
+            prefillSubmitterName(); // Call on page load
         });
     </script>
 </body>
